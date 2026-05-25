@@ -1,0 +1,51 @@
+import ImageGrid from "./imagegrid"
+import BulletIcon from "./bulletIcon"
+import BookNowButton from "@/buttons/booknow"
+import Image from "next/image";
+import ServiceImageArea from "./productsImageArea";
+import { sofadi, serif, sans} from "@/controls/fonts";
+import HeartIcon from "./hearticon";
+import CheckMarkSimple from "./checkmarkSimple";
+import ProductsImageArea from "./productsImageArea";
+import ShopCharcuterieBoardsButton from "@/buttons/shopCharcuterieBoards";
+import ShopStandardBoardsButton from "@/buttons/shopStandardBoards";
+import ShopSignatureBoardsButton from "@/buttons/shopSignaturedBoards";
+
+export default function WhyRogerAndSally() {
+    return(
+        <div id="reasonsSection" className="w-full text-center center content-center">     
+            
+            <div className={"font-bold jestify-center text-xl lg:text-5xl " + serif.className}>
+                <span className="hidden lg:block">
+                    <span className={serif.className}>Roger and Sally - The Heritage Lock</span> 
+                </span>
+                <span className="block lg:hidden">
+                        Roger and Sally - The Heritage Lock
+                </span>
+            </div>       
+            <div className="flex-none justify-center pt-5 min-h-[1025px] block">
+                
+                <div className="min-h-[800px]">
+                    <div id="featuresmall" className="block  lg:hidden w-svw h-auto">
+                        <Image
+                        className="z-0 overflow-hidden relative w-svw h-auto"
+                        src="/images/ShopPromoShot.jpg"
+                        alt="Reasons to choose Roger and Sally"
+                        width="400"
+                        height="400"
+                        />
+                    </div>
+                    <div className={'lg:w-[1025px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block mx-2 lg:mx-0 flex items-center justify-center'}>
+                        <Image
+                        className="z-0 overflow-hidden relative w-svw h-auto"
+                        src="/images/ShopPromoShot.jpg"
+                        alt="Reasons to choose Roger and Sally"
+                        width="1025"
+                        height="1025"
+                        />
+                    </div>
+                </div>
+            </div>
+      </div>
+    )
+}

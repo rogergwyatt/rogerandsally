@@ -1,0 +1,14 @@
+export default function RaltorsImage(){
+    return(
+
+        <div>
+            <div id="jobssmall" className="block w-svw h-auto w-full max-w-screen-xl">
+                <img
+                className="z-0 overflow-hidden relative w-svw h-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-xl mx-auto"
+                src="/images/realtor.jpg"
+                alt="Realtors need honeys pristine clean"
+                />
+            </div>
+        </div>
+    );
+}
