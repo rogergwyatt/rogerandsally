@@ -22,7 +22,7 @@ export default function Gallery() {
                 </span>
             </div>       
             <div className="flex-none justify-center pt-5 min-h-[1025px] block">             
-                <div>
+                <div className="mt-5">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/CherryWithGrooveNoText.jpg"
@@ -31,7 +31,7 @@ export default function Gallery() {
                         height="1025"
                         />
                 </div>            
-                <div>
+                <div className="mt-5">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/IMG_3662.jpeg"
@@ -40,7 +40,7 @@ export default function Gallery() {
                         height="1025"
                         />
                 </div>         
-                <div>
+                <div className="mt-5">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/IMG_3673.jpeg"
@@ -49,7 +49,7 @@ export default function Gallery() {
                         height="1025"
                         />
                 </div>      
-                <div>
+                <div className="mt-5">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/IMG_3701.jpeg"
@@ -58,7 +58,7 @@ export default function Gallery() {
                         height="1025"
                         />
                 </div>  
-                <div>
+                <div className="mt-5">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/IMG_3671.jpeg"
