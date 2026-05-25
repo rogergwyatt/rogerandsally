@@ -1,17 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
-import Image from "next/image";
-import SocialLinks from "@/controls/sociallinks";
-import Navigation from "@/controls/navigation";
-import HamburgerMenu from "@/controls/hamburgerMenu";
 import { sofadi,nanum } from '@/controls/fonts'
 import { Toaster, toast } from 'sonner';
-import { useSearchParams } from 'next/navigation'
-import { Suspense } from 'react'
-import Script from 'next/script';
-import http from 'https';
-import {SWRConfig, useSWRConfig} from 'swr';
-import useSWR from 'swr';
 import JobsImage from '@/controls/jobsImage';
 import FooterSection from '@/controls/footerSection';
 import Header from '@/controls/header';
