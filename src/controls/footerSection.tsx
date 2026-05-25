@@ -21,6 +21,12 @@ export default function FooterSection(){
                         <a href="/#products" className=" hover:text-blue-300">products</a>
                     </div>
                     <div className="w-40 h-10 p-r-10 text-xl">
+                        <a href="/#whyChoose" className=" hover:text-blue-300">why R&amp;S</a>
+                    </div>
+                    <div className="w-40 h-10 p-r-10 text-xl">
+                        <a href="/#gallery" className=" hover:text-blue-300">gallery</a>
+                    </div>
+                    <div className="w-40 h-10 p-r-10 text-xl">
                         <a href="/#aboutus" className=" hover:text-blue-300">aboutus</a>
                     </div>
                     <div className="w-40 h-10 p-r-10 text-xl">

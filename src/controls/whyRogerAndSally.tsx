@@ -4,8 +4,6 @@ import BookNowButton from "@/buttons/booknow"
 import Image from "next/image";
 import ServiceImageArea from "./productsImageArea";
 import { sofadi, serif, sans} from "@/controls/fonts";
-import HeartIcon from "./hearticon";
-import CheckMarkSimple from "./checkmarkSimple";
 import ProductsImageArea from "./productsImageArea";
 import ShopCharcuterieBoardsButton from "@/buttons/shopCharcuterieBoards";
 import ShopStandardBoardsButton from "@/buttons/shopStandardBoards";
@@ -57,15 +55,6 @@ export default function WhyRogerAndSally() {
                     <p className="mt-2 text-left mb-10">
                     The Signature Lock is only available on Signature series boards.
                     </p>
-                </div>
-                <div>
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/DSC_0050.jpg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
                 </div>
             </div>
       </div>

@@ -29,6 +29,7 @@ import TreeIcon from "@/controls/treeIcon";
 import MountainIcon from "@/controls/mountainIco";
 import GearIcon from "@/controls/gearIcon";
 import WhyRogerAndSally from "@/controls/whyRogerAndSally";
+import Gallery from "@/controls/gallery";
 
 
 export default function Home() {
@@ -94,7 +95,7 @@ export default function Home() {
           <a id="whyChoose"/>
           <WhyRogerAndSally/>
           <a id="gallery"/>
-          
+          <Gallery/>
           <a id="products"/>
           <Products/>     
           <a id="aboutus"/>
