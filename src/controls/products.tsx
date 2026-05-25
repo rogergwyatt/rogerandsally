@@ -4,8 +4,6 @@ import BookNowButton from "@/buttons/booknow"
 import Image from "next/image";
 import ServiceImageArea from "./productsImageArea";
 import { sofadi, serif, sans} from "@/controls/fonts";
-import HeartIcon from "./hearticon";
-import CheckMarkSimple from "./checkmarkSimple";
 import ProductsImageArea from "./productsImageArea";
 import ShopCharcuterieBoardsButton from "@/buttons/shopCharcuterieBoards";
 import ShopStandardBoardsButton from "@/buttons/shopStandardBoards";

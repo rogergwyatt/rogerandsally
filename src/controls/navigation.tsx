@@ -1,9 +1,4 @@
 'use client'
-import HamburgerMenu from "./hamburgerMenu";
-import Dropdown from "./navigation/dropdown";
-import { menuItems } from "./navigation/menuitems";
-import Link from "next/link";
-import {track} from "@vercel/analytics";
 
 export default function Navigation(){
     const bookingURL = process.env.SITE_BOOKING_URL;

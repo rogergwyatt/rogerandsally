@@ -1,5 +1,4 @@
 import ProductPhotos from "./productPhotos";
-import StarIcon from "./starIcon";
 import { sofadi,nanum, serif} from '@/controls/fonts'
 
 interface ICardDetails {
