@@ -23,11 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-       <Analytics/>
        <head>
         <link rel="canonical" href="https://www.rogerandsally.com/emailthankyou"  key="canonical"/>
 
-        <GoogleAnalyticsEmailContact/>
        </head>
       <body className={nanum.variable}>
         {children}
