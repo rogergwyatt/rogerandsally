@@ -32,7 +32,7 @@ export default function Page() {
             ],
             name: "Walnut Standard Board",
             description: "Beautiful walnut standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $100"
         },
         {
@@ -42,7 +42,7 @@ export default function Page() {
             ],
             name: "Maple Standard Board",
             description: "Beautiful cherry standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $90"
         },
         {
@@ -52,7 +52,7 @@ export default function Page() {
             ],
             name: "Cherry Standard Board",
             description: "Beautiful cherry standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $80"
         },
         {

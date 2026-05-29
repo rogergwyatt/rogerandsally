@@ -46,7 +46,7 @@ export default function Page() {
             ],
             name: "Walnut Signature Board",
             description: "Beautiful walnut signature line board that features our Heritage Lock and is more than 2 inches thick. I hand-pick each board to make a truly beautiful board. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $125"
         },
         {
@@ -56,7 +56,7 @@ export default function Page() {
             ],
             name: "Maple Signature Board",
             description: "Beautiful cherry signature line board that features our Heritage Lock and is more than 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $115"
         },
         {
@@ -66,7 +66,7 @@ export default function Page() {
             ],
             name: "Cherry Signature Board",
             description: "Beautiful cherry signature line board that features our Heritage Lock and is more than 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
-            sizes: "9x13, 12x18, custom",
+            sizes: "from 9x6 to 12x18 and custom",
             price: "From $105"
         },
         
