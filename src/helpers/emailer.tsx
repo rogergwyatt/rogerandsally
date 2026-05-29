@@ -14,12 +14,6 @@ const transporter = nodemailer.createTransport({
     user: SMTP_SERVER_USERNAME,
     pass: SMTP_SERVER_PASSWORD,
   },
-}).verify((error, success) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log("Server is ready to take our messages");
-  }
 });
 
 export async function sendMail({
