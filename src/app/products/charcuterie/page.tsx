@@ -33,7 +33,7 @@ export default function Page() {
             name: "Walnut Charcuterie Board",
             description: "Beautiful walnut charcuterie board that features our Heritage Lock. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "9x13, 12x18, custom",
-            price: "$40, $60, call"
+            price: "from $50"
         },
         {
             photos: [
@@ -43,7 +43,7 @@ export default function Page() {
             name: "Maple Charcuterie Board",
             description: "Beautiful maple charcuterie board that features our Heritage Lock. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "9x13, 12x18, custom",
-            price: "$35, $55, call"
+            price: "from $45"
         },
         {
             photos: [
@@ -53,7 +53,7 @@ export default function Page() {
             name: "Cherry Charcuterie Board",
             description: "Beautiful cherry charcuterie board that features our Heritage Lock. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "9x13, 12x18, custom",
-            price: "$30, $50, call"
+            price: "from $40"
         },
         {
             photos: [
