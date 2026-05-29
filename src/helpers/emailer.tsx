@@ -42,7 +42,6 @@ export async function sendMail({
     return;
   }
   var messageText = "name : " + name + "\r\nphone: " + phone + "\r\nzipcode: " + zipcode + "\r\nMessage: " + text;
-
   
   const info = await transporter.sendMail({
     from: email,
