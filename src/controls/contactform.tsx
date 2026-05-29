@@ -63,16 +63,17 @@ export default function ContactForm() {
           if (response?.messageId) {
             toast.success('Message sent successfully.');
             const params = {name:name, email:email, phone:phone};
-            if (maillist) {
+            /* if (maillist) {
               postContact(params);
             }
+              */
             resetForm();
             router.push("/thankyou?email_address="+email + "&phone_number="+phone);
           } else {
               console.log(SITE_MAIL_RECIEVER);
-  console.log(SMTP_SERVER_HOST);
-  console.log(SMTP_SERVER_USERNAME);
-  console.log(SMTP_SERVER_PASSWORD);
+              console.log(SMTP_SERVER_HOST);
+              console.log(SMTP_SERVER_USERNAME);
+              console.log(SMTP_SERVER_PASSWORD);
             toast.error('Failed to send message. Please call us.');
           }
         })

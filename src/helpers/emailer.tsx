@@ -48,10 +48,6 @@ export async function sendMail({
     return;
   }
   var messageText = "name : " + name + "\r\nphone: " + phone + "\r\nzipcode: " + zipcode + "\r\nMessage: " + text;
-  console.log(SITE_MAIL_RECIEVER);
-  console.log(SMTP_SERVER_HOST);
-  console.log(SMTP_SERVER_USERNAME);
-  console.log(SMTP_SERVER_PASSWORD);
   
   const info = await transporter.sendMail({
     from: email,
