@@ -6,6 +6,7 @@ import ConfigData from './settings.json';
 import { toast } from 'sonner';
 import {useRouter} from "next/navigation"
 import { sendMail } from '@/helpers/emailer';
+
 const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST; 
 const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME; 
 const SMTP_SERVER_PASSWORD = process.env.SMTP_SERVER_PASSWORD; 

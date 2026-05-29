@@ -36,7 +36,13 @@ export async function sendMail({
   html?: string;
 }) {
   try {
-    const isVerified = await transporter.verify();
+    const isVerified = await transporter.verify((error, success) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log("Server is ready to take our messages");
+        }
+      });
   } catch (error) {
     console.error('Something Went Wrong', SMTP_SERVER_USERNAME, SMTP_SERVER_PASSWORD, error);
     return;
