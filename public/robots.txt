@@ -4,4 +4,4 @@ Disallow: /nogooglebot/
 User-agent: *
 Allow: /
 
-Sitemap: https://www.honeyspristineclean.com/sitemap.xml
+Sitemap: https://www.rogerandsally.com/sitemap.xml

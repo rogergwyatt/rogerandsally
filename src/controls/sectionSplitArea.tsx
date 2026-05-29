@@ -16,7 +16,7 @@ export default function SectionSplitArea(){
             <div id="featuresmall" className="block lg:hidden w-svw h-auto">
                 <img
                 className="z-0 overflow-hidden relative w-svw h-auto"
-                src="/images/IMG_3694.jpeg"
+                src="/images/IMG_3541.jpeg"
                 alt="section split"
                 />
             </div>

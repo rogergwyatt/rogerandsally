@@ -59,8 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     "Reply-To: $email" . "\r\n" .
     "MIME-Version: 1.0\r\n" .
     "Content-Type: text/html; charset=iso-8859-1\r\n";
-    //$to = $settings['email']; //'roger@flyingmetalaviation.com';
-    //$to = "info@honeyspristineclean.com";
     $to = "roger@rogerwyatt.com";
     $subject = "Roger &amp; Sally Contact Form";
     if (mail($to, $subject, $emailBody, $headers)) {

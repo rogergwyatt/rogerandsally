@@ -6,6 +6,10 @@ import ConfigData from './settings.json';
 import { toast } from 'sonner';
 import {useRouter} from "next/navigation"
 import { sendMail } from '@/helpers/emailer';
+const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST; 
+const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME; 
+const SMTP_SERVER_PASSWORD = process.env.SMTP_SERVER_PASSWORD; 
+const SITE_MAIL_RECIEVER = process.env.SITE_MAIL_RECIEVER;
 
 interface IFormErrors {
         name:string[], 
@@ -65,6 +69,10 @@ export default function ContactForm() {
             resetForm();
             router.push("/thankyou?email_address="+email + "&phone_number="+phone);
           } else {
+              console.log(SITE_MAIL_RECIEVER);
+  console.log(SMTP_SERVER_HOST);
+  console.log(SMTP_SERVER_USERNAME);
+  console.log(SMTP_SERVER_PASSWORD);
             toast.error('Failed to send message. Please call us.');
           }
         })
