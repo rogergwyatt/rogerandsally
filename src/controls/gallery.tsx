@@ -21,52 +21,8 @@ export default function Gallery() {
                         Gallery
                 </span>
             </div>       
-            <div className="flex-none justify-center pt-5 min-h-[1025px] block">             
-                <div className="mt-5">
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/CherryWithGrooveNoText.jpg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
-                </div>            
-                <div className="mt-5">
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/IMG_3662.jpeg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
-                </div>         
-                <div className="mt-5">
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/IMG_3673.jpeg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
-                </div>      
-                <div className="mt-5">
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/IMG_3701.jpeg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
-                </div>  
-                <div className="mt-5">
-                        <Image
-                        className="z-0 overflow-hidden relative w-svw h-auto"
-                        src="/images/IMG_3671.jpeg"
-                        alt="Reasons to choose Roger and Sally"
-                        width="1025"
-                        height="1025"
-                        />
-                </div>
+            <div className="flex-none justify-center pt-5 mb-5 block">   
+                <ImageGrid/>
             </div>
       </div>
     )

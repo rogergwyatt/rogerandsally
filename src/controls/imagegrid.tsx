@@ -1,35 +1,45 @@
 import Image from "next/image";
 
 export default function ImageGrid() {
-    let bigW=500;
-    let bigH=bigW/3;
-    let smallW=bigW/2;
-    let smallH=smallW/3;
+    let bigW=1025;
+    let bigH=Math.round(bigW);
+    let smallW=Math.round(bigW * .75);
+    let smallH=Math.round(smallW);
+    console.log(bigW);
+    console.log(bigH);
+    console.log(smallW);
+    console.log(smallH);
     return(
-        <div className="table-auto gap-4 hidden md:block lg:block lg:w-[60%]">
+        <div className="table-auto gap-4 hidden md:block lg:block">
             <table>
                 <tbody>
                 <tr>
                     <td className="row-span-2">
-                    <Image src="/images/den.png" alt="Den" width={bigW} height={bigH} className="w-auto"/>
+                    <Image src="/images/IMG_3662.jpeg" alt="Cutting Board" width={bigW} height={bigH} className="w-auto"/>
                     </td>
                     <td>
                         <table>
                             <tbody>
                                 <tr>
                                     <td>
-                                    <Image src="/images/kitchen.png" alt="Kitchen" width={smallW} height={smallH} className="w-auto"/>
+                                    <Image src="/images/IMG_3701.jpeg" alt="Boards" width={smallW} height={smallH} className="w-auto"/>
                                     </td>
                                     <td>
-                                    <Image src="/images/master_bedroom.png" alt="Master Bedroom" width={smallW} height={smallH} className="w-auto"/>
+                                    <Image src="/images/IMG_3675.jpeg" alt="Boards" width={smallW} height={smallH} className="w-auto"/>
+                                    </td>
+                                    <td>
+                                    <Image src="/images/IMG_3674.jpeg" alt="Boards" width={smallW} height={smallH} className="w-auto"/>
                                     </td>
                                 </tr>
                                 <tr className="">
                                     <td>
-                                    <Image src="/images/bathroom.png" alt="Bathroom" width={smallW} height={smallH} className="w-auto"/>
+                                    <Image src="/images/DSC_0050.jpg" alt="Cherry" width={smallW} height={smallH} className="w-auto"/>
                                     </td>
                                     <td>
-                                    <Image src="/images/playroom.png" alt="Playroom" width={smallW} height={smallH} className="w-auto"/>
+                                    <Image src="/images/IMG_3671.jpeg" alt="Charcuterie" width={smallW} height={smallH} className="w-auto"/>
+                                    </td>
+                                    <td>
+                                    <Image src="/images/IMG_3606.jpeg" alt="Boards" width={smallW} height={smallH} className="w-auto"/>
                                     </td>
                                 </tr>
                             </tbody>
