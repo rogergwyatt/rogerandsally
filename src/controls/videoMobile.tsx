@@ -2,11 +2,6 @@ import {list} from "@vercel/blob"
 
 export default async function VideoComponentMobile(){
     var url = "";
-    //const response = await list({
-    //    token: 'vercel_blob_rw_emn9woPaz1wlthf2_EgQlIE7664lj52g3cVNygkcZHVkF0g'
-    //}).then((response)=>{
-    //    url = response.blobs[0].pathname;
-    //});
 
     return(
         <div>

@@ -4,8 +4,6 @@ import BookNowButton from "@/buttons/booknow"
 import Image from "next/image";
 import ServiceImageArea from "./productsImageArea";
 import { sofadi, serif, sans} from "@/controls/fonts";
-import HeartIcon from "./hearticon";
-import CheckMarkSimple from "./checkmarkSimple";
 import ProductsImageArea from "./productsImageArea";
 import ShopCharcuterieBoardsButton from "@/buttons/shopCharcuterieBoards";
 import ShopStandardBoardsButton from "@/buttons/shopStandardBoards";
@@ -44,6 +42,19 @@ export default function WhyRogerAndSally() {
                         height="1025"
                         />
                     </div>
+                </div>
+                <div className="mt-5 text-left">
+                    The Heritage Lock sets a Roger and Sally board apart from everyone else. We use dowel joinery that provides an perpendicular grain direction and is bonded to the interior of the board. 
+                    This technique not only looks amazing, it provides a couple of structural benefits. First, it bonds the outside strips together which prevents splits. 
+                    Second, it helps control wood movement
+                </div>
+                <div className="mt-5 text-left">
+                    <p>Our Signature Lock is brand new. We create a sliding dovetail on each strip that makes up the board. This means that not only are the strips glue bonded and bonded with The Heritage Lock, 
+                    they are bonded completely mechanically. This joinery makes it impossible for the board to separate. The wood would have to break before the strips coule separate. 
+                    </p>
+                    <p className="mt-2 text-left mb-10">
+                    The Signature Lock is only available on Signature series boards.
+                    </p>
                 </div>
             </div>
       </div>

@@ -1,7 +1,7 @@
 export default function SocialLinks() {
     return(
         <div id="sociallinks" className="hidden lg:flex" >      
-            <a href="https://www.facebook.com/profile.php?id=61563962982266" target="_blank">
+            <a href="https://www.facebook.com/profile.php?id=61590111643631" target="_blank">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 social"
