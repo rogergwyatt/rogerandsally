@@ -5,10 +5,6 @@ export default function ImageGrid() {
     let bigH=Math.round(bigW);
     let smallW=Math.round(bigW * .75);
     let smallH=Math.round(smallW);
-    console.log(bigW);
-    console.log(bigH);
-    console.log(smallW);
-    console.log(smallH);
     return(
         <div className="table-auto gap-4 hidden md:block lg:block">
             <table>
