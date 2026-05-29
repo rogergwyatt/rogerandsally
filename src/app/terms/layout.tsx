@@ -9,7 +9,7 @@ import GoogleAnalytics from "@/controls/googleAnalytics";
 import HotJar from "@/controls/hotjar";
 
 export const metadata: Metadata = {
-  title: "Roger &amp; Sally | Handcrafted Heritage Lock Wood Cutting Boards",
+  title: "Roger and Sally | Handcrafted Heritage Lock Wood Cutting Boards",
   description: "Hand-picked Walnut, Cherry, and Maple cutting boards featuring our signature Heritage Lock joinery. Built for a lifetime of service by Roger &amp; Sally",
   keywords: "handcrafted cutting boards, walnut butcher block, heritage lock joinery, live edge spalted maple, personalized wedding gifts, custom wood coasters, Virginia woodworking, heirloom quality kitchenware, cherry wood charcuterie board, handmade wood gifts",
   metadataBase: new URL(`https://www.rogerandsally.com`),
