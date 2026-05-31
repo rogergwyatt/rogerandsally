@@ -24,7 +24,7 @@ export default function Products() {
             <ProductsImageArea/>
             <div className="flex-none justify-center pt-5">
                 <div className="items text-left text-small lg:text-xl grid grid-flow-col grid-rows-1 grid-cols-2 gap-4 p-5 align-top">
-                    <div className="mt-2 lg:mt-5 w-[300px]">
+                    <div className="mt-2 lg:mt-5 lg:w-[300px]">
                           <Image src="/images/IMG_3671.jpeg" alt="logo" width={300} height={300}/>
                     </div>
                     <div className="mt-2 lg:mt-5 align-top">
@@ -39,7 +39,7 @@ export default function Products() {
                 </div>
 
                 <div className="items text-left text-small lg:text-xl grid grid-flow-col grid-rows-1 grid-cols-2 gap-4 p-5 align-top">
-                    <div className="mt-2 lg:mt-5 w-[300px]">
+                    <div className="mt-2 lg:mt-5 lg:w-[300px]">
                           <Image src="/images/IMG_3662.jpeg" alt="logo" width={300} height={300}/>
                     </div>
                     <div className="mt-2 lg:mt-5 align-top">
@@ -54,7 +54,7 @@ export default function Products() {
                 </div>
 
                 <div className="items text-left text-small lg:text-xl grid grid-flow-col grid-rows-1 grid-cols-2 gap-4  p-5 align-top">
-                    <div className="mt-2 lg:mt-5 w-[300px]">
+                    <div className="mt-2 lg:mt-5 lg:w-[300px]">
                           <Image src="/images/IMG_3675.jpeg" alt="logo" width={300} height={300}/>
                     </div>
                     <div className="mt-2 lg:mt-5 align-top">

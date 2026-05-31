@@ -51,23 +51,23 @@ export default function Home() {
                   We hand-pick every board and lock every edge. Discover heirloom-quality cutting boards and home goods, engineered in Virginia and built for a lifetime of service.
                 </span>
                 <br/>
-                <div className="items items-center text-left text-small lg:text-xl grid grid-flow-col grid-rows-1 grid-cols-3 gap-4">
-                  <div className="mt-2 lg:mt-5 w-[300px]">
-                    <div className="text-center align-center bg-cherry text-walnut p-4 rounded-xl border-4 border-black  h-[500px]">
+                <div className="items items-center text-left text-small lg:text-xl block lg:grid lg:grid-flow-col lg:grid-rows-1 lg:grid-cols-3 gap-4">
+                  <div className="mt-2 lg:mt-5 lg:w-[300px]">
+                    <div className="text-center align-center bg-cherry text-walnut p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <TreeIcon/><br/>
                       <span className="font-bold">Hand-Picked Timber</span><br/>
                       We don't buy pallets. Roger personally selects every piece of Walnut, Cherry, and Maple for its unique character and structural integrity.
                     </div>
                   </div>
-                  <div className="mt-2 lg:mt-5  w-[300px]">
-                    <div className="text-center align-center bg-maple text-walnut p-4 rounded-xl border-4 border-black h-[500px]">
+                  <div className="mt-2 lg:mt-5  lg:w-[300px]">
+                    <div className="text-center align-center bg-maple text-walnut p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <GearIcon/><br/>
                       <span className="font-bold">The Heritage Lock</span><br/>
                       Our signature blind and through dowel joinery mechanically anchors the edges of every board, preventing the splits and separations common in standard glue-only boards.
                     </div>
                   </div>
-                  <div className="mt-2 lg:mt-5  w-[300px]">
-                    <div className="text-center align-center bg-walnut text-maple p-4 rounded-xl border-4 border-black h-[500px]">
+                  <div className="mt-2 lg:mt-5  lg:w-[300px]">
+                    <div className="text-center align-center bg-walnut text-maple p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <MountainIcon/><br/>
                       <span className="font-bold">Built for the Future</span><br/>
                       Every purchase supports our journey from the digital world to our forest sanctuary in Tennessee. Built by hand, from our home to yours.

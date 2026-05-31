@@ -39,9 +39,9 @@ export default function HeroArea(props:any){
     }
     return(
         <div>
-            <div id="featuresmall" className="block lg:hidden w-svw h-auto bg-center bg-norepeat bg-parallax-first">
+            <div id="featuresmall" className="block hidden lg:hidden w-svw h-auto bg-center bg-norepeat bg-parallax-first">
             </div>
-            <div className="hidden m:block">
+            <div className="sm:block lg:hidden">
                 <img
                     className="z-0 overflow-hidden relative w-svw h-auto"
                     src="images/IMG_3668.jpeg"

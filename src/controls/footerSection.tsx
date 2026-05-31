@@ -41,7 +41,6 @@ export default function FooterSection(){
                     <br/>
                     <a href="email:sales@rogerandsally.com" className="hover:text-blue-300">sales@rogerandsally.com</a>
                     <br/>
-                    <a href="/terms" className="hover:text-blue-300">terms and conditions</a>
                 </div>
             </div>
         </div>
