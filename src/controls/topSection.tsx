@@ -20,10 +20,9 @@ export default function TopSection(){
     return(
         <div className="min-w-full min-h-10 lg:justify-between md:justify-between">
             <a id="top"/>
-            <div className=" min-h-10 pt-2 px-10 md:flex lg:flex md:justify-between bg-[#2d241e;]">
-                <div className="justify-left w-[10%] flex">
+            <div className=" min-h-10 pt-2 px-10 md:flex lg:flex md:justify-between bg-parchment lg:bg-[#2d241e;]">
+                <div className="justify-left w-[10%] flex hidden lg:block">
                     <SocialLinks/>
-                    <a href='/email' className="hidden md:flex lg:flex ml-5 text-white hover:text-blue-500">Email Signup</a>
                 </div>
                 <div id="name" className="flex lg:hidden mx-auto ">
                     <Image src="/images/LogoNoWebsite.svg" alt="Roger and Sally" width={400} height={20} className="w-auto mx-auto"/>

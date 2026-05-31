@@ -6,7 +6,7 @@ export default function ImageGrid() {
     let smallW=Math.round(bigW * .75);
     let smallH=Math.round(smallW);
     return(
-        <div className="table-auto gap-4 hidden md:block lg:block">
+        <div className="table-auto gap-4 block">
             <table>
                 <tbody>
                 <tr>

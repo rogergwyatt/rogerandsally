@@ -46,6 +46,9 @@ return(
         </div>
         <ul className="flex flex-col items-center justify-between min-h-[250px] z-80">
             <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="#top" onClick={handleClick}>Home</a>
+            </li>
+            <li className="border-b border-gray-400 my-8 uppercase">
                 <a href="#aboutus" onClick={handleClick}>About</a>
             </li>
             <li className="border-b border-gray-400 my-8 uppercase">
@@ -55,13 +58,10 @@ return(
                 <a href="#products" onClick={handleClick}>Products</a>
             </li>
             <li className="border-b border-gray-400 my-8 uppercase">
-                <a href="#gallery" onClick={handleClick}>Gallerys</a>
+                <a href="#gallery" onClick={handleClick}>Gallery</a>
             </li>
             <li className="border-b border-gray-400 my-8 uppercase">
                 <a href="#contactus" onClick={handleClick}>Contact Us</a>
-            </li>
-            <li className="border-b border-gray-400 my-8 uppercase">
-                <a href={bookingURL} target="_blank" onClick={()=>{track('booknowhamburger'); handleClick;}}>Book Now</a>
             </li>
         </ul>
     </div>

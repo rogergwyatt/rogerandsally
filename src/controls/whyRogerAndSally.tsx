@@ -21,9 +21,9 @@ export default function WhyRogerAndSally() {
                         Roger and Sally - The Heritage Lock
                 </span>
             </div>       
-            <div className="flex-none justify-center pt-5 min-h-[1025px] block">
+            <div className="flex-none justify-center pt-5 lg:min-h-[1025px] block">
                 
-                <div className="min-h-[800px]">
+                <div className="lg:min-h-[800px]">
                     <div id="featuresmall" className="block  lg:hidden w-svw h-auto">
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
