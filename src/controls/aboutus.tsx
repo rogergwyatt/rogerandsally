@@ -18,7 +18,7 @@ export default function AboutUs() {
             <div className="md:w-full lg:w-full w-[400px] items center mx-2 lg:mx-0">
                 <div className=" lg:flex  flex-none float-none md:float-left lg:float-left mr-5 mb-5">
                     <div className="min-h-52  ml-5 mr-5">
-                        <Image src="/images/RogerAndSally.png" alt="logo" width={300} height={800}/>
+                        <Image src="/images/RogerAndSally.png" alt="logo" width={500} height={300}/>
                     </div>
                 </div>
                 <div className="min-h-40 mx-2 lg:mx-5 md:w-full lg:w-full text-sm lg:text-xl text-wrap">

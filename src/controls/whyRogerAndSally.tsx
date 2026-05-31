@@ -33,7 +33,7 @@ export default function WhyRogerAndSally() {
                         height="400"
                         />
                     </div>
-                    <div className={'lg:w-[1025px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block mx-2 lg:mx-0 flex items-center justify-center'}>
+                    <div className={'lg:w-[1080px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block mx-2 lg:mx-0 flex items-center justify-center'}>
                         <Image
                         className="z-0 overflow-hidden relative w-svw h-auto"
                         src="/images/ShopPromoShot.jpg"

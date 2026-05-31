@@ -9,7 +9,7 @@ export default function ProductsImageArea(){
                 />
             </div>
 
-            <div className={'lg:w-[1025px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block  mx-2 lg:mx-0 flex items-center justify-center bg-fixed bg-cover bg-center bg-norepeat bg-services'}>
+            <div className={'lg:w-[1080px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block  mx-2 lg:mx-0 flex items-center justify-center bg-fixed bg-cover bg-center bg-norepeat bg-services'}>
                 
             </div>
         </div>
