@@ -23,29 +23,29 @@ export default function AboutUs() {
                 </div>
                 <div className="min-h-40 mx-2 lg:mx-5 md:w-full lg:w-full text-sm lg:text-xl text-wrap">
                     <p className="pb-2 lg:pb-5 flex-none">
-The story of Roger & Sally isn't just about woodworking; it’s about a forty-year transition from the digital world to the solid earth. After four decades spent navigating the complexities of code and software, we decided it was time to build a legacy you can actually hold in your hands.
-                    </p> 
-                    <p className="py-2 lg:py-5 flex-none">
-                        <b>Our Virginia Start</b><br/>
-Based in the heart of Virginia, we are meticulously building this business with a singular goal: to fund our move to a 200-acre forest sanctuary in Tennessee. Every board that leaves our shop is a literal piece of that dream—a step closer to the mountain air and the workshop we’ve spent a lifetime imagining.
-</p> 
-                    <p className="py-2 lg:py-5 flex-none">
-                        <b>Engineering an Heirloom</b><br/>
-Coming from a background in software, Roger brings a unique level of precision and "bug-fixing" to the woodshop. We don't just make boards that look beautiful on a countertop; we engineer them to solve the problems that plague standard woodenware.
-<br/><br/>
-<b>Hand-Selected Character</b><br/> 
-We never buy pallets of lumber and "hope for the best." Roger hand-picks every single board of Walnut, Cherry, and Maple (and if he spies something really interesting), inspecting the grain for stability and the soul for beauty before a single cut is made.
-<br/><br/>
-<b>The Heritage Lock</b><br/> 
-Wood tends to split and crack along the edges. To prevent splits and separations, we developed our signature Heritage Lock. We use traditional blind-dowel joinery to mechanically bind the outer edges of our boards. These hidden oak pegs act as a physical anchor, ensuring that your heirloom stays whole for a lifetime of service.
-                    </p> 
-                    <p className="py-2 lg:py-5 flex-none">
-<b>Our Promise to You</b><br/>
-When you purchase a piece from Roger & Sally, you are getting more than just a kitchen tool. You are getting forty years of technical expertise applied to the world’s most beautiful hardwoods.
+The story of Roger & Sally is really just about a sharp turn from the digital world to something a bit more grounded. After spending forty years navigating the invisible world of code and software, we reached a point where we wanted to build something real—something you can actually hold in your hands.
 <br/>
-Sally manages the heart of our operations, ensuring that every customer experience is as seamless and personal as the boards we build. From our workshop in Virginia to your family’s kitchen, we thank you for being a part of our journey.
-
-                        </p>
+<br/>
+Right now, we operate out of our garage shop here in the Richmond area, but we&apos;re working toward a bigger goal. Our plan with Roger & Sally is to help fund a move out to Northeast Tennessee. We&apos;re looking to buy a good piece of land out near the mountains to build a family compound and a forever workshop. Every single board we glue up is a literal step closer to that mountain air.
+<br/>
+<br/>
+Because of all that time spent in tech, the way we look at woodworking is probably a little different. We don&apos;t just build things to look pretty on a counter; we look at a cutting board like a structural engineering problem. Standard boards are famous for warping, twisting, and splitting down the road, so we design ours specifically to fix those bugs.
+<br/>
+<br/>
+That starts with the wood itself. We never buy bulk pallets of lumber and just hope for the best. I hand-pick every single board of Walnut, Cherry, and Maple myself, inspecting the grain direction to make sure it&apos;s stable before it ever touches a saw blade.
+<br/>
+<br/>
+The real backbone of our work is how we handle wood movement. To keep the edges from splitting apart under heavy kitchen use, we use a blind-dowel technique we call our Heritage Lock. We drive hidden hardwood pegs into the perimeter to mechanically bind the edges together. It doesn't go through the entire board, but it acts as a permanent physical anchor so the pieces stay locked tight for generations.
+<br/>
+<br/>
+We also have something we call the Heirloom Lock where we add a sliding dovetail to hold each strip to it&apos;s neighbor. With the Heirloom Lock combined with the Heritage Lock, the board is practically indestructible.
+<br/>
+<br/>
+When you buy a piece from us, you’re getting forty years of technical precision applied to the cleanest hardwoods we can find. While I’m covered in sawdust at the bench, Sally runs the heart of the business, making sure everything is as seamless and personal as the boards themselves.
+<br/>
+<br/>
+From our family workshop to your kitchen, thanks for being a part of the journey.
+                    </p>
                 </div>
             </div>
         </div>
