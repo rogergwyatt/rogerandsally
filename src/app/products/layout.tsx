@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
        <head>
-        <link rel="canonical" href="https://www.rogerandsally.com/news" key="canonical"/>
+        <link rel="canonical" href="https://www.rogerandsally.com" key="canonical"/>
         <HotJar/>
        </head>
       <body className={nanum.variable}>
