@@ -1,6 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
+import { serif } from "@/controls/fonts";
 
-export default function ImageGrid() {
+interface ImageGridProps {
+  /** The gallery folder name under public/images/gallery/ to link to. Defaults to "home". */
+  galleryFolder?: string;
+}
+
+export default function ImageGrid({ galleryFolder = "Standard" }: ImageGridProps) {
     let bigW=1025;
     let bigH=Math.round(bigW);
     let smallW=Math.round(bigW * .75);
@@ -45,6 +52,20 @@ export default function ImageGrid() {
                 </tr>
                 </tbody>
             </table>
+
+            {/* Link to full gallery */}
+            <div className="flex justify-center mt-6">
+                <Link
+                    href={`/gallery/${galleryFolder}`}
+                    className={
+                        "inline-block bg-walnut text-maple hover:bg-cherry transition-colors duration-200 " +
+                        "px-8 py-3 rounded-full text-base lg:text-lg shadow hover:shadow-lg " +
+                        serif.className
+                    }
+                >
+                    View Full Gallery →
+                </Link>
+            </div>
         </div>
     );
 }

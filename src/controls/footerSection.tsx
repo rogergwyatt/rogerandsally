@@ -7,9 +7,9 @@ export default function FooterSection(){
   const bookingURL = process.env.SITE_BOOKING_URL;
     return(
   
-        <div id="footerSection" className="p-x-50 w-full max-w-max items-center content-center center justify between text-med ">
+        <div id="footerSection" className="w-full text-med">
             <div className="min-h-300">&nbsp;</div>
-            <div id="footerWrapper" className="center md:flex w-full max-w-max">
+            <div id="footerWrapper" className="flex flex-wrap justify-center w-full">
                 <div id="logo" className="w-30 h-30 p-3">
                     <Image src="/images/LogoNoWebsite_small.png" alt="logo" width={400} height={150}/>
                 </div>
