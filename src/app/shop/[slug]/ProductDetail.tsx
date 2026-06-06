@@ -34,15 +34,23 @@ export default function ProductDetail({ product }: { product: Product }) {
   const router = useRouter()
   const [selected, setSelected] = useState<Record<string, string>>(defaultSelections(product))
   const [activeImage, setActiveImage] = useState(0)
+  const [added, setAdded] = useState(false)
 
   const price = computePrice(product, selected)
 
   function handleOption(key: string, value: string) {
     setSelected(prev => ({ ...prev, [key]: value }))
+    // Changing the selection makes a new variant — let them add it too.
+    setAdded(false)
   }
 
   function handleAddToCart() {
+    if (added) {
+      router.push('/cart')
+      return
+    }
     addItem(product, { ...selected }, price)
+    setAdded(true)
     toast.success(`${product.name} added to cart!`, {
       action: { label: 'View Cart', onClick: () => router.push('/cart') }
     })
@@ -125,11 +133,12 @@ export default function ProductDetail({ product }: { product: Product }) {
               )}
             </div>
             <button
+              type="button"
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 bg-cherry text-white py-3 px-6 rounded font-semibold hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`flex-1 text-white py-3 px-6 rounded font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${added ? 'bg-forest hover:bg-opacity-90' : 'bg-cherry hover:bg-opacity-90'}`}
             >
-              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+              {!product.inStock ? 'Out of Stock' : added ? 'Go to Cart →' : 'Add to Cart'}
             </button>
           </div>
 
