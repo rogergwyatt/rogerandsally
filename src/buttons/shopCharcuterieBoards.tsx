@@ -1,15 +1,15 @@
 'use client'
-import Image from "next/image";
-import {track} from "@vercel/analytics";
+import Link from "next/link";
+
 
 export default function ShopCharcuterieBoardsButton() {
 
-    const bookingURL = "/products/charcuterie";
+    const shopURL = "/shop/heritage-lock-charcuterie-board";
     return (
         <div className="mb-2 lg:mb-3 grid content-center text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-1 lg:text-left">
 
-            <a
-                href={bookingURL}
+            <Link
+                href={shopURL}
                 className="lg:min-w-80 group rounded-lg border border-transparent px-5 py-4 transition-colors"
                 rel="noopener noreferrer"
                 >
@@ -21,7 +21,7 @@ export default function ShopCharcuterieBoardsButton() {
                     </div>
                     
                 </div>
-            </a>
+            </Link>
         </div>
     );
 }

@@ -1,0 +1,204 @@
+[
+  {
+    "id": "standard-cutting-board",
+    "slug": "standard-cutting-board",
+    "name": "Standard Cutting Board",
+    "tagline": "Our signature joinery, built for a lifetime of service.",
+    "description": "Hand-crafted with our signature Heritage Lock joinery, these cutting boards are built to last generations. Each board is individually selected, joined, and finished by hand in Virginia. Available in Walnut, Cherry, Maple, and mixed combinations.",
+    "images": [
+      "/images/products/Maple and Cherry with Custom Engraving.jpeg",
+      "/images/products/Cherry Signature Board.jpg"
+    ],
+    "category": "cutting-board",
+    "options": [
+      {
+        "name": "Wood Type",
+        "key": "wood",
+        "choices": [
+          { "label": "Walnut", "priceModifier": 40 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 20 },
+          { "label": "Walnut & Cherry Mix", "priceModifier": 15},
+          { "label": "Walnut & Maple Mix", "priceModifier": 17}
+        ]
+      },
+      {
+        "name": "Size",
+        "key": "size",
+        "choices": [
+          { "label": "Small (9\" x 6\")", "priceModifier": 0 },
+          { "label": "Medium (8\" x 12\")", "priceModifier": 40 },
+          { "label": "Large (12\" x 18\")", "priceModifier": 80 }
+        ]
+      },
+      {
+        "name": "Juice Groove",
+        "key": "juiceGroove",
+        "choices": [
+          { "label": "No Groove", "priceModifier": 0 },
+          { "label": "Add Juice Groove", "priceModifier": 15 }
+        ]
+      },
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional)",
+        "priceModifier": 20
+      }
+    ],
+    "basePrice": 80,
+    "weightLbs": 3.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 1.5 },
+    "featured": true,
+    "inStock": true
+  },
+  {
+    "id": "signature-cutting-board",
+    "slug": "signature-cutting-board",
+    "name": "Signature Cutting Board",
+    "tagline": "Our signature joinery, built for a lifetime of service.",
+    "description": "Hand-crafted with our signature Heritage Lock joinery and they are 2 inches thick or more, these cutting boards are built to last generations. Each board is individually selected, joined, and finished by hand in Virginia. Available in Walnut, Cherry, Maple, and mixed combinations.",
+    "images": [
+      "/images/products/Maple and Cherry with Custom Engraving.jpeg",
+      "/images/products/Cherry Signature Board.jpg"
+    ],
+    "category": "cutting-board",
+    "options": [
+      {
+        "name": "Wood Type",
+        "key": "wood",
+        "choices": [
+          { "label": "Walnut", "priceModifier": 60 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 30 },
+          { "label": "Walnut & Cherry Mix", "priceModifier": 35},
+          { "label": "Walnut & Maple Mix", "priceModifier": 40}
+        ]
+      },
+      {
+        "name": "Size",
+        "key": "size",
+        "choices": [
+          { "label": "Small (9\" x 6\")", "priceModifier": 0 },
+          { "label": "Medium (8\" x 12\")", "priceModifier": 40 },
+          { "label": "Large (12\" x 18\")", "priceModifier": 60 }
+        ]
+      },
+      {
+        "name": "Juice Groove",
+        "key": "juiceGroove",
+        "choices": [
+          { "label": "No Groove", "priceModifier": 0 },
+          { "label": "Add Juice Groove", "priceModifier": 15 }
+        ]
+      },
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional)",
+        "priceModifier": 20
+      }
+    ],
+    "basePrice": 115,
+    "weightLbs": 3.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 2.0 },
+    "featured": true,
+    "inStock": true
+  },
+  {
+    "id": "heritage-lock-charcuterie-board",
+    "slug": "heritage-lock-charcuterie-board",
+    "name": "Heritage Lock Charcuterie Board",
+    "tagline": "Entertain in style with heirloom-quality craftsmanship.",
+    "description": "Perfect for entertaining, our charcuterie boards feature the same Heritage Lock joinery and hand-selected hardwoods as our cutting boards, with a wider profile ideal for spreads. Includes a juice groove on request.",
+    "images": [
+      "/images/products/Walnut Charcuterie Board.jpeg",
+      "/images/products/Walnut Charcuterie or Cheese Board.jpeg"
+    ],
+    "category": "charcuterie-board",
+    "options": [
+      {
+        "name": "Wood Type",
+        "key": "wood",
+        "choices": [
+          { "label": "Walnut", "priceModifier": 60 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 30 },
+          { "label": "Mixed (Walnut, Cherry & Maple)", "priceModifier": 10 }
+        ]
+      },
+      {
+        "name": "Size",
+        "key": "size",
+        "choices": [
+          { "label": "Large (12\" x 18\")", "priceModifier": 35 },
+          { "label": "Small (9\" x 6\")", "priceModifier": 0}
+        ]
+      },
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional)",
+        "priceModifier": 20
+      }
+    ],
+    "basePrice": 50,
+    "weightLbs": 4.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 0.75 },
+    "featured": true,
+    "inStock": true
+  },
+  {
+    "id": "spalted-silver-maple-charcuterie-board",
+    "slug": "spalted-silver-maple-charcuterie-board",
+    "name": "Spalted Silver Maple Charcuterie Board",
+    "tagline": "One-of-a-kind spalted silver maple charcuterie board",
+    "description": "From a special purchase, this spalted silver maple board has walnut Heritage Locks. Makes a perfect gift.",
+    "images": [
+      "/images/products/Spalted Silver Maple Charcuterie.jpeg"
+    ],
+    "category": "one-of-a-kind",
+    "options": [
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional, applied to all 4)",
+        "priceModifier": 15
+      }
+    ],
+    "basePrice": 90,
+    "weightLbs": 1.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 0.75 },
+    "featured": false,
+    "inStock": true
+  },
+  {
+    "id": "figured-maple-cutting-board",
+    "slug": "figured-maple-cutting-board",
+    "name": "Figured Maple Cutting Board",
+    "tagline": "One-of-a-kind figured maple cutting board",
+    "description": "From a special purchase, this board has amazing figures in the wood tat give a 3D appearance. Makes a perfect gift.",
+    "images": [
+      "/images/products/Figured Maple.jpeg"
+    ],
+    "category": "one-of-a-kind",
+    "options": [
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional, applied to all 4)",
+        "priceModifier": 15
+      }
+    ],
+    "basePrice": 190,
+    "weightLbs": 1.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 1.5 },
+    "featured": false,
+    "inStock": true
+  }
+]
