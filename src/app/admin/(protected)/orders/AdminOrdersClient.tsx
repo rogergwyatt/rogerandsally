@@ -174,16 +174,27 @@ export default function AdminOrdersClient() {
                       </div>
                     </div>
 
-                    {/* Shipping address */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-walnut mb-2">Ship To</h3>
-                      <div className="text-sm text-slate leading-6">
-                        <div>{order.shippingAddress?.name}</div>
-                        <div>{order.shippingAddress?.line1}</div>
-                        {order.shippingAddress?.line2 && <div>{order.shippingAddress.line2}</div>}
-                        <div>{order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.zip}</div>
-                      </div>
-                    </div>
+                    {/* Shipping address — Supabase returns snake_case shipping_address */}
+                    {(() => {
+                      const ship = (order as any).shipping_address ?? order.shippingAddress ?? {}
+                      return (
+                        <div>
+                          <h3 className="text-sm font-semibold text-walnut mb-2">Ship To</h3>
+                          <div className="text-sm text-slate leading-6">
+                            {ship.name || ship.line1 ? (
+                              <>
+                                <div>{ship.name}</div>
+                                <div>{ship.line1}</div>
+                                {ship.line2 && <div>{ship.line2}</div>}
+                                <div>{ship.city}, {ship.state} {ship.zip}</div>
+                              </>
+                            ) : (
+                              <span className="text-slate/60">No shipping address on file</span>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   {/* Controls */}
