@@ -25,6 +25,28 @@ export default function AdminOrdersClient() {
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all')
   const [refundState, setRefundState] = useState<Record<string, { amount: string; reason: string; processing: boolean; error: string }>>({})
   const [showRefund, setShowRefund] = useState<string | null>(null)
+  const [labelState, setLabelState] = useState<Record<string, { buying: boolean; error: string }>>({})
+
+  async function buyLabel(orderId: string) {
+    setLabelState(s => ({ ...s, [orderId]: { buying: true, error: '' } }))
+    const res = await fetch('/api/admin/shipping-label', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setLabelState(s => ({ ...s, [orderId]: { buying: false, error: data.error ?? 'Failed to buy label' } }))
+      return
+    }
+    setOrders(prev => prev.map(o => o.id === orderId ? {
+      ...o,
+      status: 'shipped' as OrderStatus,
+      trackingNumber: data.trackingNumber,
+      ...({ carrier: data.carrier, label_url: data.labelUrl } as any),
+    } : o))
+    setLabelState(s => ({ ...s, [orderId]: { buying: false, error: '' } }))
+  }
 
   useEffect(() => {
     fetch('/api/admin/orders')
@@ -177,23 +199,47 @@ export default function AdminOrdersClient() {
                       </select>
                     </div>
                     <div className="flex-1 min-w-48">
-                      <label className="block text-xs font-semibold text-walnut mb-1">Tracking Number</label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder="e.g. 9400111899220012345678"
-                          value={tracking[order.id] ?? order.trackingNumber ?? ''}
-                          onChange={e => setTracking(t => ({ ...t, [order.id]: e.target.value }))}
-                          className="flex-1 border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry"
-                        />
-                        <button
-                          onClick={() => updateOrder(order.id, undefined, tracking[order.id] ?? '')}
-                          disabled={saving === order.id}
-                          className="bg-forest text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90 disabled:opacity-50"
-                        >
-                          {saving === order.id ? '…' : 'Save'}
-                        </button>
-                      </div>
+                      <label className="block text-xs font-semibold text-walnut mb-1">Shipping</label>
+                      {(order as any).label_url ? (
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <a href={(order as any).label_url} target="_blank" rel="noopener noreferrer"
+                            className="bg-forest text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90">
+                            🏷️ Print Label
+                          </a>
+                          <span className="text-sm text-slate">
+                            {(order as any).carrier} · <span className="font-mono">{order.trackingNumber}</span>
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2 items-center flex-wrap">
+                          <button
+                            type="button"
+                            onClick={() => buyLabel(order.id)}
+                            disabled={labelState[order.id]?.buying}
+                            className="bg-cherry text-white px-3 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90 disabled:opacity-50"
+                          >
+                            {labelState[order.id]?.buying ? 'Buying…' : 'Buy Shipping Label'}
+                          </button>
+                          {/* Manual tracking fallback */}
+                          <input
+                            type="text"
+                            placeholder="or enter tracking # manually"
+                            value={tracking[order.id] ?? order.trackingNumber ?? ''}
+                            onChange={e => setTracking(t => ({ ...t, [order.id]: e.target.value }))}
+                            className="flex-1 min-w-40 border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry"
+                          />
+                          <button
+                            onClick={() => updateOrder(order.id, undefined, tracking[order.id] ?? '')}
+                            disabled={saving === order.id}
+                            className="bg-forest text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90 disabled:opacity-50"
+                          >
+                            {saving === order.id ? '…' : 'Save'}
+                          </button>
+                        </div>
+                      )}
+                      {labelState[order.id]?.error && (
+                        <p className="text-red-600 text-xs mt-1">{labelState[order.id].error}</p>
+                      )}
                     </div>
                     <a
                       href={`mailto:${order.email}?subject=Your Roger %26 Sally Order`}

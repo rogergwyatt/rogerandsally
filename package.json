@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@easypost/api": "^8.8.0",
     "@stripe/react-stripe-js": "^6.6.0",
     "@stripe/stripe-js": "^9.7.0",
     "@supabase/supabase-js": "^2.107.0",
