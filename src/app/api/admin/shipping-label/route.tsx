@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import EasyPostClient from '@easypost/api'
+import { Shippo } from 'shippo'
 import { supabaseAdmin } from '@/lib/supabase'
 import { isAdminAuthenticated } from '@/lib/adminAuth'
 import { logCustomerEvent } from '@/lib/customers'
@@ -7,18 +7,17 @@ import products from '@/data/products.json'
 import { Product } from '@/lib/types'
 import nodemailer from 'nodemailer'
 
-const api = new EasyPostClient(process.env.EASYPOST_API_KEY ?? 'EZTK_REPLACE_ME')
+const shippo = new Shippo({ apiKeyHeader: process.env.SHIPPO_API_KEY ?? 'shippo_test_REPLACE_ME' })
 
-// Build a single parcel that represents the whole order. We sum item weights
-// and use the largest single product's dimensions as a reasonable box size.
+// Build a single parcel (Shippo wants string fields, weight in lb). We sum
+// item weights and use the largest single product's dimensions as the box.
 function buildParcel(items: any[]) {
-  let totalWeightOz = 0
+  let totalWeightLb = 0
   let maxL = 6, maxW = 6, maxH = 2
   for (const item of items) {
     const p = (products as Product[]).find(pr => pr.id === item.product?.id)
     const qty = item.quantity ?? 1
-    const lbs = p?.weightLbs ?? 2
-    totalWeightOz += lbs * 16 * qty
+    totalWeightLb += (p?.weightLbs ?? 2) * qty
     const d = p?.dimensionsInches
     if (d) {
       maxL = Math.max(maxL, d.length)
@@ -26,9 +25,15 @@ function buildParcel(items: any[]) {
       maxH = Math.max(maxH, d.height * qty) // stack height grows with qty
     }
   }
-  // Never ship a zero-weight parcel
-  if (totalWeightOz <= 0) totalWeightOz = 16
-  return { length: maxL, width: maxW, height: maxH, weight: Math.ceil(totalWeightOz) }
+  if (totalWeightLb <= 0) totalWeightLb = 1
+  return {
+    length: String(maxL),
+    width: String(maxW),
+    height: String(maxH),
+    distanceUnit: 'in' as const,
+    weight: totalWeightLb.toFixed(2),
+    massUnit: 'lb' as const,
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -63,17 +68,9 @@ export async function POST(req: NextRequest) {
   try {
     const parcel = buildParcel(order.items ?? [])
 
-    const shipment = await api.Shipment.create({
-      to_address: {
-        name: addr.name,
-        street1: addr.line1,
-        street2: addr.line2 || undefined,
-        city: addr.city,
-        state: addr.state,
-        zip: addr.zip,
-        country: 'US',
-      },
-      from_address: {
+    // Create the shipment synchronously to get live rates back
+    const shipment = await shippo.shipments.create({
+      addressFrom: {
         name: process.env.SHIP_FROM_NAME ?? 'Roger & Sally',
         street1: process.env.SHIP_FROM_STREET ?? '507 Coalbrook Dr',
         city: process.env.SHIP_FROM_CITY ?? 'Midlothian',
@@ -81,24 +78,52 @@ export async function POST(req: NextRequest) {
         zip: process.env.SHIP_FROM_ZIP ?? '23114',
         country: 'US',
         phone: process.env.SHIP_FROM_PHONE ?? '8044648162',
+        email: process.env.EMAIL_FROM ?? 'sales@rogerandsally.com',
       },
-      parcel,
+      addressTo: {
+        name: addr.name,
+        street1: addr.line1,
+        street2: addr.line2 || undefined,
+        city: addr.city,
+        state: addr.state,
+        zip: addr.zip,
+        country: 'US',
+        email: order.email || undefined,
+      },
+      parcels: [parcel],
+      async: false,
     })
 
-    if (!shipment.rates || shipment.rates.length === 0) {
+    const rates = shipment.rates ?? []
+    if (rates.length === 0) {
       return NextResponse.json({ error: 'No shipping rates available for this address.' }, { status: 422 })
     }
 
-    // Auto-buy the cheapest rate
-    const cheapest = shipment.rates.reduce((lo: any, r: any) =>
-      parseFloat(r.rate) < parseFloat(lo.rate) ? r : lo
-    )
-    const bought = await api.Shipment.buy(shipment.id, cheapest)
+    // Auto-buy cheapest, trying rates in ascending price order so an
+    // unregistered/erroring carrier doesn't block the purchase — we fall
+    // through to the next cheapest until one succeeds.
+    const sorted = [...rates].sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount))
+    let transaction: any = null
+    let chosen: any = null
+    let lastError = ''
+    for (const rate of sorted) {
+      const t = await shippo.transactions.create({
+        rate: rate.objectId,
+        labelFileType: 'PDF',
+        async: false,
+      })
+      if (t.status === 'SUCCESS') { transaction = t; chosen = rate; break }
+      lastError = t.messages?.map((m: any) => m.text).join('; ') || 'Carrier rejected the label purchase.'
+    }
 
-    const trackingNumber = bought.tracking_code
-    const labelUrl = bought.postage_label?.label_url
-    const carrier = bought.selected_rate?.carrier
-    const cost = bought.selected_rate?.rate
+    if (!transaction) {
+      return NextResponse.json({ error: lastError || 'No purchasable rate for this order.' }, { status: 422 })
+    }
+
+    const trackingNumber = transaction.trackingNumber
+    const labelUrl = transaction.labelUrl
+    const carrier = chosen.provider
+    const cost = chosen.amount
 
     // Persist + flip to shipped
     await db.from('orders').update({
@@ -110,7 +135,7 @@ export async function POST(req: NextRequest) {
     }).eq('id', orderId)
 
     // Email the customer their tracking info
-    await sendTrackingEmail(order.email, addr.name, trackingNumber, carrier, bought.tracker?.public_url)
+    await sendTrackingEmail(order.email, addr.name, trackingNumber ?? '', carrier, transaction.trackingUrlProvider)
 
     // Log to customer timeline
     if (order.email) {
