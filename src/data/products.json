@@ -15,20 +15,20 @@
         "name": "Wood Type",
         "key": "wood",
         "choices": [
-          { "label": "Walnut", "priceModifier": 0 },
-          { "label": "Cherry", "priceModifier": -10 },
-          { "label": "Maple", "priceModifier": -5 },
-          { "label": "Walnut & Cherry Mix", "priceModifier": -5},
-          { "label": "Walnut & Maple Mix", "priceModifier": -2.50 }
+          { "label": "Walnut", "priceModifier": 40 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 20 },
+          { "label": "Walnut & Cherry Mix", "priceModifier": 15},
+          { "label": "Walnut & Maple Mix", "priceModifier": 17}
         ]
       },
       {
         "name": "Size",
         "key": "size",
         "choices": [
-          { "label": "Small (8\" x 12\")", "priceModifier": 0 },
-          { "label": "Medium (10\" x 16\")", "priceModifier": 25 },
-          { "label": "Large (12\" x 20\")", "priceModifier": 50 }
+          { "label": "Small (9\" x 6\")", "priceModifier": 0 },
+          { "label": "Medium (8\" x 12\")", "priceModifier": 40 },
+          { "label": "Large (12\" x 18\")", "priceModifier": 80 }
         ]
       },
       {
@@ -47,9 +47,63 @@
         "priceModifier": 20
       }
     ],
-    "basePrice": 89,
+    "basePrice": 80,
     "weightLbs": 3.5,
-    "dimensionsInches": { "length": 18, "width": 12, "height": 2 },
+    "dimensionsInches": { "length": 18, "width": 12, "height": 1.5 },
+    "featured": true,
+    "inStock": true
+  },
+  {
+    "id": "signature-cutting-board",
+    "slug": "signature-cutting-board",
+    "name": "Signature Cutting Board",
+    "tagline": "Our signature joinery, built for a lifetime of service.",
+    "description": "Hand-crafted with our signature Heritage Lock joinery and they are 2 inches thick or more, these cutting boards are built to last generations. Each board is individually selected, joined, and finished by hand in Virginia. Available in Walnut, Cherry, Maple, and mixed combinations.",
+    "images": [
+      "/images/products/Maple and Cherry with Custom Engraving.jpeg",
+      "/images/products/Cherry Signature Board.jpg"
+    ],
+    "category": "cutting-board",
+    "options": [
+      {
+        "name": "Wood Type",
+        "key": "wood",
+        "choices": [
+          { "label": "Walnut", "priceModifier": 60 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 30 },
+          { "label": "Walnut & Cherry Mix", "priceModifier": 35},
+          { "label": "Walnut & Maple Mix", "priceModifier": 40}
+        ]
+      },
+      {
+        "name": "Size",
+        "key": "size",
+        "choices": [
+          { "label": "Small (9\" x 6\")", "priceModifier": 0 },
+          { "label": "Medium (8\" x 12\")", "priceModifier": 40 },
+          { "label": "Large (12\" x 18\")", "priceModifier": 60 }
+        ]
+      },
+      {
+        "name": "Juice Groove",
+        "key": "juiceGroove",
+        "choices": [
+          { "label": "No Groove", "priceModifier": 0 },
+          { "label": "Add Juice Groove", "priceModifier": 15 }
+        ]
+      },
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional)",
+        "priceModifier": 20
+      }
+    ],
+    "basePrice": 115,
+    "weightLbs": 3.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 2.0 },
     "featured": true,
     "inStock": true
   },
@@ -69,9 +123,9 @@
         "name": "Wood Type",
         "key": "wood",
         "choices": [
-          { "label": "Walnut", "priceModifier": 0 },
-          { "label": "Cherry", "priceModifier": -10 },
-          { "label": "Maple", "priceModifier": -5 },
+          { "label": "Walnut", "priceModifier": 60 },
+          { "label": "Cherry", "priceModifier": 0 },
+          { "label": "Maple", "priceModifier": 30 },
           { "label": "Mixed (Walnut, Cherry & Maple)", "priceModifier": 10 }
         ]
       },
@@ -79,8 +133,8 @@
         "name": "Size",
         "key": "size",
         "choices": [
-          { "label": "Standard (12\" x 18\")", "priceModifier": 35 },
-          { "label": "Large (9\" x 6\")", "priceModifier": -35}
+          { "label": "Large (12\" x 18\")", "priceModifier": 35 },
+          { "label": "Small (9\" x 6\")", "priceModifier": 0}
         ]
       },
       {
