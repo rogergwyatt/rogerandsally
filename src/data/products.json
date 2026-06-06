@@ -2,7 +2,7 @@
   {
     "id": "standard-cutting-board",
     "slug": "standard-cutting-board",
-    "name": "standard Cutting Board",
+    "name": "Standard Cutting Board",
     "tagline": "Our signature joinery, built for a lifetime of service.",
     "description": "Hand-crafted with our signature Heritage Lock joinery, these cutting boards are built to last generations. Each board is individually selected, joined, and finished by hand in Virginia. Available in Walnut, Cherry, Maple, and mixed combinations.",
     "images": [
@@ -119,6 +119,31 @@
     "basePrice": 90,
     "weightLbs": 1.5,
     "dimensionsInches": { "length": 18, "width": 12, "height": 0.75 },
+    "featured": false,
+    "inStock": true
+  },
+  {
+    "id": "figured-maple-cutting-board",
+    "slug": "figured-maple-cutting-board",
+    "name": "Figured Maple Cutting Board",
+    "tagline": "One-of-a-kind figured maple cutting board",
+    "description": "From a special purchase, this board has amazing figures in the wood tat give a 3D appearance. Makes a perfect gift.",
+    "images": [
+      "/images/products/Figured Maple.jpeg"
+    ],
+    "category": "one-of-a-kind",
+    "options": [
+      {
+        "name": "Personalization",
+        "key": "personalization",
+        "type": "text",
+        "placeholder": "Enter text to engrave (optional, applied to all 4)",
+        "priceModifier": 15
+      }
+    ],
+    "basePrice": 190,
+    "weightLbs": 1.5,
+    "dimensionsInches": { "length": 18, "width": 12, "height": 1.5 },
     "featured": false,
     "inStock": true
   }
