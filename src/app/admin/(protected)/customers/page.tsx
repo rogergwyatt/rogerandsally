@@ -46,35 +46,39 @@ export default function CustomersPage() {
       {customers.length === 0 ? (
         <p className="text-slate text-center py-16">No customers yet. They'll appear here after their first order.</p>
       ) : (
-        <div className="bg-white border border-maple rounded-lg overflow-hidden">
+        <div className="bg-white border border-maple rounded-lg overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-parchment border-b border-maple">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate uppercase">Customer</th>
-                <th className="text-right px-4 py-3 text-xs font-semibold text-slate uppercase">Orders</th>
-                <th className="text-right px-4 py-3 text-xs font-semibold text-slate uppercase">Total Spend</th>
+                <th className="text-left px-3 sm:px-4 py-3 text-xs font-semibold text-slate uppercase">Customer</th>
+                <th className="text-right px-3 sm:px-4 py-3 text-xs font-semibold text-slate uppercase whitespace-nowrap">Orders</th>
+                <th className="text-right px-3 sm:px-4 py-3 text-xs font-semibold text-slate uppercase whitespace-nowrap">Spend</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate uppercase hidden md:table-cell">Last Order</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate uppercase hidden md:table-cell">Since</th>
-                <th className="px-4 py-3"></th>
+                <th className="px-4 py-3 hidden sm:table-cell"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-maple">
               {customers.map(c => (
-                <tr key={c.id} className="hover:bg-parchment transition-colors">
-                  <td className="px-4 py-3">
+                <tr
+                  key={c.id}
+                  onClick={() => router.push(`/admin/customers/${c.id}`)}
+                  className="hover:bg-parchment transition-colors cursor-pointer"
+                >
+                  <td className="px-3 sm:px-4 py-3">
                     <div className="font-medium text-walnut">{c.name || '—'}</div>
-                    <div className="text-slate text-xs">{c.email}</div>
+                    <div className="text-slate text-xs break-all">{c.email}</div>
                     {c.phone && <div className="text-slate text-xs">{c.phone}</div>}
                   </td>
-                  <td className="px-4 py-3 text-right font-semibold text-walnut">{(c as any).orderCount ?? 0}</td>
-                  <td className="px-4 py-3 text-right font-semibold text-cherry">${((c as any).totalSpend ?? 0).toFixed(2)}</td>
+                  <td className="px-3 sm:px-4 py-3 text-right font-semibold text-walnut">{(c as any).orderCount ?? 0}</td>
+                  <td className="px-3 sm:px-4 py-3 text-right font-semibold text-cherry whitespace-nowrap">${((c as any).totalSpend ?? 0).toFixed(2)}</td>
                   <td className="px-4 py-3 text-slate hidden md:table-cell">
                     {(c as any).lastOrderAt ? new Date((c as any).lastOrderAt).toLocaleDateString() : '—'}
                   </td>
                   <td className="px-4 py-3 text-slate hidden md:table-cell">
                     {new Date(c.created_at).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 hidden sm:table-cell">
                     <Link href={`/admin/customers/${c.id}`} className="text-forest text-xs hover:underline whitespace-nowrap">
                       View →
                     </Link>

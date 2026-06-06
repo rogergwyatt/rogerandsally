@@ -8,9 +8,9 @@ import AdminNav from '@/controls/admin/AdminNav'
 export default function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   if (!isAdminAuthenticated()) redirect('/admin/login')
   return (
-    <div className="min-h-screen bg-parchment flex">
+    <div className="min-h-screen bg-parchment flex flex-col lg:flex-row">
       <AdminNav />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 min-w-0 overflow-y-auto">
         {children}
       </main>
     </div>

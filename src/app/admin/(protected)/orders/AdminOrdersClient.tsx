@@ -133,23 +133,24 @@ export default function AdminOrdersClient() {
             <div key={order.id} className="bg-white border border-maple rounded-lg overflow-hidden">
               {/* Row summary */}
               <button
-                className="w-full text-left px-5 py-4 flex items-center gap-4 hover:bg-parchment transition-colors"
+                className="w-full text-left px-4 sm:px-5 py-4 flex items-start gap-3 sm:gap-4 hover:bg-parchment transition-colors"
                 onClick={() => setExpanded(expanded === order.id ? null : order.id)}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <span className="font-mono text-sm text-walnut">{order.id.slice(0, 8)}…</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${STATUS_COLORS[order.status]}`}>
                       {order.status}
                     </span>
                   </div>
-                  <div className="text-sm text-slate mt-1">{order.email} · {new Date((order as any).created_at).toLocaleDateString()}</div>
+                  <div className="text-sm text-slate mt-1 truncate">{order.email}</div>
+                  <div className="text-xs text-slate">{new Date((order as any).created_at).toLocaleDateString()}</div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <div className="font-semibold text-walnut">${order.total?.toFixed(2)}</div>
-                  <div className="text-xs text-slate">{order.items?.length ?? 0} item(s)</div>
+                  <div className="font-semibold text-walnut whitespace-nowrap">${order.total?.toFixed(2)}</div>
+                  <div className="text-xs text-slate whitespace-nowrap">{order.items?.length ?? 0} item(s)</div>
                 </div>
-                <span className="text-slate ml-2">{expanded === order.id ? '▲' : '▼'}</span>
+                <span className="text-slate flex-shrink-0 mt-0.5">{expanded === order.id ? '▲' : '▼'}</span>
               </button>
 
               {/* Expanded detail */}
