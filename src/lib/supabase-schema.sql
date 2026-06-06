@@ -11,6 +11,8 @@ create table if not exists orders (
   shipping_address jsonb not null default '{}',
   status text not null default 'pending',
   tracking_number text,
+  carrier text,
+  label_url text,
   refunds jsonb not null default '[]',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

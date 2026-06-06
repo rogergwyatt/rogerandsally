@@ -48,7 +48,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
         <StatCard label="Revenue Today" value={`$${todayRevenue.toFixed(2)}`} sub={`${todayOrders.length} order${todayOrders.length !== 1 ? 's' : ''}`} color="text-cherry" />
         <StatCard label="Total Revenue" value={`$${totalRevenue.toFixed(2)}`} sub={`${totalOrders} orders all time`} />
         <StatCard label="Abandoned Carts" value={abandonedCarts.length} sub="with email — eligible for recovery" color={abandonedCarts.length > 0 ? 'text-cherry' : 'text-walnut'} />
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Order status breakdown */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         {(['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'] as const).map(s => (
           <Link key={s} href="/admin/orders"
             className="bg-white border border-maple rounded-lg p-3 text-center hover:border-cherry transition-colors">

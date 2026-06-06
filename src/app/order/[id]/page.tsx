@@ -5,6 +5,10 @@ import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
 
+// Always render fresh — order status/tracking changes over time and must
+// never be served from a stale cache.
+export const dynamic = 'force-dynamic'
+
 const STATUS_STEPS = ['pending', 'processing', 'shipped', 'delivered']
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Order Received',
@@ -13,11 +17,26 @@ const STATUS_LABELS: Record<string, string> = {
   delivered: 'Delivered',
 }
 
+// Build a carrier tracking URL from the tracking number.
+function trackingUrl(carrier?: string, tracking?: string): string | null {
+  if (!tracking) return null
+  const c = (carrier ?? '').toLowerCase()
+  if (c.includes('usps')) return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${tracking}`
+  if (c.includes('ups')) return `https://www.ups.com/track?tracknum=${tracking}`
+  if (c.includes('fedex')) return `https://www.fedex.com/fedextrack/?trknbr=${tracking}`
+  // Carrier-agnostic fallback
+  return `https://www.google.com/search?q=${encodeURIComponent(`${carrier ?? ''} tracking ${tracking}`)}`
+}
+
 export default async function OrderPage({ params }: { params: { id: string } }) {
   const db = supabaseAdmin()
   const { data } = await db.from('orders').select('*').eq('id', params.id).single()
   if (!data) notFound()
   const order = data as unknown as Order
+  // Supabase returns snake_case columns
+  const trackingNumber = (data as any).tracking_number as string | undefined
+  const carrier = (data as any).carrier as string | undefined
+  const trackUrl = trackingUrl(carrier, trackingNumber)
 
   const currentStep = STATUS_STEPS.indexOf(order.status)
 
@@ -45,10 +64,18 @@ export default async function OrderPage({ params }: { params: { id: string } }) 
           ))}
         </div>
 
-        {order.trackingNumber && (
-          <div className="bg-white border border-maple rounded-lg p-4 mb-6">
-            <p className="text-sm text-slate">Tracking Number</p>
-            <p className="font-mono text-walnut font-semibold">{order.trackingNumber}</p>
+        {trackingNumber && (
+          <div className="bg-white border border-maple rounded-lg p-4 mb-6 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-sm text-slate">{carrier ? `${carrier} Tracking` : 'Tracking Number'}</p>
+              <p className="font-mono text-walnut font-semibold">{trackingNumber}</p>
+            </div>
+            {trackUrl && (
+              <a href={trackUrl} target="_blank" rel="noopener noreferrer"
+                className="bg-cherry text-white px-5 py-2 rounded font-semibold text-sm hover:bg-opacity-90 transition-colors whitespace-nowrap">
+                Track Package →
+              </a>
+            )}
           </div>
         )}
 
