@@ -11,6 +11,7 @@ create table if not exists orders (
   shipping_address jsonb not null default '{}',
   status text not null default 'pending',
   tracking_number text,
+  refunds jsonb not null default '[]',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -41,7 +42,34 @@ create table if not exists custom_orders (
   timeline text,
   reference_images jsonb default '[]',
   status text not null default 'new',  -- new | quoted | accepted | declined
+
   quote_amount numeric(10,2),
   notes text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists customers (
+  id uuid primary key default gen_random_uuid(),
+  email text unique not null,
+  name text,
+  phone text,
+  events jsonb not null default '[]',  -- CustomerEvent[]
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_customers_email on customers (email);
+
+create table if not exists promo_codes (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null,               -- e.g. SAVE10
+  description text,                        -- internal note
+  type text not null default 'percent',    -- percent | fixed
+  value numeric(10,2) not null,            -- 10 = 10% off, or $10 off
+  min_order numeric(10,2) default 0,       -- minimum order subtotal to apply
+  max_uses int,                            -- null = unlimited
+  uses int not null default 0,
+  active boolean not null default true,
+  expires_at timestamptz,
   created_at timestamptz not null default now()
 );

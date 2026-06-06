@@ -8,7 +8,7 @@ import { serif } from '@/controls/fonts'
 import { toast } from 'sonner'
 
 function computePrice(product: Product, selected: Record<string, string>): number {
-  let price = product.basePrice
+  let price = product.salePrice ?? product.basePrice
   for (const opt of product.options) {
     if (opt.type === 'text') {
       if (selected[opt.key] && selected[opt.key].trim()) price += opt.priceModifier ?? 0
@@ -115,7 +115,15 @@ export default function ProductDetail({ product }: { product: Product }) {
           ))}
 
           <div className="mt-8 flex items-center gap-6">
-            <span className={`text-3xl text-cherry font-bold ${serif.className}`}>${price}</span>
+            <div className="flex items-baseline gap-3">
+              {product.salePrice && (
+                <span className="inline-block bg-cherry text-white text-xs font-bold px-2 py-0.5 rounded">SALE</span>
+              )}
+              <span className={`text-3xl text-cherry font-bold ${serif.className}`}>${price}</span>
+              {product.salePrice && (
+                <span className="text-slate line-through text-lg">${price + (product.basePrice - product.salePrice)}</span>
+              )}
+            </div>
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
