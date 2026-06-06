@@ -1,6 +1,9 @@
 import { supabaseAdmin } from './supabase'
 import { upsertCustomer, logCustomerEvent } from './customers'
 import nodemailer from 'nodemailer'
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? 'sk_test_REPLACE_ME')
 
 /**
  * Idempotently finalize a paid order. Safe to call from both the Stripe
@@ -11,7 +14,7 @@ import nodemailer from 'nodemailer'
  * Returns { fulfilled: true } if this call performed the work, or
  * { fulfilled: false } if the order was already processed or not found.
  */
-export async function fulfillOrder(paymentIntentId: string, cartSessionId?: string) {
+export async function fulfillOrder(paymentIntentId: string, cartSessionId?: string, taxCalculationId?: string) {
   const db = supabaseAdmin()
 
   // Atomic claim: flip pending → processing only if still pending.
@@ -40,6 +43,19 @@ export async function fulfillOrder(paymentIntentId: string, cartSessionId?: stri
     `Order placed — $${order.total} (${order.items?.length ?? 0} item${order.items?.length !== 1 ? 's' : ''})`,
     { orderId: order.id, total: order.total }
   )
+
+  // Record the Stripe Tax transaction from the calculation (for tax reporting).
+  // Best-effort: never let a reporting hiccup affect order fulfillment.
+  if (taxCalculationId) {
+    try {
+      await stripe.tax.transactions.createFromCalculation({
+        calculation: taxCalculationId,
+        reference: order.id,
+      })
+    } catch (taxErr: any) {
+      console.error('Stripe Tax transaction recording failed:', taxErr.message)
+    }
+  }
 
   // Mark abandoned-cart session as recovered
   if (cartSessionId) {

@@ -22,6 +22,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: paymentIntent.status, fulfilled: false })
   }
 
-  const result = await fulfillOrder(pi, paymentIntent.metadata.cartSessionId || undefined)
+  const result = await fulfillOrder(pi, paymentIntent.metadata.cartSessionId || undefined, paymentIntent.metadata.taxCalculationId || undefined)
   return NextResponse.json({ status: 'succeeded', ...result })
 }

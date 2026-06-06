@@ -68,6 +68,7 @@ export default function CheckoutPage() {
   const [selectedRate, setSelectedRate] = useState<ShippingRate | null>(null)
   const [loadingRates, setLoadingRates] = useState(false)
   const [clientSecret, setClientSecret] = useState('')
+  const [tax, setTax] = useState(0)
   const [step, setStep] = useState<'address' | 'payment'>('address')
   const [promoInput, setPromoInput] = useState('')
   const [promo, setPromo] = useState<PromoResult | null>(null)
@@ -144,7 +145,7 @@ export default function CheckoutPage() {
       }),
     })
       .then(r => r.json())
-      .then(d => setClientSecret(d.clientSecret ?? ''))
+      .then(d => { setClientSecret(d.clientSecret ?? ''); setTax(d.tax ?? 0) })
   }, [step, selectedRate])
 
   function handleSuccess(piId: string) {
@@ -154,7 +155,7 @@ export default function CheckoutPage() {
     router.push(`/order/confirmation?pi=${piId}`)
   }
 
-  const total = discountedSubtotal + (selectedRate?.price ?? 0)
+  const total = discountedSubtotal + (selectedRate?.price ?? 0) + tax
 
   return (
     <main className="bg-parchment min-h-screen flex flex-col">
@@ -278,6 +279,9 @@ export default function CheckoutPage() {
                 </div>
               )}
               <div className="flex justify-between text-sm text-slate mb-1"><span>Shipping</span><span>${(selectedRate?.price ?? 0).toFixed(2)}</span></div>
+              {tax > 0 && (
+                <div className="flex justify-between text-sm text-slate mb-1"><span>Tax</span><span>${tax.toFixed(2)}</span></div>
+              )}
               <div className="border-t border-maple mt-2 pt-2 flex justify-between font-semibold text-walnut text-lg">
                 <span>Total</span><span>${total.toFixed(2)}</span>
               </div>

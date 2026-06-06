@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'payment_intent.succeeded') {
     const pi = event.data.object as Stripe.PaymentIntent
-    await fulfillOrder(pi.id, pi.metadata.cartSessionId || undefined)
+    await fulfillOrder(pi.id, pi.metadata.cartSessionId || undefined, pi.metadata.taxCalculationId || undefined)
   }
 
   return NextResponse.json({ received: true })
