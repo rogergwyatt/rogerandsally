@@ -1,12 +1,13 @@
 'use client'
 import Image from "next/image"
+import Link from "next/link"
 import {track} from "@vercel/analytics"
 
 export default function FooterSection(){
 
   const bookingURL = process.env.SITE_BOOKING_URL;
     return(
-  
+
         <div id="footerSection" className="w-full text-med">
             <div className="min-h-300">&nbsp;</div>
             <div id="footerWrapper" className="flex flex-wrap justify-center w-full">
@@ -32,6 +33,15 @@ export default function FooterSection(){
                     <div className="w-40 h-10 p-r-10 text-xl">
                         <a href="/#contactform" className=" hover:text-blue-300">contact us</a>
                     </div>
+                    <div className="w-40 h-10 p-r-10 text-xl">
+                        <Link href="/shop" className=" hover:text-blue-300">shop</Link>
+                    </div>
+                    <div className="w-40 h-10 p-r-10 text-xl">
+                        <Link href="/custom-order" className=" hover:text-blue-300">custom order</Link>
+                    </div>
+                    <div className="w-40 h-10 p-r-10 text-xl">
+                        <Link href="/cart" className=" hover:text-blue-300">cart</Link>
+                    </div>
                 </div>
                 <div id="footerContact" className="p-5 float-right" >
                     Roger &amp; Sally<br/>
@@ -39,11 +49,11 @@ export default function FooterSection(){
                     Midlothian, Va 23114<br/>
                     <a href="tel:+18044648162" className="hover:text-blue-300">(804) 464-8162</a><br/>
                     <br/>
-                    <a href="email:sales@rogerandsally.com" className="hover:text-blue-300">sales@rogerandsally.com</a>
+                    <a href="mailto:sales@rogerandsally.com" className="hover:text-blue-300">sales@rogerandsally.com</a>
                     <br/>
                 </div>
             </div>
         </div>
-      
+
     )
 }

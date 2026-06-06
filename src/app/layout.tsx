@@ -8,6 +8,7 @@ import { nanum } from '../controls/fonts'
 import GoogleAnalytics from "@/controls/googleAnalytics";
 import GoogleTagManager from "@/controls/googleTagManager";
 import HotJar from "@/controls/hotjar";
+import { CartProvider } from '@/context/CartContext';
 
 export const metadata: Metadata = {
   title: "Roger And Sally | Handcrafted Heritage Lock Wood Cutting Boards",
@@ -30,7 +31,9 @@ export default function RootLayout({
         <HotJar/>
        </head>
       <body className={nanum.variable}>
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
         </body>
     </html>
   );

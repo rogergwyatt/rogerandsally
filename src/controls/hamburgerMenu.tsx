@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import ConfigData from '@/controls/settings.json';
 import {track} from "@vercel/analytics";
+import CartIcon from './cartIcon';
 
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,6 +62,15 @@ return(
             </li>
             <li className="border-b border-gray-400 my-8 uppercase">
                 <a href="#contactus" onClick={handleClick}>Contact Us</a>
+            </li>
+            <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="/shop" onClick={handleClick}>Shop</a>
+            </li>
+            <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="/custom-order" onClick={handleClick}>Custom Order</a>
+            </li>
+            <li className="my-8">
+                <CartIcon />
             </li>
         </ul>
     </div>
