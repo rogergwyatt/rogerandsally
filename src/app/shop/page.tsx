@@ -51,12 +51,20 @@ export default function ShopPage() {
                 )}
               </div>
               <div className="p-5">
+                {product.salePrice && (
+                  <span className="inline-block bg-cherry text-white text-xs font-bold px-2 py-0.5 rounded mb-2">SALE</span>
+                )}
                 <h2 className={`text-xl text-walnut mb-1 ${serif.className}`}>{product.name}</h2>
                 <p className="text-slate text-sm mb-3">{product.tagline}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-cherry font-semibold text-lg">
-                    From ${product.basePrice}
-                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-cherry font-semibold text-lg">
+                      From ${product.salePrice ?? product.basePrice}
+                    </span>
+                    {product.salePrice && (
+                      <span className="text-slate line-through text-sm">${product.basePrice}</span>
+                    )}
+                  </div>
                   <span className="text-sm text-forest font-medium group-hover:underline">
                     View Options →
                   </span>

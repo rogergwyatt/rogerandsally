@@ -1,18 +1,19 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Order, OrderStatus } from '@/lib/types'
+import { Order, OrderStatus, RefundRecord } from '@/lib/types'
 import { serif } from '@/controls/fonts'
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
+  pending:    'bg-yellow-100 text-yellow-800',
   processing: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
+  shipped:    'bg-purple-100 text-purple-800',
+  delivered:  'bg-green-100 text-green-800',
+  cancelled:  'bg-red-100 text-red-800',
+  returned:   'bg-orange-100 text-orange-800',
 }
 
-const STATUSES: OrderStatus[] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+const STATUSES: OrderStatus[] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']
 
 export default function AdminOrdersClient() {
   const router = useRouter()
@@ -22,6 +23,8 @@ export default function AdminOrdersClient() {
   const [tracking, setTracking] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState<string | null>(null)
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all')
+  const [refundState, setRefundState] = useState<Record<string, { amount: string; reason: string; processing: boolean; error: string }>>({})
+  const [showRefund, setShowRefund] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/admin/orders')
@@ -49,25 +52,44 @@ export default function AdminOrdersClient() {
     setSaving(null)
   }
 
-  async function logout() {
-    await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) })
-    router.push('/admin/login')
+  async function processRefund(orderId: string, full: boolean, total: number) {
+    const state = refundState[orderId] ?? { amount: '', reason: '', processing: false, error: '' }
+    const amountCents = full ? undefined : Math.round(parseFloat(state.amount) * 100)
+    if (!full && (!amountCents || amountCents <= 0 || amountCents > total * 100)) {
+      setRefundState(r => ({ ...r, [orderId]: { ...state, error: `Enter a valid amount (max $${total.toFixed(2)})` } }))
+      return
+    }
+    setRefundState(r => ({ ...r, [orderId]: { ...state, processing: true, error: '' } }))
+    const res = await fetch('/api/admin/refund', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, full, amountCents, reason: state.reason || 'Customer return' }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setRefundState(r => ({ ...r, [orderId]: { ...state, processing: false, error: data.error ?? 'Refund failed' } }))
+      return
+    }
+    setOrders(prev => prev.map(o => o.id === orderId ? {
+      ...o,
+      status: data.newStatus,
+      ...(data.refund ? { refunds: [...((o as any).refunds ?? []), data.refund] } : {}),
+    } : o))
+    setRefundState(r => ({ ...r, [orderId]: { amount: '', reason: '', processing: false, error: '' } }))
+    setShowRefund(null)
   }
 
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter)
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-parchment text-slate">Loading orders…</div>
+  if (loading) return <div className="flex items-center justify-center h-64 text-slate">Loading orders…</div>
 
   return (
-    <main className="bg-parchment min-h-screen">
+    <div className="p-6 max-w-6xl">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className={`text-3xl text-walnut ${serif.className}`}>Orders</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate">{orders.length} total</span>
-            <button onClick={logout} className="text-sm text-slate hover:text-cherry underline">Sign out</button>
-          </div>
+          <span className="text-sm text-slate">{orders.length} total</span>
         </div>
 
         {/* Filter tabs */}
@@ -179,13 +201,85 @@ export default function AdminOrdersClient() {
                     >
                       Email customer
                     </a>
+                    {['delivered', 'shipped', 'processing', 'returned'].includes(order.status) && (
+                      <button
+                        type="button"
+                        onClick={() => setShowRefund(showRefund === order.id ? null : order.id)}
+                        className="text-sm text-orange-600 hover:underline"
+                      >
+                        {showRefund === order.id ? 'Cancel refund' : 'Issue refund'}
+                      </button>
+                    )}
                   </div>
+
+                  {/* Refund panel */}
+                  {showRefund === order.id && (
+                    <div className="mt-4 border-t border-maple pt-4">
+                      <h4 className="text-sm font-semibold text-walnut mb-3">Issue Refund</h4>
+                      <div className="flex flex-wrap gap-3 items-end">
+                        <div>
+                          <label className="block text-xs font-semibold text-walnut mb-1">Partial Amount ($)</label>
+                          <input
+                            type="number" min="0.01" step="0.01" max={order.total}
+                            placeholder={`Max $${order.total?.toFixed(2)}`}
+                            value={refundState[order.id]?.amount ?? ''}
+                            onChange={e => setRefundState(r => ({ ...r, [order.id]: { ...r[order.id] ?? { amount: '', reason: '', processing: false, error: '' }, amount: e.target.value } }))}
+                            className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry w-36"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-48">
+                          <label className="block text-xs font-semibold text-walnut mb-1">Reason</label>
+                          <input
+                            type="text" placeholder="e.g. Damaged in shipping"
+                            value={refundState[order.id]?.reason ?? ''}
+                            onChange={e => setRefundState(r => ({ ...r, [order.id]: { ...r[order.id] ?? { amount: '', reason: '', processing: false, error: '' }, reason: e.target.value } }))}
+                            className="w-full border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => processRefund(order.id, false, order.total)}
+                          disabled={refundState[order.id]?.processing}
+                          className="bg-orange-500 text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90 disabled:opacity-50"
+                        >
+                          {refundState[order.id]?.processing ? '…' : 'Partial Refund'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => processRefund(order.id, true, order.total)}
+                          disabled={refundState[order.id]?.processing}
+                          className="bg-red-600 text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90 disabled:opacity-50"
+                        >
+                          {refundState[order.id]?.processing ? '…' : `Full Refund ($${order.total?.toFixed(2)})`}
+                        </button>
+                      </div>
+                      {refundState[order.id]?.error && (
+                        <p className="text-red-600 text-xs mt-2">{refundState[order.id].error}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Refund history */}
+                  {((order as any).refunds ?? []).length > 0 && (
+                    <div className="mt-4 border-t border-maple pt-4">
+                      <h4 className="text-sm font-semibold text-walnut mb-2">Refund History</h4>
+                      {((order as any).refunds as RefundRecord[]).map((r, i) => (
+                        <div key={i} className="flex justify-between text-sm py-1 border-b border-maple last:border-0">
+                          <div className="text-slate">
+                            <span className="capitalize">{r.refundedBy}</span> refund · {r.reason}
+                            <span className="text-xs ml-2 text-slate/60">{new Date(r.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          <span className="text-orange-700 font-medium">−${r.amount.toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ))}
         </div>
       </div>
-    </main>
+    </div>
   )
 }

@@ -17,6 +17,7 @@ export interface Product {
   category: string
   options: ProductOption[]
   basePrice: number
+  salePrice?: number
   weightLbs: number
   dimensionsInches: { length: number; width: number; height: number }
   featured: boolean
@@ -36,7 +37,37 @@ export interface Cart {
   email?: string
 }
 
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned'
+
+export type CustomerEventType = 'note' | 'order' | 'refund' | 'custom_order' | 'email'
+
+export interface CustomerEvent {
+  type: CustomerEventType
+  text: string
+  metadata?: Record<string, unknown>
+  createdAt: string
+}
+
+export interface Customer {
+  id: string
+  email: string
+  name?: string
+  phone?: string
+  events: CustomerEvent[]
+  created_at: string
+  // computed
+  orderCount?: number
+  totalSpend?: number
+  lastOrderAt?: string
+}
+
+export interface RefundRecord {
+  stripeRefundId: string
+  amount: number
+  reason: string
+  createdAt: string
+  refundedBy: 'full' | 'partial'
+}
 
 export interface Order {
   id: string

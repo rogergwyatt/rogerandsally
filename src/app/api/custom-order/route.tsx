@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { upsertCustomer, logCustomerEvent } from '@/lib/customers'
 import nodemailer from 'nodemailer'
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,10 @@ export async function POST(req: NextRequest) {
     }).select('id').single()
 
     if (error) throw error
+
+    // Capture customer
+    await upsertCustomer({ email, name, phone })
+    await logCustomerEvent(email, 'custom_order', `Custom order request — ${woodPreference ?? 'wood TBD'}, budget: ${budget ?? 'TBD'}`, { customOrderId: data?.id, description })
 
     // Notify site owner
     const transporter = nodemailer.createTransport({
