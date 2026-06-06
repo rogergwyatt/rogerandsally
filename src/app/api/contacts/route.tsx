@@ -1,50 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ReadableStream } from "stream/web";
-
-import {SWRConfig, useSWRConfig} from 'swr';
-import useSWR from 'swr';
-import { QueryResultRow, sql } from "@vercel/postgres";
-import {headers} from 'next/headers';
-
+import { sql } from "@vercel/postgres";
+import { headers } from 'next/headers';
 
 export async function POST(req: NextRequest) {
-  const params:any = await req.json();
+  const params = await req.json();
+  const apikey = headers().get('Authorization');
 
-  const headersList = headers();
-  const referer = headersList.get('referer');
-  const apikey = headersList.get('Authorization');
-  console.log("header apikey");
-  console.log(apikey);
-
-  var outrows = {};
-  var result = {};
-  if(apikey == 'Bearer b51f0783-421b-4f8d-9966-996360f4428d'){
-    const { rows } = await sql`select * from contacts where ${params.email}  in (select email from contacts)`;
-    if (rows.length == 0) {
-        await sql `insert into contacts (name, email) values (${params.name}, ${params.email})`;
-    };
-    result = {success:true}
-  } else {
-    result = {success:false}
+  if (apikey !== 'Bearer ' + process.env.CONTACTS_API_KEY) {
+    return NextResponse.json({ success: false }, { status: 401 });
   }
-  console.log("API response");
-  console.log(result);
-  return NextResponse.json(result);
-};
+
+  const { rows } = await sql`SELECT * FROM contacts WHERE ${params.email} IN (SELECT email FROM contacts)`;
+  if (rows.length === 0) {
+    await sql`INSERT INTO contacts (name, email) VALUES (${params.name}, ${params.email})`;
+  }
+
+  return NextResponse.json({ success: true });
+}
 
 export async function GET(req: NextRequest) {
-  const headersList = headers();
-  const referer = headersList.get('referer');
-  const apikey = headersList.get('Authorization');
-  var result = {};
+  const apikey = headers().get('Authorization');
 
-  if(apikey == 'Bearer '+process.env.HPC_API){
-      console.log(apikey + ' != ' + 'Bearer '+process.env.HPC_API);
-      const { rows } = await sql`select * from contacts`;
-      result = {success:true, rows};
-  }else{
-    result = {success:false, rows:[]};
+  if (apikey !== 'Bearer ' + process.env.HPC_API) {
+    return NextResponse.json({ success: false, rows: [] }, { status: 401 });
   }
-  return NextResponse.json(result);
-};
 
+  const { rows } = await sql`SELECT * FROM contacts`;
+  return NextResponse.json({ success: true, rows });
+}

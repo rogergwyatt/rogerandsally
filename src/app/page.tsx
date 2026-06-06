@@ -3,12 +3,10 @@ import AboutUs from "@/controls/aboutus";
 import ContactForm from "@/controls/contactform";
 import HeroArea from "@/controls/heroarea";
 import SectionSplitArea from "@/controls/sectionSplitArea";
-import { sofadi, nanum, sans, serif } from '../controls/fonts'
-import { Toaster, toast } from 'sonner';
+import { sans, serif } from '../controls/fonts'
+import { Toaster } from 'sonner';
 import TopSection from "@/controls/topSection";
 import FooterSection from "@/controls/footerSection";
-import {cookies} from 'next/headers';
-import NewsFeed from "@/controls/news";
 import Products from "@/controls/products";
 import TreeIcon from "@/controls/treeIcon";
 import MountainIcon from "@/controls/mountainIco";
@@ -18,40 +16,29 @@ import Gallery from "@/controls/gallery";
 
 
 export default function Home() {
-  const bookingURL = process.env.SITE_BOOKING_URL;
-  var showModal = true;
-
-  const cookiehandler = cookies();
-  var emailmember = cookiehandler.get('emailmember');
-  var kitchenShineUpShown = cookiehandler.get('kitchenShineUpShown');
-  var fallSpecialShown = cookiehandler.get('fallSpecialShown');
-  console.log(emailmember);
-
-
-
   return (
     <main className={"bg-parchment flex flex-col items-center justify-between p-0 " + sans.className}>
       <Toaster richColors/>
       <TopSection/>
       <HeroArea />
-      <div id="contentBody" className="w-full items center justify between content-center">
-        <div className="items center justify-center content-center mx-auto">
-          <div className={"w-full  text-l lg:text-5xl text-center mb-3 lg:mb-10 mt-3 "+serif.className}>
+      <div id="contentBody" className="w-full items-center justify-between content-center">
+        <div className="items-center justify-center content-center mx-auto">
+          <div className={"w-full text-lg lg:text-5xl text-center mb-3 lg:mb-10 mt-3 " + serif.className}>
             Forty Years of Code. A Lifetime of Craft.
           </div>
         </div>
-        <div className="lg:w-[60%] items center justify-center content-center mx-auto">
-          <div className="w-full ">
+        <div className="lg:w-[60%] items-center justify-center content-center mx-auto">
+          <div className="w-full">
             <div className="w-full center p-2 text-center mr-5">
               <div className="min-h-52 text-small lg:text-3xl">
-                <span className="font-bold hidden lg:block"><span className={serif.className}>
+                <span className={"font-bold hidden lg:block " + serif.className}>
                   We hand-pick every board and lock every edge. Discover heirloom-quality cutting boards and home goods, engineered in Virginia and built for a lifetime of service.
-                </span></span>
-                <span className="font-bold block lg:hidden text-md serif.className">
+                </span>
+                <span className="font-bold block lg:hidden text-md">
                   We hand-pick every board and lock every edge. Discover heirloom-quality cutting boards and home goods, engineered in Virginia and built for a lifetime of service.
                 </span>
                 <br/>
-                <div className="items items-center text-left text-small lg:text-xl block lg:grid lg:grid-flow-col lg:grid-rows-1 lg:grid-cols-3 gap-4">
+                <div className="items-center text-left text-small lg:text-xl block lg:grid lg:grid-flow-col lg:grid-rows-1 lg:grid-cols-3 gap-4">
                   <div className="mt-2 lg:mt-5 lg:w-[300px]">
                     <div className="text-center align-center bg-cherry text-walnut p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <TreeIcon/><br/>
@@ -59,14 +46,14 @@ export default function Home() {
                       We don't buy pallets. Roger personally selects every piece of Walnut, Cherry, and Maple for its unique character and structural integrity.
                     </div>
                   </div>
-                  <div className="mt-2 lg:mt-5  lg:w-[300px]">
+                  <div className="mt-2 lg:mt-5 lg:w-[300px]">
                     <div className="text-center align-center bg-maple text-walnut p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <GearIcon/><br/>
                       <span className="font-bold">The Heritage Lock</span><br/>
                       Our signature blind and through dowel joinery mechanically anchors the edges of every board, preventing the splits and separations common in standard glue-only boards.
                     </div>
                   </div>
-                  <div className="mt-2 lg:mt-5  lg:w-[300px]">
+                  <div className="mt-2 lg:mt-5 lg:w-[300px]">
                     <div className="text-center align-center bg-walnut text-maple p-4 rounded-xl border-4 border-black lg:h-[500px]">
                       <MountainIcon/><br/>
                       <span className="font-bold">Built for the Future</span><br/>
@@ -82,23 +69,16 @@ export default function Home() {
           <a id="gallery"/>
           <Gallery/>
           <a id="products"/>
-          <Products/>     
+          <Products/>
           <a id="aboutus"/>
           <AboutUs/>
         </div>
       <SectionSplitArea/>
       <a id="contactform"/>
-      <div className="lg:w-[60%] items center justify-center content-center mx-auto">
+      <div className="lg:w-[60%] items-center justify-center content-center mx-auto">
         <div id="contactUsSection" className="w-full">
-          <div className="font-bold text-xl lg:text-5xl text-center"> 
-            <span className="hidden lg:block">      
-              <span className={serif.className}>
-                Contact Us
-              </span>
-            </span>
-            <span className="block lg:hidden">   
-                Contact Us
-            </span>
+          <div className={"font-bold text-xl lg:text-5xl text-center " + serif.className}>
+            Contact Us
           </div>
           <ContactForm/>
         </div>

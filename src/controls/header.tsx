@@ -5,7 +5,6 @@ import Navigation from "./navigation";
 import {track} from "@vercel/analytics";
 
 export default function Header(){
-    const bookingURL = process.env.SITE_BOOKING_URL;
     return(
         <div id="header" className="text-med flex justify-center">
             <div className="justify-left flex md:hidden lg:hidden mr-5">

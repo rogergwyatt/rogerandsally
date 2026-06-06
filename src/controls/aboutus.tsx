@@ -5,15 +5,8 @@ export default function AboutUs() {
 
     return(
         <div className="md:w-[90%] lg:w-[90%] w-[400px]  mr-5">
-            <div className="w-full text-lg lg:text-5xl text-center justify-center mb-2 lg:mb-5">
-                <span className="hidden lg:block">
-                    <span className={serif.className }>
-                        <b>From High-Tech to High-Timber</b>
-                    </span>
-                </span>
-                <span className="block lg:hidden">
-                    <span className="text-xl font-bold serif.className">From High-Tech to High-Timber</span>
-                </span>
+            <div className={"w-full font-bold text-lg lg:text-5xl text-center justify-center mb-2 lg:mb-5 " + serif.className}>
+                From High-Tech to High-Timber
             </div>
             <div className="md:w-full lg:w-full w-[400px] items center mx-2 lg:mx-0">
                 <div className=" lg:flex  flex-none float-none md:float-left lg:float-left mr-5 mb-5">

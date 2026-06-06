@@ -15,7 +15,6 @@ export default function HamburgerMenu() {
   const open2Class = isOpen ? 'opacity-0' : 'opacity-100';
   const open3Class = isOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5';
 
-  const bookingURL = process.env.SITE_BOOKING_URL;
 return(
 <div>
     <div className="mh-50">
