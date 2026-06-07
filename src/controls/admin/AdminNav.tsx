@@ -7,6 +7,7 @@ import Image from 'next/image'
 const links = [
   { href: '/admin', label: 'Dashboard', icon: '▦' },
   { href: '/admin/orders', label: 'Orders', icon: '📦' },
+  { href: '/admin/custom-orders', label: 'Custom Orders', icon: '🪵' },
   { href: '/admin/customers', label: 'Customers', icon: '👤' },
   { href: '/admin/promo', label: 'Promo Codes', icon: '🏷️' },
 ]
