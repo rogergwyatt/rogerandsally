@@ -197,7 +197,7 @@
     ],
     "basePrice": 190,
     "weightLbs": 1.5,
-    "dimensionsInches": { "length": 18, "width": 12, "height": 1.5 },
+    "dimensionsInches": { "length": 20 , "width": 10, "height": 1.5 },
     "featured": false,
     "inStock": true
   }
