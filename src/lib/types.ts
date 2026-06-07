@@ -37,7 +37,43 @@ export interface Cart {
   email?: string
 }
 
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned'
+export type OrderStatus =
+  | 'pending'
+  | 'processing'
+  | 'being_crafted'
+  | 'ready_to_ship'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'returned'
+
+// All statuses in lifecycle order (cancelled/returned are terminal off-ramps).
+export const ORDER_STATUSES: OrderStatus[] = [
+  'pending', 'processing', 'being_crafted', 'ready_to_ship', 'shipped', 'delivered', 'cancelled', 'returned',
+]
+
+// Human labels — statuses are stored as snake_case machine values.
+export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  pending: 'Pending',
+  processing: 'Processing',
+  being_crafted: 'Being Crafted',
+  ready_to_ship: 'Ready to Ship',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  returned: 'Returned',
+}
+
+export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
+  pending: 'bg-yellow-100 text-yellow-800',
+  processing: 'bg-blue-100 text-blue-800',
+  being_crafted: 'bg-amber-100 text-amber-800',
+  ready_to_ship: 'bg-teal-100 text-teal-800',
+  shipped: 'bg-purple-100 text-purple-800',
+  delivered: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800',
+  returned: 'bg-orange-100 text-orange-800',
+}
 
 export type CustomerEventType = 'note' | 'order' | 'refund' | 'custom_order' | 'email'
 

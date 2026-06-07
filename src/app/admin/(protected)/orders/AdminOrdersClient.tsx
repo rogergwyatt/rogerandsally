@@ -1,20 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Order, OrderStatus, RefundRecord } from '@/lib/types'
+import { Order, OrderStatus, RefundRecord, ORDER_STATUSES, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types'
 import { serif } from '@/controls/fonts'
 import { splitOptions } from '@/lib/orderOptions'
 
-const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending:    'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped:    'bg-purple-100 text-purple-800',
-  delivered:  'bg-green-100 text-green-800',
-  cancelled:  'bg-red-100 text-red-800',
-  returned:   'bg-orange-100 text-orange-800',
-}
-
-const STATUSES: OrderStatus[] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']
+const STATUS_COLORS = ORDER_STATUS_COLORS
+const STATUSES = ORDER_STATUSES
 
 export default function AdminOrdersClient() {
   const router = useRouter()
@@ -119,8 +111,8 @@ export default function AdminOrdersClient() {
         <div className="flex gap-2 mb-6 flex-wrap">
           {(['all', ...STATUSES] as const).map(s => (
             <button key={s} onClick={() => setFilter(s)}
-              className={`px-3 py-1 rounded text-sm capitalize transition-colors ${filter === s ? 'bg-cherry text-white' : 'bg-white border border-maple text-slate hover:border-cherry'}`}>
-              {s} {s !== 'all' && `(${orders.filter(o => o.status === s).length})`}
+              className={`px-3 py-1 rounded text-sm transition-colors ${filter === s ? 'bg-cherry text-white' : 'bg-white border border-maple text-slate hover:border-cherry'}`}>
+              {s === 'all' ? 'All' : `${ORDER_STATUS_LABELS[s]} (${orders.filter(o => o.status === s).length})`}
             </button>
           ))}
         </div>
@@ -140,8 +132,8 @@ export default function AdminOrdersClient() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <span className="font-mono text-sm text-walnut">{order.id.slice(0, 8)}…</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${STATUS_COLORS[order.status]}`}>
-                      {order.status}
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[order.status]}`}>
+                      {ORDER_STATUS_LABELS[order.status]}
                     </span>
                   </div>
                   <div className="text-sm text-slate mt-1 truncate">{order.email}</div>
@@ -216,7 +208,7 @@ export default function AdminOrdersClient() {
                         onChange={e => updateOrder(order.id, e.target.value as OrderStatus)}
                         className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry"
                       >
-                        {STATUSES.map(s => <option key={s} value={s} className="capitalize">{s}</option>)}
+                        {STATUSES.map(s => <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>)}
                       </select>
                     </div>
                     <div className="flex-1 min-w-48">
@@ -268,7 +260,7 @@ export default function AdminOrdersClient() {
                     >
                       Email customer
                     </a>
-                    {['delivered', 'shipped', 'processing', 'returned'].includes(order.status) && (
+                    {['processing', 'being_crafted', 'ready_to_ship', 'shipped', 'delivered', 'returned'].includes(order.status) && (
                       <button
                         type="button"
                         onClick={() => setShowRefund(showRefund === order.id ? null : order.id)}

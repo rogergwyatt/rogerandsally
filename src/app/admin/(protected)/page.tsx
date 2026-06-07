@@ -3,15 +3,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { serif } from '@/controls/fonts'
+import { ORDER_STATUSES, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, OrderStatus } from '@/lib/types'
 
-const STATUS_COLORS: Record<string, string> = {
-  pending:    'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped:    'bg-purple-100 text-purple-800',
-  delivered:  'bg-green-100 text-green-800',
-  cancelled:  'bg-red-100 text-red-800',
-  returned:   'bg-orange-100 text-orange-800',
-}
+const STATUS_COLORS = ORDER_STATUS_COLORS
 
 function StatCard({ label, value, sub, color = 'text-walnut' }: { label: string; value: string | number; sub?: string; color?: string }) {
   return (
@@ -58,12 +52,12 @@ export default function AdminDashboard() {
       </div>
 
       {/* Order status breakdown */}
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-        {(['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'] as const).map(s => (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        {ORDER_STATUSES.map(s => (
           <Link key={s} href="/admin/orders"
             className="bg-white border border-maple rounded-lg p-3 text-center hover:border-cherry transition-colors">
             <p className="text-2xl font-bold text-walnut">{statusCounts[s] ?? 0}</p>
-            <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[s]}`}>{s}</span>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[s]}`}>{ORDER_STATUS_LABELS[s]}</span>
           </Link>
         ))}
       </div>
@@ -87,7 +81,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-walnut">${Number(order.total).toFixed(2)}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[order.status] ?? ''}`}>{order.status}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[order.status as OrderStatus] ?? ''}`}>{ORDER_STATUS_LABELS[order.status as OrderStatus] ?? order.status}</span>
                   </div>
                 </div>
               ))}
