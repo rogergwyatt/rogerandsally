@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Order, OrderStatus, RefundRecord } from '@/lib/types'
 import { serif } from '@/controls/fonts'
+import { splitOptions } from '@/lib/orderOptions'
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending:    'bg-yellow-100 text-yellow-800',
@@ -163,9 +164,17 @@ export default function AdminOrdersClient() {
                       {order.items?.map((item, i) => (
                         <div key={i} className="text-sm text-slate mb-2 pl-2 border-l-2 border-maple">
                           <div>{item.product.name} × {item.quantity} — ${(item.unitPrice * item.quantity).toFixed(2)}</div>
-                          {Object.entries(item.selectedOptions).map(([k, v]) =>
-                            v ? <div key={k} className="text-xs">{k}: {v}</div> : null
-                          )}
+                          {splitOptions(item.selectedOptions).text.map(({ key, value }) => (
+                            <div key={key} className="text-xs">{key}: {value}</div>
+                          ))}
+                          {splitOptions(item.selectedOptions).graphics.map((url, gi) => (
+                            <div key={gi} className="text-xs">
+                              graphic:{' '}
+                              <a href={url} target="_blank" rel="noopener noreferrer" className="text-forest font-semibold hover:underline">
+                                Download to engrave ↓
+                              </a>
+                            </div>
+                          ))}
                         </div>
                       ))}
                       <div className="text-sm mt-2 space-y-0.5">

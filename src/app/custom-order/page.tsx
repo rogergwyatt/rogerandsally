@@ -4,6 +4,7 @@ import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
 import { toast } from 'sonner'
+import GraphicUpload from '@/controls/GraphicUpload'
 
 const WOOD_OPTIONS = ['Walnut', 'Cherry', 'Maple', 'Mixed / Surprise me', 'Not sure yet']
 const BUDGET_OPTIONS = ['Under $100', '$100–$200', '$200–$400', '$400+', 'Not sure — give me a quote']
@@ -18,6 +19,7 @@ export default function CustomOrderPage() {
     budget: '',
     timeline: '',
   })
+  const [referenceImages, setReferenceImages] = useState<string[]>([])
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -31,7 +33,7 @@ export default function CustomOrderPage() {
     const res = await fetch('/api/custom-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, referenceImages }),
     })
     if (res.ok) {
       setSubmitted(true)
@@ -120,6 +122,14 @@ export default function CustomOrderPage() {
               <input value={form.dimensions} onChange={e => set('dimensions', e.target.value)}
                 placeholder='e.g. "12" × 18"" or "about the size of a laptop"'
                 className="w-full border border-maple rounded px-3 py-2 focus:outline-none focus:border-cherry bg-parchment" />
+            </div>
+
+            <div className="space-y-2">
+              <GraphicUpload
+                label="Reference image or graphic (optional)"
+                value={referenceImages[0]}
+                onChange={url => setReferenceImages(url ? [url] : [])}
+              />
             </div>
           </div>
 

@@ -2,6 +2,7 @@ import { supabaseAdmin } from './supabase'
 import { upsertCustomer, logCustomerEvent } from './customers'
 import nodemailer from 'nodemailer'
 import Stripe from 'stripe'
+import { splitOptions } from './orderOptions'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? 'sk_test_REPLACE_ME')
 
@@ -83,7 +84,8 @@ async function sendConfirmationEmail(order: any) {
         <td style="padding: 8px 0; border-bottom: 1px solid #e6ded1; color: #5a5a5a;">
           ${item.product?.name ?? 'Item'} × ${item.quantity}
           <div style="font-size: 12px; color: #999; margin-top: 2px;">
-            ${Object.entries(item.selectedOptions ?? {}).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(' · ')}
+            ${splitOptions(item.selectedOptions).text.map(o => `${o.key}: ${o.value}`).join(' · ')}
+            ${splitOptions(item.selectedOptions).graphics.map(u => ` · <a href="${u}" style="color:#a64b29;">engraving graphic</a>`).join('')}
           </div>
         </td>
         <td style="padding: 8px 0; border-bottom: 1px solid #e6ded1; text-align: right; color: #2d241e; font-weight: 600;">
