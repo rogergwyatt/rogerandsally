@@ -36,7 +36,7 @@ export default function AdminDashboard() {
 
   if (loading) return <div className="flex items-center justify-center h-64 text-slate">Loading…</div>
 
-  const { totalRevenue, todayRevenue, totalOrders, todayOrders, statusCounts, abandonedCarts, promoCodes, customerCount } = data
+  const { totalRevenue, todayRevenue, totalOrders, todayOrders, statusCounts, abandonedCarts, promoCodes, customerCount, newCustomOrders } = data
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
@@ -48,12 +48,13 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <StatCard label="Revenue Today" value={`$${todayRevenue.toFixed(2)}`} sub={`${todayOrders.length} order${todayOrders.length !== 1 ? 's' : ''}`} color="text-cherry" />
         <StatCard label="Total Revenue" value={`$${totalRevenue.toFixed(2)}`} sub={`${totalOrders} orders all time`} />
         <StatCard label="Abandoned Carts" value={abandonedCarts.length} sub="with email — eligible for recovery" color={abandonedCarts.length > 0 ? 'text-cherry' : 'text-walnut'} />
         <StatCard label="Active Promo Codes" value={promoCodes.length} sub="running now" />
         <StatCard label="Total Customers" value={customerCount} sub={<><a href="/admin/customers" className="text-forest hover:underline">view all →</a></>  as any} />
+        <StatCard label="New Custom Orders" value={newCustomOrders} sub={<><a href="/admin/custom-orders" className="text-forest hover:underline">review →</a></> as any} color={newCustomOrders > 0 ? 'text-cherry' : 'text-walnut'} />
       </div>
 
       {/* Order status breakdown */}
