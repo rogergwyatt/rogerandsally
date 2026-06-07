@@ -167,6 +167,11 @@ export default function AdminOrdersClient() {
                               </a>
                             </div>
                           ))}
+                          {splitOptions(item.selectedOptions).notes && (
+                            <div className="text-xs mt-1 text-walnut bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                              <span className="font-semibold">Engraving placement:</span> {splitOptions(item.selectedOptions).notes}
+                            </div>
+                          )}
                         </div>
                       ))}
                       <div className="text-sm mt-2 space-y-0.5">

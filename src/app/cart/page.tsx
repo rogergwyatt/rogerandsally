@@ -56,6 +56,9 @@ export default function CartPage() {
                       <a href={url} target="_blank" rel="noopener noreferrer" className="text-forest hover:underline">view</a>
                     </div>
                   ))}
+                  {splitOptions(item.selectedOptions).notes && (
+                    <div>engraving placement: {splitOptions(item.selectedOptions).notes}</div>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-3">

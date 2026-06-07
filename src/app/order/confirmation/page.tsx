@@ -145,6 +145,9 @@ function ConfirmationContent() {
                       <a href={splitOptions(item.selectedOptions).graphics[0]} target="_blank" rel="noopener noreferrer" className="text-forest hover:underline">view</a>
                     </>
                   )}
+                  {splitOptions(item.selectedOptions).notes && (
+                    <div>Engraving placement: {splitOptions(item.selectedOptions).notes}</div>
+                  )}
                 </div>
               </div>
               <span className="text-walnut font-medium whitespace-nowrap">
