@@ -91,7 +91,9 @@ create table if not exists drop_items (
   drop_id uuid not null references drops(id) on delete cascade,
   name text not null,
   description text,
-  image_url text,
+  image_url text,                          -- primary/first photo (card thumbnail)
+  image_urls jsonb not null default '[]',  -- all photos, in display order
+  video_url text,                          -- optional self-hosted MP4 (Vercel Blob)
   price numeric(10,2) not null,
   quantity int not null default 1,         -- batch size (1 = one-of-a-kind)
   sold int not null default 0,
@@ -102,3 +104,7 @@ create table if not exists drop_items (
 );
 
 create index if not exists idx_drop_items_drop on drop_items (drop_id);
+
+-- Migration for tables created before multi-photo / video support:
+alter table drop_items add column if not exists image_urls jsonb not null default '[]';
+alter table drop_items add column if not exists video_url text;

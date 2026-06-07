@@ -25,11 +25,14 @@ export async function POST(req: NextRequest) {
   }
 
   if (body.kind === 'item') {
+    const imageUrls: string[] = Array.isArray(body.image_urls) ? body.image_urls : []
     const { data, error } = await db.from('drop_items').insert({
       drop_id: body.drop_id,
       name: body.name,
       description: body.description ?? null,
-      image_url: body.image_url ?? null,
+      image_urls: imageUrls,
+      image_url: imageUrls[0] ?? body.image_url ?? null,
+      video_url: body.video_url ?? null,
       price: Number(body.price),
       quantity: Number(body.quantity) || 1,
       allow_engraving: body.allow_engraving ?? true,
@@ -61,8 +64,13 @@ export async function PATCH(req: NextRequest) {
 
   if (body.kind === 'item') {
     const update: Record<string, unknown> = {}
-    for (const f of ['name', 'description', 'image_url', 'allow_engraving']) {
+    for (const f of ['name', 'description', 'video_url', 'allow_engraving']) {
       if (body[f] !== undefined) update[f] = body[f]
+    }
+    if (body.image_urls !== undefined) {
+      const arr: string[] = Array.isArray(body.image_urls) ? body.image_urls : []
+      update.image_urls = arr
+      update.image_url = arr[0] ?? null
     }
     if (body.price !== undefined) update.price = Number(body.price)
     if (body.quantity !== undefined) update.quantity = Number(body.quantity)

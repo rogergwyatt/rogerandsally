@@ -4,13 +4,20 @@ import { Product, DropItem } from './types'
 // checkout. The id is prefixed "drop:" so order fulfillment can recognize it
 // and decrement inventory.
 export function dropItemToProduct(item: DropItem): Product {
+  const images =
+    item.image_urls && item.image_urls.length
+      ? item.image_urls
+      : item.image_url
+        ? [item.image_url]
+        : []
   return {
     id: `drop:${item.id}`,
     slug: `drop-${item.id}`,
     name: item.name,
     tagline: 'Limited release',
     description: item.description ?? '',
-    images: item.image_url ? [item.image_url] : [],
+    images,
+    video: item.video_url || undefined,
     category: 'drop',
     options: item.allow_engraving
       ? [{ name: 'Personalization', key: 'personalization', type: 'text', placeholder: 'Enter text to engrave (optional)', priceModifier: 0 }]

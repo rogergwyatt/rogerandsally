@@ -41,9 +41,16 @@ export default function ProductDetail({ product, isDrop = false }: { product: Pr
   const { addItem } = useCart()
   const router = useRouter()
   const [selected, setSelected] = useState<Record<string, string>>(defaultSelections(product))
-  const [activeImage, setActiveImage] = useState(0)
+  const [activeMedia, setActiveMedia] = useState(0)
   const [added, setAdded] = useState(false)
   const [uploading, setUploading] = useState(false)
+
+  // Combined media list: photos first, then an optional video.
+  const media: { type: 'image' | 'video'; src: string }[] = [
+    ...product.images.map(src => ({ type: 'image' as const, src })),
+    ...(product.video ? [{ type: 'video' as const, src: product.video }] : []),
+  ]
+  const active = media[activeMedia]
 
   const price = computePrice(product, selected)
 
@@ -68,25 +75,36 @@ export default function ProductDetail({ product, isDrop = false }: { product: Pr
   return (
     <div className="max-w-5xl mx-auto w-full px-4 py-12 flex-1">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Images */}
+        {/* Media (photos + optional video) */}
         <div>
           <div className="relative h-96 bg-maple rounded-lg overflow-hidden mb-3">
-            {product.images[activeImage] ? (
-              <Image src={product.images[activeImage]} alt={product.name} fill className="object-cover" />
+            {active ? (
+              active.type === 'video' ? (
+                <video src={active.src} controls playsInline className="w-full h-full object-cover" />
+              ) : (
+                <Image src={active.src} alt={product.name} fill className="object-cover" />
+              )
             ) : (
               <div className="flex items-center justify-center h-full text-slate">No image yet</div>
             )}
           </div>
-          {product.images.length > 1 && (
-            <div className="flex gap-2">
-              {product.images.map((img, i) => (
+          {media.length > 1 && (
+            <div className="flex gap-2 flex-wrap">
+              {media.map((m, i) => (
                 <button
                   type="button"
                   key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={`relative h-20 w-20 rounded overflow-hidden border-2 ${i === activeImage ? 'border-cherry' : 'border-maple'}`}
+                  onClick={() => setActiveMedia(i)}
+                  className={`relative h-20 w-20 rounded overflow-hidden border-2 ${i === activeMedia ? 'border-cherry' : 'border-maple'}`}
                 >
-                  <Image src={img} alt="" fill className="object-cover" />
+                  {m.type === 'video' ? (
+                    <>
+                      <video src={m.src} muted playsInline className="w-full h-full object-cover" />
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-lg">▶</span>
+                    </>
+                  ) : (
+                    <Image src={m.src} alt="" fill className="object-cover" />
+                  )}
                 </button>
               ))}
             </div>

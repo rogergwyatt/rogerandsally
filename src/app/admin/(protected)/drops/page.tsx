@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { serif } from '@/controls/fonts'
 import GraphicUpload from '@/controls/GraphicUpload'
+import VideoUpload from '@/controls/VideoUpload'
 
 const STATUS_COLORS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700',
@@ -24,6 +25,24 @@ export default function DropsAdminPage() {
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
   const [itemDraft, setItemDraft] = useState<Record<string, any>>({})
+  const [mediaBusy, setMediaBusy] = useState(false)
+
+  function patchDraft(dropId: string, patch: any) {
+    setItemDraft(s => ({ ...s, [dropId]: { ...s[dropId], ...patch } }))
+  }
+  function addPhoto(dropId: string, url?: string) {
+    if (!url) return
+    setItemDraft(s => {
+      const cur = s[dropId]?.image_urls ?? []
+      return { ...s, [dropId]: { ...s[dropId], image_urls: [...cur, url] } }
+    })
+  }
+  function removePhoto(dropId: string, idx: number) {
+    setItemDraft(s => {
+      const cur: string[] = s[dropId]?.image_urls ?? []
+      return { ...s, [dropId]: { ...s[dropId], image_urls: cur.filter((_, i) => i !== idx) } }
+    })
+  }
 
   function load() {
     fetch('/api/admin/drops')
@@ -155,9 +174,36 @@ export default function DropsAdminPage() {
                   Allow engraving
                 </label>
               </div>
-              <GraphicUpload label="Board photo" value={itemDraft[drop.id]?.image_url}
-                onChange={url => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], image_url: url } }))} />
-              <button onClick={() => addItem(drop.id)} className="bg-forest text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90">Add Board</button>
+              {/* Photos (multiple) */}
+              <div>
+                <p className="text-xs font-semibold text-walnut mb-1">Board photos</p>
+                {(itemDraft[drop.id]?.image_urls ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {(itemDraft[drop.id]?.image_urls ?? []).map((url: string, i: number) => (
+                      <div key={i} className="relative h-16 w-16 rounded overflow-hidden border border-maple">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt="" className="h-full w-full object-cover" />
+                        <button onClick={() => removePhoto(drop.id, i)}
+                          className="absolute top-0 right-0 bg-walnut/80 text-white text-xs w-5 h-5 leading-5 text-center">×</button>
+                        {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-cherry text-white text-[9px] text-center">cover</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <GraphicUpload label="Add a photo" value={undefined}
+                  onUploadingChange={setMediaBusy}
+                  onChange={url => addPhoto(drop.id, url)} />
+              </div>
+
+              {/* Video */}
+              <VideoUpload label="Board video (optional)" value={itemDraft[drop.id]?.video_url}
+                onUploadingChange={setMediaBusy}
+                onChange={url => patchDraft(drop.id, { video_url: url })} />
+
+              <button onClick={() => addItem(drop.id)} disabled={mediaBusy}
+                className="bg-forest text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90 disabled:opacity-50">
+                {mediaBusy ? 'Uploading…' : 'Add Board'}
+              </button>
             </div>
           </div>
         ))}

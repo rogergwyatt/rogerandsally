@@ -14,6 +14,7 @@ export interface Product {
   tagline: string
   description: string
   images: string[]
+  video?: string
   category: string
   options: ProductOption[]
   basePrice: number
@@ -151,6 +152,8 @@ export interface DropItem {
   name: string
   description?: string
   image_url?: string
+  image_urls?: string[]
+  video_url?: string
   price: number
   quantity: number
   sold: number
