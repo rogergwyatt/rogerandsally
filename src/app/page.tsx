@@ -23,9 +23,12 @@ export default function Home() {
       <HeroArea />
       <div id="contentBody" className="w-full items-center justify-between content-center">
         <div className="items-center justify-center content-center mx-auto">
-          <div className={"w-full text-lg lg:text-5xl text-center mb-3 lg:mb-10 mt-3 " + serif.className}>
+          <h1 className={"w-full text-2xl lg:text-5xl text-center text-walnut mt-3 mb-1 " + serif.className}>
+            Handcrafted Heritage Lock Cutting &amp; Charcuterie Boards
+          </h1>
+          <p className={"w-full text-lg lg:text-3xl text-center text-slate italic mb-3 lg:mb-10 " + serif.className}>
             Forty Years of Code. A Lifetime of Craft.
-          </div>
+          </p>
         </div>
         <div className="lg:w-[60%] items-center justify-center content-center mx-auto">
           <div className="w-full">

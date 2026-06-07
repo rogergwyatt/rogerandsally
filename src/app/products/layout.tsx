@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: "Hand-picked Walnut, Cherry, and Maple cutting boards featuring our signature Heritage Lock joinery. Built for a lifetime of service by Roger &amp; Sally",
   keywords: "handcrafted cutting boards, walnut butcher block, heritage lock joinery, live edge spalted maple, personalized wedding gifts, custom wood coasters, Virginia woodworking, heirloom quality kitchenware, cherry wood charcuterie board, handmade wood gifts",
   metadataBase: new URL(`https://www.rogerandsally.com`),
-  alternates: {
-      canonical: './news',
-  }
+  // Legacy product pages superseded by /shop — keep them out of the index to
+  // avoid duplicate content (links still followed through to /shop).
+  robots: { index: false, follow: true },
 };
 
 export default function RootLayout({
