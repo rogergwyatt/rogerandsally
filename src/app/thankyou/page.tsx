@@ -1,62 +1,43 @@
-"use client"
-import { useState, useEffect } from 'react'
-
-import { sofadi, nanum } from '@/controls/fonts'
-
-import { Toaster, toast } from 'sonner';
-import { useSearchParams } from 'next/navigation'
+'use client'
 import { Suspense } from 'react'
-import Script from 'next/script';
-import FooterSection from '@/controls/footerSection';
-import TopSection from '@/controls/topSection';
+import { useSearchParams } from 'next/navigation'
+import TopSection from '@/controls/topSection'
+import FooterSection from '@/controls/footerSection'
+import { serif } from '@/controls/fonts'
 
+function ThankYouContent() {
+  const searchParams = useSearchParams()
+  const email = searchParams.get('email_address')
+  const phone = searchParams.get('phone_number')
 
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center py-24 text-center px-4">
+      <div className="text-5xl mb-6">✉️</div>
+      <h1 className={`text-4xl text-walnut mb-4 ${serif.className}`}>Thank You!</h1>
+      <p className="text-slate text-lg max-w-md">
+        Thank you for contacting us — we'll respond shortly.
+        {(phone || email) && (
+          <>
+            <br />
+            We'll reach you{phone ? ` by phone at ${phone}` : ''}
+            {phone && email ? ' or' : ''}
+            {email ? ` at ${email}` : ''}.
+          </>
+        )}
+      </p>
+      <a href="/shop" className="mt-8 text-forest hover:underline text-sm">Browse the shop →</a>
+    </div>
+  )
+}
 
 export default function Page() {
-  
-        const bookingURL = process.env.SITE_BOOKING_URL;
-        const [email, setEmail] = useState<any>('');
-        const [phone_number, setPhoneNumber] = useState<any>('');
-
-
-        function SearchParms(){
-
-          const searchParams = useSearchParams();
-          setPhoneNumber(searchParams.get('phone_number'));
-          setEmail(searchParams.get('email_address'));
-
-          return(<div></div>);
-        }
-
-        return (
-          <main className={"flex min-h-screen flex-col items-center  p-0 " + nanum.className}>
-            <Suspense>
-              <SearchParms/>
-            </Suspense>
-            <Toaster richColors/>
-            <a id="top"/>
-            <TopSection/>
-
-            <div id="contentBody" className="z-50 w-full max-w-max items justify between content-center">
-                <div className="lg:w-full items justify-center content-center mx-auto">
-                    <div className = "flex-none">
-                      <div className="flex w-full max-w-fullx text-3xl font-bold justify-center mb-3 mt-10">
-                        Thank You!
-                      </div>
-                      <div className="block  w-full max-w-fullx text-l text-center">
-                        Thank you for contacting us! We will respond shortly.<br/>
-                        We will contact you by phone at {phone_number} or at your email {email}
-                      </div>
-                    </div>
-                    
-                </div>
-            </div>        
-
-      <div className="lg:w-[60%] items center justify-center content-center mx-auto">
-          <FooterSection/>
-      </div>
-
-    <div className="min-w-full min-h-10 bg-blue-900 flex px-10 py-2 justify-between">&nbsp;</div>
+  return (
+    <main className="bg-parchment min-h-screen flex flex-col">
+      <TopSection />
+      <Suspense fallback={<div className="flex-1 flex items-center justify-center text-slate">Loading…</div>}>
+        <ThankYouContent />
+      </Suspense>
+      <FooterSection />
     </main>
-    )
-  }
+  )
+}
