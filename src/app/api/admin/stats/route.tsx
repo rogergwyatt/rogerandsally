@@ -17,6 +17,7 @@ export async function GET() {
     { data: promoCodes },
     { data: revenueData },
     { count: customerCount },
+    { count: newCustomOrders },
   ] = await Promise.all([
     db.from('orders').select('id, status').neq('status', 'cancelled'),
     db.from('orders').select('*').gte('created_at', todayISO).order('created_at', { ascending: false }),
@@ -24,6 +25,7 @@ export async function GET() {
     db.from('promo_codes').select('*').eq('active', true).order('created_at', { ascending: false }),
     db.from('orders').select('total').neq('status', 'cancelled'),
     db.from('customers').select('*', { count: 'exact', head: true }),
+    db.from('custom_orders').select('*', { count: 'exact', head: true }).eq('status', 'new'),
   ])
 
   const totalRevenue = (revenueData ?? []).reduce((sum, o) => sum + Number(o.total ?? 0), 0)
@@ -43,5 +45,6 @@ export async function GET() {
     abandonedCarts: abandonedCarts ?? [],
     promoCodes: promoCodes ?? [],
     customerCount: customerCount ?? 0,
+    newCustomOrders: newCustomOrders ?? 0,
   })
 }

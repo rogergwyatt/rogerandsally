@@ -21,6 +21,8 @@ export default function CustomOrdersPage() {
   const [filter, setFilter] = useState<COStatus | 'all'>('all')
   const [draft, setDraft] = useState<Record<string, { quote: string; notes: string }>>({})
   const [saving, setSaving] = useState<string | null>(null)
+  const [sendingQuote, setSendingQuote] = useState<string | null>(null)
+  const [quoteMsg, setQuoteMsg] = useState<Record<string, string>>({})
 
   function load() {
     fetch('/api/admin/custom-orders')
@@ -43,6 +45,21 @@ export default function CustomOrdersPage() {
       ...(patch.notes !== undefined ? { notes: patch.notes } : {}),
     } : o))
     setSaving(null)
+  }
+
+  async function sendQuote(id: string, quote: string, message: string) {
+    if (!quote) { alert('Enter a quote amount first.'); return }
+    setSendingQuote(id)
+    const res = await fetch('/api/admin/custom-orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, quoteAmount: quote, message }),
+    })
+    const data = await res.json()
+    setSendingQuote(null)
+    if (!res.ok) { alert(data.error ?? 'Failed to send quote'); return }
+    setItems(prev => prev.map(o => o.id === id ? { ...o, quote_amount: Number(quote), status: 'quoted' } : o))
+    alert('Quote emailed to the customer.')
   }
 
   if (loading) return <div className="flex items-center justify-center h-64 text-slate">Loading…</div>
@@ -147,6 +164,22 @@ export default function CustomOrdersPage() {
                       {saving === co.id ? '…' : 'Save'}
                     </button>
                     <a href={`mailto:${co.email}?subject=Your Roger %26 Sally custom order`} className="text-sm text-forest hover:underline">Email</a>
+                  </div>
+
+                  {/* Send quote */}
+                  <div className="pt-3 border-t border-maple">
+                    <label className="block text-xs font-semibold text-walnut mb-1">Quote message to customer (optional)</label>
+                    <textarea rows={2}
+                      value={quoteMsg[co.id] ?? ''}
+                      onChange={e => setQuoteMsg(p => ({ ...p, [co.id]: e.target.value }))}
+                      placeholder="A note to include with the quote email…"
+                      className="w-full border border-maple rounded px-3 py-2 text-sm bg-white focus:outline-none focus:border-cherry resize-none mb-2" />
+                    <button onClick={() => sendQuote(co.id, d.quote, quoteMsg[co.id] ?? '')}
+                      disabled={sendingQuote === co.id}
+                      className="bg-cherry text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90 disabled:opacity-50">
+                      {sendingQuote === co.id ? 'Sending…' : `Email Quote${d.quote ? ` ($${Number(d.quote).toFixed(2)})` : ''}`}
+                    </button>
+                    <span className="text-xs text-slate ml-3">Emails the customer the quote above and marks this “quoted”.</span>
                   </div>
                 </div>
               )}
