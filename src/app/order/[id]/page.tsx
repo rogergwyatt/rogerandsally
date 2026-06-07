@@ -9,10 +9,12 @@ import { serif } from '@/controls/fonts'
 // never be served from a stale cache.
 export const dynamic = 'force-dynamic'
 
-const STATUS_STEPS = ['pending', 'processing', 'shipped', 'delivered']
+const STATUS_STEPS = ['pending', 'processing', 'being_crafted', 'ready_to_ship', 'shipped', 'delivered']
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Order Received',
-  processing: 'Being Crafted',
+  processing: 'Processing',
+  being_crafted: 'Being Crafted',
+  ready_to_ship: 'Ready to Ship',
   shipped: 'Shipped',
   delivered: 'Delivered',
 }

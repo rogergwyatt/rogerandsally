@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { serif } from '@/controls/fonts'
-import { Customer, CustomerEvent } from '@/lib/types'
+import { Customer, CustomerEvent, OrderStatus, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types'
 
 const EVENT_ICONS: Record<string, string> = {
   order: '📦',
@@ -188,12 +188,9 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-semibold text-walnut">${Number(order.total).toFixed(2)}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${
-                        order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
-                        order.status === 'returned' ? 'bg-orange-100 text-orange-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>{order.status}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${ORDER_STATUS_COLORS[order.status as OrderStatus] ?? 'bg-blue-100 text-blue-800'}`}>
+                        {ORDER_STATUS_LABELS[order.status as OrderStatus] ?? order.status}
+                      </span>
                     </div>
                   </div>
                 ))}

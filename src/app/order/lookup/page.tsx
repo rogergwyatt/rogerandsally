@@ -4,22 +4,10 @@ import Link from 'next/link'
 import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
+import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types'
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Order Received',
-  processing: 'Being Crafted',
-  shipped: 'Shipped',
-  delivered: 'Delivered',
-  cancelled: 'Cancelled',
-}
-
-const STATUS_COLORS: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-}
+const STATUS_LABELS = ORDER_STATUS_LABELS
+const STATUS_COLORS = ORDER_STATUS_COLORS
 
 export default function OrderLookupPage() {
   const [email, setEmail] = useState('')
@@ -88,8 +76,8 @@ export default function OrderLookupPage() {
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-walnut mb-2">${Number(order.total).toFixed(2)}</div>
-                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-700'}`}>
-                        {STATUS_LABELS[order.status] ?? order.status}
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${(STATUS_COLORS as Record<string, string>)[order.status] ?? 'bg-gray-100 text-gray-700'}`}>
+                        {(STATUS_LABELS as Record<string, string>)[order.status] ?? order.status}
                       </span>
                     </div>
                   </div>
