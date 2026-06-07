@@ -30,8 +30,8 @@ export default function Page() {
               "/images/IMG_3662.jpeg",
               "/images/IMG_3673.jpeg"
             ],
-            name: "Walnut Standard Board",
-            description: "Beautiful walnut standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
+            name: "Walnut Heritage Board",
+            description: "Beautiful walnut Heritage line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "from 9x6 to 12x18 and custom",
             price: "From $100"
         },
@@ -40,8 +40,8 @@ export default function Page() {
               "/images/MapleCherryMountains.jpg",
               "/images/IMG_3662.jpeg"
             ],
-            name: "Maple Standard Board",
-            description: "Beautiful cherry standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
+            name: "Maple Heritage Board",
+            description: "Beautiful cherry Heritage line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "from 9x6 to 12x18 and custom",
             price: "From $90"
         },
@@ -50,8 +50,8 @@ export default function Page() {
               "/images/CherryWithGrooveNoText.jpg",
               "/images/CherryStillLife.jpg"
             ],
-            name: "Cherry Standard Board",
-            description: "Beautiful cherry standard line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
+            name: "Cherry Heritage Board",
+            description: "Beautiful cherry Heritage line board that features our Heritage Lock and is between 1.25 and 2 inches thick. Brass feet are added to the bottom to product your counter tops. Each board is unique, but you can make it even more unique with laser engraving.",
             sizes: "from 9x6 to 12x18 and custom",
             price: "From $80"
         },
@@ -60,7 +60,7 @@ export default function Page() {
               "/images/MapleCherryMountains.jpg",
               "/images/IMG_3662.jpeg"
             ],
-            name: "Mixed Species Standard Board",
+            name: "Mixed Species Heritage Board",
             description: "Want something really special, try mixing woods together such as Maple/Cherry or Walnut/Maple. Each still comes with our Heritage Lock.",
             sizes: "custom",
             price: "call"
@@ -79,12 +79,12 @@ export default function Page() {
                 <div className="flex w-full max-w-fullx text-3xl font-bold justify-center mb-3 mt-10">
                   <div className="text-5xl">
                     <span className={serif.className}>
-                      Standard Boards
+                      Heritage Boards
                     </span>
                   </div>
                 </div>
                 <div className={"text-3xl "+serif.className}>
-                    Our standard boards are between 1.25 and 2 inches thick. They all feature the Heritage Lock in a complimentary wood species. Juice groove and laser engraving are optional and great touches to add.
+                    Our Heritage boards are between 1.25 and 2 inches thick. They all feature the Heritage Lock in a complimentary wood species. Juice groove and laser engraving are optional and great touches to add.
                 </div>
                 <div className="justify-center ">
                       {
