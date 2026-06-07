@@ -116,6 +116,13 @@ export default function ProductDetail({ product, isDrop = false }: { product: Pr
           <h1 className={`text-3xl lg:text-4xl text-walnut mb-2 ${serif.className}`}>{product.name}</h1>
           <p className="text-slate mb-4">{product.description}</p>
 
+          {product.dimensionsInches && (product.dimensionsInches.length || product.dimensionsInches.width || product.dimensionsInches.height) ? (
+            <p className="text-sm text-walnut mb-4">
+              <span className="font-semibold">Dimensions:</span>{' '}
+              {product.dimensionsInches.length}″ L × {product.dimensionsInches.width}″ W × {product.dimensionsInches.height}″ thick
+            </p>
+          ) : null}
+
           {product.options.map((opt: ProductOption) => (
             <div key={opt.key} className="mb-5">
               <label className="block text-walnut font-semibold mb-2">{opt.name}</label>

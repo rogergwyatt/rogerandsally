@@ -98,6 +98,11 @@ create table if not exists drop_items (
   quantity int not null default 1,         -- batch size (1 = one-of-a-kind)
   sold int not null default 0,
   allow_engraving boolean not null default true,
+  length_in numeric(6,2),                  -- board dimensions
+  width_in numeric(6,2),
+  thickness_in numeric(6,2),
+  juice_groove_available boolean not null default true,  -- false = N/A for this board
+  juice_groove_price numeric(10,2) not null default 0,   -- upcharge to add a groove
   weight_lbs numeric(6,2) default 3,
   sort_order int not null default 0,
   created_at timestamptz not null default now()
@@ -108,3 +113,8 @@ create index if not exists idx_drop_items_drop on drop_items (drop_id);
 -- Migration for tables created before multi-photo / video support:
 alter table drop_items add column if not exists image_urls jsonb not null default '[]';
 alter table drop_items add column if not exists video_url text;
+alter table drop_items add column if not exists length_in numeric(6,2);
+alter table drop_items add column if not exists width_in numeric(6,2);
+alter table drop_items add column if not exists thickness_in numeric(6,2);
+alter table drop_items add column if not exists juice_groove_available boolean not null default true;
+alter table drop_items add column if not exists juice_groove_price numeric(10,2) not null default 0;

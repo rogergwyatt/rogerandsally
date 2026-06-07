@@ -174,6 +174,36 @@ export default function DropsAdminPage() {
                   Allow engraving
                 </label>
               </div>
+
+              {/* Dimensions (inches) */}
+              <div>
+                <p className="text-xs font-semibold text-walnut mb-1">Dimensions (inches)</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <input type="number" min="0" step="0.25" placeholder="Length" value={itemDraft[drop.id]?.length_in ?? ''} onChange={e => patchDraft(drop.id, { length_in: e.target.value })}
+                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+                  <input type="number" min="0" step="0.25" placeholder="Width" value={itemDraft[drop.id]?.width_in ?? ''} onChange={e => patchDraft(drop.id, { width_in: e.target.value })}
+                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+                  <input type="number" min="0" step="0.125" placeholder="Thickness" value={itemDraft[drop.id]?.thickness_in ?? ''} onChange={e => patchDraft(drop.id, { thickness_in: e.target.value })}
+                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+                </div>
+              </div>
+
+              {/* Juice groove */}
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-2 text-sm text-slate">
+                  <input type="checkbox" checked={itemDraft[drop.id]?.juice_groove_available ?? true} onChange={e => patchDraft(drop.id, { juice_groove_available: e.target.checked })} className="accent-cherry" />
+                  Offer juice groove
+                </label>
+                {(itemDraft[drop.id]?.juice_groove_available ?? true) && (
+                  <div className="flex items-center gap-1 text-sm text-slate">
+                    <span>Upcharge $</span>
+                    <input type="number" min="0" step="0.01" placeholder="0.00" value={itemDraft[drop.id]?.juice_groove_price ?? ''} onChange={e => patchDraft(drop.id, { juice_groove_price: e.target.value })}
+                      className="w-24 border border-maple rounded px-2 py-1 text-sm bg-white focus:outline-none focus:border-cherry" />
+                    <span className="text-xs text-slate">(0 = free)</span>
+                  </div>
+                )}
+              </div>
+
               {/* Photos (multiple) */}
               <div>
                 <p className="text-xs font-semibold text-walnut mb-1">Board photos</p>
