@@ -6,12 +6,20 @@ import { Product, ProductOption } from '@/lib/types'
 import { useCart } from '@/context/CartContext'
 import { serif } from '@/controls/fonts'
 import { toast } from 'sonner'
+import GraphicUpload from '@/controls/GraphicUpload'
+
+// Graphic URL for a text (personalization) option is stored under this key.
+const graphicKey = (optKey: string) => `${optKey}_graphic`
 
 function computePrice(product: Product, selected: Record<string, string>): number {
   let price = product.salePrice ?? product.basePrice
   for (const opt of product.options) {
     if (opt.type === 'text') {
-      if (selected[opt.key] && selected[opt.key].trim()) price += opt.priceModifier ?? 0
+      // Personalization charge applies once if EITHER engraved text OR an
+      // uploaded graphic is present — never doubled.
+      const hasText = !!selected[opt.key]?.trim()
+      const hasGraphic = !!selected[graphicKey(opt.key)]
+      if (hasText || hasGraphic) price += opt.priceModifier ?? 0
     } else {
       const choice = opt.choices?.find(c => c.label === selected[opt.key])
       if (choice) price += choice.priceModifier
@@ -93,13 +101,24 @@ export default function ProductDetail({ product }: { product: Product }) {
             <div key={opt.key} className="mb-5">
               <label className="block text-walnut font-semibold mb-2">{opt.name}</label>
               {opt.type === 'text' ? (
-                <input
-                  type="text"
-                  placeholder={opt.placeholder}
-                  value={selected[opt.key] ?? ''}
-                  onChange={e => handleOption(opt.key, e.target.value)}
-                  className="w-full border border-maple rounded px-3 py-2 text-slate focus:outline-none focus:border-cherry bg-white"
-                />
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder={opt.placeholder}
+                    value={selected[opt.key] ?? ''}
+                    onChange={e => handleOption(opt.key, e.target.value)}
+                    className="w-full border border-maple rounded px-3 py-2 text-slate focus:outline-none focus:border-cherry bg-white"
+                  />
+                  <GraphicUpload
+                    value={selected[graphicKey(opt.key)] || undefined}
+                    onChange={url => handleOption(graphicKey(opt.key), url ?? '')}
+                  />
+                  {opt.priceModifier ? (
+                    <p className="text-xs text-slate">
+                      Personalization (text and/or graphic): +${opt.priceModifier} — charged once.
+                    </p>
+                  ) : null}
+                </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {opt.choices?.map(choice => (

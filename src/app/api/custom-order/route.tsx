@@ -50,6 +50,9 @@ export async function POST(req: NextRequest) {
         <p><strong>Timeline:</strong> ${timeline || 'not specified'}</p>
         <p><strong>Description:</strong></p>
         <blockquote style="border-left: 3px solid #a64b29; padding-left: 16px; color: #5a5a5a;">${description}</blockquote>
+        ${(referenceImages ?? []).length
+          ? `<p><strong>Reference image(s):</strong> ${(referenceImages as string[]).map((u, i) => `<a href="${u}">image ${i + 1}</a>`).join(' · ')}</p>`
+          : ''}
         <p><a href="https://www.rogerandsally.com/admin/orders">View Admin Dashboard</a></p>
       `,
     }).catch(console.error)

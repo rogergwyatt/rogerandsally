@@ -6,6 +6,7 @@ import Image from 'next/image'
 import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
+import { splitOptions } from '@/lib/orderOptions'
 
 export default function CartPage() {
   const { cart, removeItem, updateQuantity, subtotal } = useCart()
@@ -46,9 +47,15 @@ export default function CartPage() {
               <div className="flex-1">
                 <h2 className={`text-lg text-walnut ${serif.className}`}>{item.product.name}</h2>
                 <div className="text-sm text-slate mt-1 space-y-0.5">
-                  {Object.entries(item.selectedOptions).map(([k, v]) =>
-                    v ? <div key={k}><span className="capitalize">{k}:</span> {v}</div> : null
-                  )}
+                  {splitOptions(item.selectedOptions).text.map(({ key, value }) => (
+                    <div key={key}><span className="capitalize">{key}:</span> {value}</div>
+                  ))}
+                  {splitOptions(item.selectedOptions).graphics.map((url, i) => (
+                    <div key={i}>
+                      <span className="capitalize">graphic:</span>{' '}
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-forest hover:underline">view</a>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-3">

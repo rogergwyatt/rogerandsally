@@ -6,6 +6,7 @@ import { serif } from '@/controls/fonts'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { splitOptions } from '@/lib/orderOptions'
 
 const LEAD_TIME = process.env.NEXT_PUBLIC_LEAD_TIME ?? '3–4 weeks'
 
@@ -138,10 +139,12 @@ function ConfirmationContent() {
               <div className="text-slate">
                 <span className="text-walnut">{item.product?.name}</span> × {item.quantity}
                 <div className="text-xs mt-0.5">
-                  {Object.entries(item.selectedOptions ?? {})
-                    .filter(([, v]) => v)
-                    .map(([k, v]) => `${k}: ${v}`)
-                    .join(' · ')}
+                  {splitOptions(item.selectedOptions).text.map(o => `${o.key}: ${o.value}`).join(' · ')}
+                  {splitOptions(item.selectedOptions).graphics.length > 0 && (
+                    <> · graphic:{' '}
+                      <a href={splitOptions(item.selectedOptions).graphics[0]} target="_blank" rel="noopener noreferrer" className="text-forest hover:underline">view</a>
+                    </>
+                  )}
                 </div>
               </div>
               <span className="text-walnut font-medium whitespace-nowrap">
