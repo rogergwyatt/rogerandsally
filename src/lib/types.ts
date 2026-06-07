@@ -14,6 +14,7 @@ export interface Product {
   tagline: string
   description: string
   images: string[]
+  video?: string
   category: string
   options: ProductOption[]
   basePrice: number
@@ -133,4 +134,31 @@ export interface ShippingRate {
   displayName: string
   price: number
   estimatedDays: string
+}
+
+export interface Drop {
+  id: string
+  title: string
+  description?: string
+  status: 'draft' | 'live' | 'ended'
+  release_at?: string | null
+  created_at: string
+  items?: DropItem[]
+}
+
+export interface DropItem {
+  id: string
+  drop_id: string
+  name: string
+  description?: string
+  image_url?: string
+  image_urls?: string[]
+  video_url?: string
+  price: number
+  quantity: number
+  sold: number
+  allow_engraving: boolean
+  weight_lbs?: number
+  sort_order: number
+  created_at: string
 }

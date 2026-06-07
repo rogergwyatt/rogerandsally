@@ -3,6 +3,7 @@ import { upsertCustomer, logCustomerEvent } from './customers'
 import nodemailer from 'nodemailer'
 import Stripe from 'stripe'
 import { splitOptions } from './orderOptions'
+import { dropItemIdFromProductId } from './dropProduct'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? 'sk_test_REPLACE_ME')
 
@@ -56,6 +57,21 @@ export async function fulfillOrder(paymentIntentId: string, cartSessionId?: stri
       })
     } catch (taxErr: any) {
       console.error('Stripe Tax transaction recording failed:', taxErr.message)
+    }
+  }
+
+  // Decrement drop inventory for any limited-release items in the order.
+  for (const item of (order.items ?? [])) {
+    const dropItemId = dropItemIdFromProductId(item.product?.id ?? '')
+    if (!dropItemId) continue
+    try {
+      const { data: di } = await db.from('drop_items').select('sold, quantity').eq('id', dropItemId).single()
+      if (di) {
+        const newSold = Math.min(di.quantity, (di.sold ?? 0) + (item.quantity ?? 1))
+        await db.from('drop_items').update({ sold: newSold }).eq('id', dropItemId)
+      }
+    } catch (e: any) {
+      console.error('Drop inventory update failed:', e.message)
     }
   }
 

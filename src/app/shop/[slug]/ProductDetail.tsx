@@ -37,13 +37,20 @@ function defaultSelections(product: Product): Record<string, string> {
   return sel
 }
 
-export default function ProductDetail({ product }: { product: Product }) {
+export default function ProductDetail({ product, isDrop = false }: { product: Product; isDrop?: boolean }) {
   const { addItem } = useCart()
   const router = useRouter()
   const [selected, setSelected] = useState<Record<string, string>>(defaultSelections(product))
-  const [activeImage, setActiveImage] = useState(0)
+  const [activeMedia, setActiveMedia] = useState(0)
   const [added, setAdded] = useState(false)
   const [uploading, setUploading] = useState(false)
+
+  // Combined media list: photos first, then an optional video.
+  const media: { type: 'image' | 'video'; src: string }[] = [
+    ...product.images.map(src => ({ type: 'image' as const, src })),
+    ...(product.video ? [{ type: 'video' as const, src: product.video }] : []),
+  ]
+  const active = media[activeMedia]
 
   const price = computePrice(product, selected)
 
@@ -68,25 +75,36 @@ export default function ProductDetail({ product }: { product: Product }) {
   return (
     <div className="max-w-5xl mx-auto w-full px-4 py-12 flex-1">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Images */}
+        {/* Media (photos + optional video) */}
         <div>
           <div className="relative h-96 bg-maple rounded-lg overflow-hidden mb-3">
-            {product.images[activeImage] ? (
-              <Image src={product.images[activeImage]} alt={product.name} fill className="object-cover" />
+            {active ? (
+              active.type === 'video' ? (
+                <video src={active.src} controls playsInline className="w-full h-full object-cover" />
+              ) : (
+                <Image src={active.src} alt={product.name} fill className="object-cover" />
+              )
             ) : (
               <div className="flex items-center justify-center h-full text-slate">No image yet</div>
             )}
           </div>
-          {product.images.length > 1 && (
-            <div className="flex gap-2">
-              {product.images.map((img, i) => (
+          {media.length > 1 && (
+            <div className="flex gap-2 flex-wrap">
+              {media.map((m, i) => (
                 <button
                   type="button"
                   key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={`relative h-20 w-20 rounded overflow-hidden border-2 ${i === activeImage ? 'border-cherry' : 'border-maple'}`}
+                  onClick={() => setActiveMedia(i)}
+                  className={`relative h-20 w-20 rounded overflow-hidden border-2 ${i === activeMedia ? 'border-cherry' : 'border-maple'}`}
                 >
-                  <Image src={img} alt="" fill className="object-cover" />
+                  {m.type === 'video' ? (
+                    <>
+                      <video src={m.src} muted playsInline className="w-full h-full object-cover" />
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-lg">▶</span>
+                    </>
+                  ) : (
+                    <Image src={m.src} alt="" fill className="object-cover" />
+                  )}
                 </button>
               ))}
             </div>
@@ -169,14 +187,21 @@ export default function ProductDetail({ product }: { product: Product }) {
               disabled={!product.inStock || uploading}
               className={`flex-1 text-white py-3 px-6 rounded font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${added ? 'bg-forest hover:bg-opacity-90' : 'bg-cherry hover:bg-opacity-90'}`}
             >
-              {!product.inStock ? 'Out of Stock' : uploading ? 'Uploading…' : added ? 'Go to Cart →' : 'Add to Cart'}
+              {!product.inStock ? (isDrop ? 'Sold' : 'Out of Stock') : uploading ? 'Uploading…' : added ? 'Go to Cart →' : 'Add to Cart'}
             </button>
           </div>
 
-          <div className="mt-6 bg-maple rounded-lg px-4 py-3 text-sm text-walnut flex items-center gap-2">
-            <span>🕐</span>
-            <span>Made to order — currently booking <strong>{process.env.NEXT_PUBLIC_LEAD_TIME ?? '3–4 weeks'}</strong> out.</span>
-          </div>
+          {isDrop ? (
+            <div className="mt-6 bg-forest text-white rounded-lg px-4 py-3 text-sm flex items-center gap-2">
+              <span>✦</span>
+              <span><strong>Limited release</strong> — ready to ship. Once it's gone, it's gone.</span>
+            </div>
+          ) : (
+            <div className="mt-6 bg-maple rounded-lg px-4 py-3 text-sm text-walnut flex items-center gap-2">
+              <span>🕐</span>
+              <span>Made to order — currently booking <strong>{process.env.NEXT_PUBLIC_LEAD_TIME ?? '3–4 weeks'}</strong> out.</span>
+            </div>
+          )}
           <a href="/shop" className="inline-block mt-4 text-sm text-forest hover:underline">← Back to Shop</a>
         </div>
       </div>
