@@ -75,3 +75,30 @@ create table if not exists promo_codes (
   expires_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+-- Product drops: a limited batch released together as a sales tool.
+create table if not exists drops (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text,
+  status text not null default 'draft',   -- draft | live | ended
+  release_at timestamptz,                  -- null or past = visible now; future = scheduled
+  created_at timestamptz not null default now()
+);
+
+create table if not exists drop_items (
+  id uuid primary key default gen_random_uuid(),
+  drop_id uuid not null references drops(id) on delete cascade,
+  name text not null,
+  description text,
+  image_url text,
+  price numeric(10,2) not null,
+  quantity int not null default 1,         -- batch size (1 = one-of-a-kind)
+  sold int not null default 0,
+  allow_engraving boolean not null default true,
+  weight_lbs numeric(6,2) default 3,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_drop_items_drop on drop_items (drop_id);

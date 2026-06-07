@@ -5,11 +5,14 @@ import Image from 'next/image'
 import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
+import DropsSection from '@/controls/DropsSection'
 
 export const metadata = {
   title: 'Shop | Roger & Sally',
   description: 'Hand-crafted Heritage Lock cutting boards, charcuterie boards, and coasters.',
 }
+
+export const dynamic = 'force-dynamic'
 
 export default function ShopPage() {
   return (
@@ -31,6 +34,9 @@ export default function ShopPage() {
             Need something custom? →
           </a>
         </div>
+        <DropsSection />
+
+        <h2 className={`text-2xl lg:text-3xl text-walnut text-center mb-6 ${serif.className}`}>Our Catalog</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {(products as Product[]).map(product => (
             <Link

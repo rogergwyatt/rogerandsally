@@ -37,7 +37,7 @@ function defaultSelections(product: Product): Record<string, string> {
   return sel
 }
 
-export default function ProductDetail({ product }: { product: Product }) {
+export default function ProductDetail({ product, isDrop = false }: { product: Product; isDrop?: boolean }) {
   const { addItem } = useCart()
   const router = useRouter()
   const [selected, setSelected] = useState<Record<string, string>>(defaultSelections(product))
@@ -169,14 +169,21 @@ export default function ProductDetail({ product }: { product: Product }) {
               disabled={!product.inStock || uploading}
               className={`flex-1 text-white py-3 px-6 rounded font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${added ? 'bg-forest hover:bg-opacity-90' : 'bg-cherry hover:bg-opacity-90'}`}
             >
-              {!product.inStock ? 'Out of Stock' : uploading ? 'Uploading…' : added ? 'Go to Cart →' : 'Add to Cart'}
+              {!product.inStock ? (isDrop ? 'Sold' : 'Out of Stock') : uploading ? 'Uploading…' : added ? 'Go to Cart →' : 'Add to Cart'}
             </button>
           </div>
 
-          <div className="mt-6 bg-maple rounded-lg px-4 py-3 text-sm text-walnut flex items-center gap-2">
-            <span>🕐</span>
-            <span>Made to order — currently booking <strong>{process.env.NEXT_PUBLIC_LEAD_TIME ?? '3–4 weeks'}</strong> out.</span>
-          </div>
+          {isDrop ? (
+            <div className="mt-6 bg-forest text-white rounded-lg px-4 py-3 text-sm flex items-center gap-2">
+              <span>✦</span>
+              <span><strong>Limited release</strong> — ready to ship. Once it's gone, it's gone.</span>
+            </div>
+          ) : (
+            <div className="mt-6 bg-maple rounded-lg px-4 py-3 text-sm text-walnut flex items-center gap-2">
+              <span>🕐</span>
+              <span>Made to order — currently booking <strong>{process.env.NEXT_PUBLIC_LEAD_TIME ?? '3–4 weeks'}</strong> out.</span>
+            </div>
+          )}
           <a href="/shop" className="inline-block mt-4 text-sm text-forest hover:underline">← Back to Shop</a>
         </div>
       </div>
