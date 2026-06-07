@@ -1,8 +1,8 @@
 [
   {
-    "id": "standard-cutting-board",
-    "slug": "standard-cutting-board",
-    "name": "Standard Cutting Board",
+    "id": "heritage-lock-cutting-board",
+    "slug": "heritage-lock-cutting-board",
+    "name": "Heritage Lock Cutting Board",
     "tagline": "Our signature joinery, built for a lifetime of service.",
     "description": "Hand-crafted with our signature Heritage Lock joinery, these cutting boards are built to last generations. Each board is individually selected, joined, and finished by hand in Virginia. Available in Walnut, Cherry, Maple, and mixed combinations.",
     "images": [
@@ -150,85 +150,4 @@
     "dimensionsInches": { "length": 18, "width": 12, "height": 0.75 },
     "featured": true,
     "inStock": true
-  },
-  {
-    "id": "spalted-silver-maple-charcuterie-board",
-    "slug": "spalted-silver-maple-charcuterie-board",
-    "name": "Spalted Silver Maple Charcuterie Board",
-    "tagline": "One-of-a-kind spalted silver maple charcuterie board",
-    "description": "From a special purchase, this spalted silver maple board has walnut Heritage Locks. Makes a perfect gift.",
-    "images": [
-      "/images/products/Spalted Silver Maple Charcuterie.jpeg"
-    ],
-    "category": "one-of-a-kind",
-    "options": [
-      {
-        "name": "Personalization",
-        "key": "personalization",
-        "type": "text",
-        "placeholder": "Enter text to engrave (optional, applied to all 4)",
-        "priceModifier": 15
-      }
-    ],
-    "basePrice": 90,
-    "weightLbs": 1.5,
-    "dimensionsInches": { "length": 18, "width": 12, "height": 0.75 },
-    "featured": false,
-    "inStock": true
-  },
-  {
-    "id": "figured-maple-cutting-board",
-    "slug": "figured-maple-cutting-board",
-    "name": "Figured Maple Cutting Board",
-    "tagline": "One-of-a-kind figured maple cutting board",
-    "description": "From a special purchase, this board has amazing figures in the wood tat give a 3D appearance. Makes a perfect gift.",
-    "images": [
-      "/images/products/Figured Maple.jpeg"
-    ],
-    "category": "one-of-a-kind",
-    "options": [
-      {
-        "name": "Personalization",
-        "key": "personalization",
-        "type": "text",
-        "placeholder": "Enter text to engrave (optional, applied to all 4)",
-        "priceModifier": 15
-      }
-    ],
-    "basePrice": 190,
-    "weightLbs": 1.5,
-    "dimensionsInches": { "length": 20 , "width": 10, "height": 1.5 },
-    "featured": false,
-    "inStock": true
-  },
-  {
-    "id": "pinstripe-cutting-board",
-    "slug": "pinstripe-cutting-board",
-    "name": "Walnut and Maple Pinstripe",
-    "tagline": "Walnut and maple pinstripe cutting board",
-    "description": "Part of our first drop, an amazing walnut and maple pinstripe board. This is 1.5 inches thick with Maple Heritage Lock. Add engraving or a juice groove to complete your customized board.",
-    "images": [
-      "/images/products/IMG_3792.jpeg",
-      "/images/products/IMG_3791.jpeg",
-      "/images/products/IMG_3790.jpeg",
-      "/images/products/IMG_3787.jpeg",
-      "/images/products/IMG_3785.jpeg",
-      "/images/products/IMG_3783.jpeg"
-    ],
-    "category": "one-of-a-kind",
-    "options": [
-      {
-        "name": "Personalization",
-        "key": "personalization",
-        "type": "text",
-        "placeholder": "Enter text to engrave (optional, applied to all 4)",
-        "priceModifier": 15
-      }
-    ],
-    "basePrice": 210,
-    "weightLbs": 4.5,
-    "dimensionsInches": { "length": 20 , "width": 18, "height": 1.5 },
-    "featured": true,
-    "inStock": true
-  }
 ]
