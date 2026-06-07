@@ -36,6 +36,11 @@ export async function POST(req: NextRequest) {
       price: Number(body.price),
       quantity: Number(body.quantity) || 1,
       allow_engraving: body.allow_engraving ?? true,
+      length_in: body.length_in ? Number(body.length_in) : null,
+      width_in: body.width_in ? Number(body.width_in) : null,
+      thickness_in: body.thickness_in ? Number(body.thickness_in) : null,
+      juice_groove_available: body.juice_groove_available ?? true,
+      juice_groove_price: body.juice_groove_price ? Number(body.juice_groove_price) : 0,
       weight_lbs: body.weight_lbs ? Number(body.weight_lbs) : 3,
       sort_order: body.sort_order ?? 0,
     }).select('*').single()
@@ -64,7 +69,7 @@ export async function PATCH(req: NextRequest) {
 
   if (body.kind === 'item') {
     const update: Record<string, unknown> = {}
-    for (const f of ['name', 'description', 'video_url', 'allow_engraving']) {
+    for (const f of ['name', 'description', 'video_url', 'allow_engraving', 'juice_groove_available']) {
       if (body[f] !== undefined) update[f] = body[f]
     }
     if (body.image_urls !== undefined) {
@@ -74,6 +79,10 @@ export async function PATCH(req: NextRequest) {
     }
     if (body.price !== undefined) update.price = Number(body.price)
     if (body.quantity !== undefined) update.quantity = Number(body.quantity)
+    if (body.length_in !== undefined) update.length_in = body.length_in ? Number(body.length_in) : null
+    if (body.width_in !== undefined) update.width_in = body.width_in ? Number(body.width_in) : null
+    if (body.thickness_in !== undefined) update.thickness_in = body.thickness_in ? Number(body.thickness_in) : null
+    if (body.juice_groove_price !== undefined) update.juice_groove_price = body.juice_groove_price ? Number(body.juice_groove_price) : 0
     if (body.sold !== undefined) update.sold = Number(body.sold)
     const { error } = await db.from('drop_items').update(update).eq('id', body.id)
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })

@@ -158,6 +158,11 @@ export interface DropItem {
   quantity: number
   sold: number
   allow_engraving: boolean
+  length_in?: number
+  width_in?: number
+  thickness_in?: number
+  juice_groove_available?: boolean
+  juice_groove_price?: number
   weight_lbs?: number
   sort_order: number
   created_at: string
