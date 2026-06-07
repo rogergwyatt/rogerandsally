@@ -35,6 +35,7 @@ export async function fulfillOrder(paymentIntentId: string, cartSessionId?: stri
 
   // Side effects — run once, by the winner of the atomic claim.
   await sendConfirmationEmail(order)
+  await sendOwnerNotification(order)
 
   const addr = (order.shipping_address ?? {}) as { name?: string }
   await upsertCustomer({ email: order.email, name: addr.name })
@@ -66,6 +67,52 @@ export async function fulfillOrder(paymentIntentId: string, cartSessionId?: stri
   return { fulfilled: true, order }
 }
 
+// Notify the shop (sales@) of a new paid order, with per-item personalization
+// and — importantly — the customer's engraving placement notes.
+async function sendOwnerNotification(order: any) {
+  if (!process.env.SMTP_SERVER_HOST || process.env.SMTP_SERVER_HOST === 'REPLACE_WITH_LOCAL_VALUE') return
+  const to = process.env.SITE_MAIL_RECIEVER || process.env.EMAIL_FROM
+  if (!to) return
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_SERVER_HOST,
+    port: 465,
+    secure: true,
+    auth: { user: process.env.SMTP_SERVER_USERNAME, pass: process.env.SMTP_SERVER_PASSWORD },
+  })
+
+  const addr = order.shipping_address ?? {}
+  const itemBlocks = (order.items ?? []).map((item: any) => {
+    const { text, graphics, notes } = splitOptions(item.selectedOptions)
+    return `
+      <div style="border-left:3px solid #a64b29;padding-left:12px;margin:10px 0;">
+        <div style="font-weight:bold;color:#2d241e;">${item.product?.name ?? 'Item'} × ${item.quantity} — $${((item.unitPrice ?? 0) * (item.quantity ?? 1)).toFixed(2)}</div>
+        <div style="font-size:13px;color:#5a5a5a;">${text.map(o => `${o.key}: ${o.value}`).join(' · ')}</div>
+        ${graphics.map(u => `<div style="font-size:13px;"><a href="${u}" style="color:#a64b29;font-weight:bold;">⬇ Download engraving graphic</a></div>`).join('')}
+        ${notes ? `<div style="font-size:13px;margin-top:4px;background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:6px 8px;"><strong>Engraving placement:</strong> ${notes}</div>` : ''}
+      </div>`
+  }).join('')
+
+  await transporter.sendMail({
+    from: `Roger & Sally <${process.env.EMAIL_FROM ?? 'sales@rogerandsally.com'}>`,
+    to,
+    replyTo: order.email,
+    subject: `New order — $${order.total} from ${addr.name ?? order.email}`,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #2d241e;">
+        <h2 style="color:#a64b29;">New Order Received</h2>
+        <p><strong>Order:</strong> ${order.id}</p>
+        <p><strong>Customer:</strong> ${addr.name ?? ''} &lt;${order.email}&gt;</p>
+        <p><strong>Ship to:</strong> ${addr.line1 ?? ''}${addr.line2 ? ', ' + addr.line2 : ''}, ${addr.city ?? ''}, ${addr.state ?? ''} ${addr.zip ?? ''}</p>
+        <h3 style="color:#2d241e;">Items</h3>
+        ${itemBlocks}
+        <p style="margin-top:16px;"><strong>Subtotal:</strong> $${(order.subtotal ?? 0).toFixed(2)} · <strong>Shipping:</strong> $${(order.shipping ?? 0).toFixed(2)} · <strong>Total:</strong> $${(order.total ?? 0).toFixed(2)}</p>
+        <p><a href="https://www.rogerandsally.com/admin/orders" style="color:#a64b29;">Open in Admin →</a></p>
+      </div>
+    `,
+  }).catch(console.error)
+}
+
 async function sendConfirmationEmail(order: any) {
   if (!process.env.SMTP_SERVER_HOST || process.env.SMTP_SERVER_HOST === 'REPLACE_WITH_LOCAL_VALUE') {
     return // SMTP not configured (e.g. local dev) — skip silently
@@ -86,6 +133,7 @@ async function sendConfirmationEmail(order: any) {
           <div style="font-size: 12px; color: #999; margin-top: 2px;">
             ${splitOptions(item.selectedOptions).text.map(o => `${o.key}: ${o.value}`).join(' · ')}
             ${splitOptions(item.selectedOptions).graphics.map(u => ` · <a href="${u}" style="color:#a64b29;">engraving graphic</a>`).join('')}
+            ${splitOptions(item.selectedOptions).notes ? `<div style="margin-top:2px;"><strong>Engraving placement:</strong> ${splitOptions(item.selectedOptions).notes}</div>` : ''}
           </div>
         </td>
         <td style="padding: 8px 0; border-bottom: 1px solid #e6ded1; text-align: right; color: #2d241e; font-weight: 600;">

@@ -115,6 +115,16 @@ export default function ProductDetail({ product }: { product: Product }) {
                     onChange={url => handleOption(graphicKey(opt.key), url ?? '')}
                     onUploadingChange={setUploading}
                   />
+                  <div>
+                    <label className="block text-walnut font-medium text-sm mb-1">Engraving placement notes (optional)</label>
+                    <textarea
+                      rows={2}
+                      placeholder="e.g. center of the board, bottom-right corner, on the handle…"
+                      value={selected.engraving_notes ?? ''}
+                      onChange={e => handleOption('engraving_notes', e.target.value)}
+                      className="w-full border border-maple rounded px-3 py-2 text-slate focus:outline-none focus:border-cherry bg-white resize-none"
+                    />
+                  </div>
                   {opt.priceModifier ? (
                     <p className="text-xs text-slate">
                       Personalization (text and/or graphic): +${opt.priceModifier} — charged once.
