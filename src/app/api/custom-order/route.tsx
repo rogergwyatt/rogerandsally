@@ -6,12 +6,18 @@ import nodemailer from 'nodemailer'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, phone, description, woodPreference, dimensions, budget, timeline, referenceImages } = body
+    const { name, email, phone, description, woodPreference, dimensions, budget, timeline, referenceImages, engravingText } = body
+
+    // No dedicated column for engraving text — fold it into the stored
+    // description so it's captured without a schema change.
+    const fullDescription = engravingText
+      ? `${description}\n\nEngraving text: ${engravingText}`
+      : description
 
     const db = supabaseAdmin()
     const { data, error } = await db.from('custom_orders').insert({
       name, email, phone,
-      description,
+      description: fullDescription,
       wood_preference: woodPreference,
       dimensions,
       budget,
@@ -48,6 +54,7 @@ export async function POST(req: NextRequest) {
         <p><strong>Dimensions:</strong> ${dimensions || 'not specified'}</p>
         <p><strong>Budget:</strong> ${budget || 'not specified'}</p>
         <p><strong>Timeline:</strong> ${timeline || 'not specified'}</p>
+        ${engravingText ? `<p><strong>Engraving text:</strong> ${engravingText}</p>` : ''}
         <p><strong>Description:</strong></p>
         <blockquote style="border-left: 3px solid #a64b29; padding-left: 16px; color: #5a5a5a;">${description}</blockquote>
         ${(referenceImages ?? []).length
