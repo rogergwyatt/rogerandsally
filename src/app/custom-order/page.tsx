@@ -19,6 +19,7 @@ export default function CustomOrderPage() {
     budget: '',
     timeline: '',
     engravingText: '',
+    engravingNotes: '',
   })
   const [referenceImages, setReferenceImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
@@ -131,6 +132,13 @@ export default function CustomOrderPage() {
               <input value={form.engravingText} onChange={e => set('engravingText', e.target.value)}
                 placeholder="Text you'd like engraved"
                 className="w-full border border-maple rounded px-3 py-2 focus:outline-none focus:border-cherry bg-parchment" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-walnut mb-1">Engraving placement notes (optional)</label>
+              <textarea rows={2} value={form.engravingNotes} onChange={e => set('engravingNotes', e.target.value)}
+                placeholder="Where should it go? e.g. center of the board, bottom-right corner, on the handle…"
+                className="w-full border border-maple rounded px-3 py-2 focus:outline-none focus:border-cherry bg-parchment resize-none" />
             </div>
 
             <div className="space-y-2">
