@@ -18,8 +18,10 @@ export default function CustomOrderPage() {
     dimensions: '',
     budget: '',
     timeline: '',
+    engravingText: '',
   })
   const [referenceImages, setReferenceImages] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -124,11 +126,19 @@ export default function CustomOrderPage() {
                 className="w-full border border-maple rounded px-3 py-2 focus:outline-none focus:border-cherry bg-parchment" />
             </div>
 
+            <div>
+              <label className="block text-sm font-semibold text-walnut mb-1">Engraving text (optional)</label>
+              <input value={form.engravingText} onChange={e => set('engravingText', e.target.value)}
+                placeholder="Text you'd like engraved"
+                className="w-full border border-maple rounded px-3 py-2 focus:outline-none focus:border-cherry bg-parchment" />
+            </div>
+
             <div className="space-y-2">
               <GraphicUpload
-                label="Reference image or graphic (optional)"
+                label="Reference image or graphic to engrave (optional)"
                 value={referenceImages[0]}
                 onChange={url => setReferenceImages(url ? [url] : [])}
+                onUploadingChange={setUploading}
               />
             </div>
           </div>
@@ -160,9 +170,9 @@ export default function CustomOrderPage() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading}
+          <button type="submit" disabled={loading || uploading}
             className="w-full bg-cherry text-white py-3 rounded font-semibold hover:bg-opacity-90 transition-colors disabled:opacity-50 text-lg">
-            {loading ? 'Sending…' : 'Send My Request'}
+            {uploading ? 'Waiting for upload…' : loading ? 'Sending…' : 'Send My Request'}
           </button>
           <p className="text-xs text-slate text-center">We'll respond within 2 business days with a quote. No payment required now.</p>
         </form>

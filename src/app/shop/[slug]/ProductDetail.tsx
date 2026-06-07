@@ -43,6 +43,7 @@ export default function ProductDetail({ product }: { product: Product }) {
   const [selected, setSelected] = useState<Record<string, string>>(defaultSelections(product))
   const [activeImage, setActiveImage] = useState(0)
   const [added, setAdded] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const price = computePrice(product, selected)
 
@@ -112,6 +113,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                   <GraphicUpload
                     value={selected[graphicKey(opt.key)] || undefined}
                     onChange={url => handleOption(graphicKey(opt.key), url ?? '')}
+                    onUploadingChange={setUploading}
                   />
                   {opt.priceModifier ? (
                     <p className="text-xs text-slate">
@@ -154,10 +156,10 @@ export default function ProductDetail({ product }: { product: Product }) {
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={!product.inStock}
+              disabled={!product.inStock || uploading}
               className={`flex-1 text-white py-3 px-6 rounded font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${added ? 'bg-forest hover:bg-opacity-90' : 'bg-cherry hover:bg-opacity-90'}`}
             >
-              {!product.inStock ? 'Out of Stock' : added ? 'Go to Cart →' : 'Add to Cart'}
+              {!product.inStock ? 'Out of Stock' : uploading ? 'Uploading…' : added ? 'Go to Cart →' : 'Add to Cart'}
             </button>
           </div>
 

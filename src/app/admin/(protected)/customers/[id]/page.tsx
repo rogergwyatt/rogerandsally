@@ -216,8 +216,17 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                         'bg-yellow-100 text-yellow-800'
                       }`}>{co.status}</span>
                     </div>
-                    <p className="text-walnut">{co.description?.slice(0, 120)}{co.description?.length > 120 ? '…' : ''}</p>
+                    <p className="text-walnut whitespace-pre-line">{co.description}</p>
                     {co.wood_preference && <p className="text-slate text-xs mt-1">Wood: {co.wood_preference} · Budget: {co.budget ?? 'TBD'}</p>}
+                    {Array.isArray(co.reference_images) && co.reference_images.length > 0 && (
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        {co.reference_images.map((url: string, ri: number) => (
+                          <a key={ri} href={url} target="_blank" rel="noopener noreferrer" className="block">
+                            <img src={url} alt={`reference ${ri + 1}`} className="h-20 w-20 object-cover rounded border border-maple hover:border-cherry" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
