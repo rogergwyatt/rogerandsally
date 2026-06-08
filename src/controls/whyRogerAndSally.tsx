@@ -43,6 +43,26 @@ export default function WhyRogerAndSally() {
                         The Signature Lock is only available on Signature series boards.
                     </p>
                 </div>
+                               <div className="lg:min-h-[800px]">
+                    <div id="featuresmall" className="block lg:hidden w-svw h-auto">
+                        <Image
+                            className="z-0 overflow-hidden relative w-svw h-auto"
+                            src="/images/WhyChooseRandS.jpg"
+                            alt="Reasons to choose Roger and Sally"
+                            width={400}
+                            height={400}
+                        />
+                    </div>
+                    <div className="lg:w-[1080px] lg:h-[450px] md:w-[800px] md:h-[200px] w-[400px] h-[200px] hidden lg:block mx-2 lg:mx-0 flex items-center justify-center">
+                        <Image
+                            className="z-0 overflow-hidden relative w-svw h-auto"
+                            src="/images/WhyChooseRandS.jpg"
+                            alt="Reasons to choose Roger and Sally"
+                            width={1025}
+                            height={1025}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );
