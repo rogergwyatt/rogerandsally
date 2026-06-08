@@ -9,7 +9,8 @@ export default function Navigation() {
                 <Link href="/" className="hover:text-blue-300">Home</Link>
                 <Link href="/#whyChoose" className="hover:text-blue-300">The Heritage Lock</Link>
 <Link href="/#gallery" className="hover:text-blue-300">Gallery</Link>
-                <Link href="/about" className="hover:text-blue-300">About Us</Link>
+                <Link href="/#aboutus" className="hover:text-blue-300">About Us</Link>
+                <Link href="/philosophy" className="hover:text-blue-300">Our Philosophy</Link>
                 <Link href="/#contactform" className="hover:text-blue-300">Contact Us</Link>
                 <Link href="/shop" className="hover:text-blue-300">Shop</Link>
                 <Link href="/custom-order" className="hover:text-blue-300">Custom Order</Link>

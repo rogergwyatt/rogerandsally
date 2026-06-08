@@ -1,23 +1,20 @@
 import TopSection from "@/controls/topSection";
 import FooterSection from "@/controls/footerSection";
-import WhyRogerAndSally from "@/controls/whyRogerAndSally";
-import AboutUs from "@/controls/aboutus";
 import { sans, serif } from "@/controls/fonts";
 
 export const metadata = {
-  title: "About | Roger & Sally",
+  title: "Our Philosophy | Roger & Sally",
   description:
-    "Our philosophy of understated elegance — we let the wood be the star. Meet the makers behind the Heritage Lock and our hand-crafted Virginia cutting boards.",
+    "Understated elegance — we let the wood be the star. Why we don't make over-cut, glue-heavy geometric boards, and how that restraint defines the Roger & Sally brand.",
 };
 
-export default function AboutPage() {
+export default function PhilosophyPage() {
   return (
     <main className={"bg-parchment flex flex-col items-center min-h-screen p-0 " + sans.className}>
       <TopSection />
 
-      <div className="lg:w-[60%] w-full items-center justify-center content-center mx-auto px-4 lg:px-0 py-8 lg:py-12">
-        {/* Philosophy */}
-        <section className="mb-12 lg:mb-20">
+      <div className="lg:w-[60%] w-full items-center justify-center content-center mx-auto px-4 lg:px-0 py-8 lg:py-16">
+        <section>
           <h1 className={"text-3xl lg:text-5xl text-center text-walnut mb-3 " + serif.className}>
             Let the Wood Do the Talking
           </h1>
@@ -50,16 +47,6 @@ export default function AboutPage() {
               Roger &amp; Sally brand.
             </p>
           </div>
-        </section>
-
-        {/* The Heritage Lock */}
-        <section id="heritage" className="mb-12 lg:mb-20">
-          <WhyRogerAndSally />
-        </section>
-
-        {/* Our Story */}
-        <section id="story">
-          <AboutUs />
         </section>
       </div>
 

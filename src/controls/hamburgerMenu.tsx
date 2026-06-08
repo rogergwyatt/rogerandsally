@@ -37,7 +37,10 @@ export default function HamburgerMenu() {
             <Link href="/#gallery" onClick={handleClick}>Gallery</Link>
           </li>
           <li className="border-b border-gray-400 my-8 uppercase">
-            <Link href="/about" onClick={handleClick}>About Us</Link>
+            <Link href="/#aboutus" onClick={handleClick}>About Us</Link>
+          </li>
+          <li className="border-b border-gray-400 my-8 uppercase">
+            <Link href="/philosophy" onClick={handleClick}>Our Philosophy</Link>
           </li>
           <li className="border-b border-gray-400 my-8 uppercase">
             <Link href="/#contactform" onClick={handleClick}>Contact Us</Link>
