@@ -32,9 +32,9 @@ export default function Products() {
                         <Image src="/images/IMG_3662.jpeg" alt="Standard cutting board" width={300} height={300}/>
                     </div>
                     <div className="mt-2 lg:mt-5 align-top">
-                        <div className="text-2xl">Standard Boards</div>
+                        <div className="text-2xl">Heritage Boards</div>
                         <div className="text-lg">
-                            Our standard boards run between 1.5 and 2 inches thick. They come with an optional juice groove and laser engraving. All feature The Heritage Lock and have brass feet.
+                            Our Heritage boards run between 1.5 and 2 inches thick. They come with an optional juice groove and laser engraving. All feature The Heritage Lock and have brass feet.
                         </div>
                         <div><ShopStandardBoardsButton/></div>
                     </div>
