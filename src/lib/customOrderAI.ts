@@ -76,7 +76,7 @@ export async function generateImageBase64(imagePrompt: string): Promise<string> 
     throw new Error('GEMINI_API_KEY is not set — image generation is unconfigured')
   }
   const url =
-    'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict'
+    'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict'
   const res = await fetch(url, {
     method: 'POST',
     headers: {
