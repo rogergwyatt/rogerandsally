@@ -113,18 +113,12 @@ export default function CustomOrdersPage() {
                 <div className="border-t border-maple px-5 py-5 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
                     <div><span className="text-slate">Phone:</span> <span className="text-walnut">{co.phone || '—'}</span></div>
-                    <div><span className="text-slate">Wood:</span> <span className="text-walnut">{co.wood_preference || '—'}</span></div>
-                    <div><span className="text-slate">Dimensions:</span> <span className="text-walnut">{co.dimensions || '—'}</span></div>
-                    <div><span className="text-slate">Timeline:</span> <span className="text-walnut">{co.timeline || '—'}</span></div>
-                    <div><span className="text-slate">Budget:</span> <span className="text-walnut">{co.budget || '—'}</span></div>
+                    {co.wood_preference && <div><span className="text-slate">Wood:</span> <span className="text-walnut">{co.wood_preference}</span></div>}
+                    {co.dimensions && <div><span className="text-slate">Dimensions:</span> <span className="text-walnut">{co.dimensions}</span></div>}
+                    {co.timeline && <div><span className="text-slate">Timeline:</span> <span className="text-walnut">{co.timeline}</span></div>}
+                    {co.budget && <div><span className="text-slate">Budget:</span> <span className="text-walnut">{co.budget}</span></div>}
                   </div>
 
-                  {co.ai_summary && (
-                    <div>
-                      <p className="text-xs font-semibold text-walnut mb-1">AI summary</p>
-                      <p className="text-sm text-slate whitespace-pre-line">{co.ai_summary}</p>
-                    </div>
-                  )}
                   {co.ai_image_url && (
                     <div>
                       <p className="text-xs font-semibold text-walnut mb-1">Generated preview</p>
@@ -134,10 +128,26 @@ export default function CustomOrdersPage() {
                       </a>
                     </div>
                   )}
-                  <div>
-                    <p className="text-xs font-semibold text-walnut mb-1">Description</p>
-                    <p className="text-sm text-slate whitespace-pre-line">{co.description}</p>
-                  </div>
+
+                  {Array.isArray(co.chat_transcript) && co.chat_transcript.length > 0 ? (
+                    <div>
+                      <p className="text-xs font-semibold text-walnut mb-1">Conversation</p>
+                      <div className="space-y-2 bg-parchment border border-maple rounded p-3">
+                        {co.chat_transcript.map((m: any, i: number) => (
+                          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-[85%] rounded-2xl px-3 py-1.5 text-sm ${m.role === 'user' ? 'bg-cherry text-white' : 'bg-maple text-walnut'}`}>
+                              {m.content}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-xs font-semibold text-walnut mb-1">Description</p>
+                      <p className="text-sm text-slate whitespace-pre-line">{co.description}</p>
+                    </div>
+                  )}
 
                   {Array.isArray(co.reference_images) && co.reference_images.length > 0 && (
                     <div>
