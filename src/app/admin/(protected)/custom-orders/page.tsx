@@ -119,6 +119,25 @@ export default function CustomOrdersPage() {
                     {co.budget && <div><span className="text-slate">Budget:</span> <span className="text-walnut">{co.budget}</span></div>}
                   </div>
 
+                  {co.ai_specs && ([
+                    ['wood', 'Wood'], ['dimensions', 'Dimensions'], ['thickness', 'Thickness'],
+                    ['juiceGroove', 'Juice groove'], ['engraving', 'Engraving'], ['budget', 'Budget'],
+                  ] as [string, string][]).some(([k]) => co.ai_specs[k]) && (
+                    <div>
+                      <p className="text-xs font-semibold text-walnut mb-1">Specifications</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                        {([
+                          ['wood', 'Wood'], ['dimensions', 'Dimensions'], ['thickness', 'Thickness'],
+                          ['juiceGroove', 'Juice groove'], ['engraving', 'Engraving'], ['budget', 'Budget'],
+                        ] as [string, string][])
+                          .filter(([k]) => co.ai_specs[k])
+                          .map(([k, label]) => (
+                            <div key={k}><span className="text-slate">{label}:</span> <span className="text-walnut">{co.ai_specs[k]}</span></div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
                   {co.ai_image_url && (
                     <div>
                       <p className="text-xs font-semibold text-walnut mb-1">Generated preview</p>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { upsertCustomer, logCustomerEvent } from '@/lib/customers'
+import { extractSpecs, type BoardSpecs } from '@/lib/customOrderAI'
 import nodemailer from 'nodemailer'
 
 export async function POST(req: NextRequest) {
@@ -26,6 +27,25 @@ export async function POST(req: NextRequest) {
       engravingText ? `Engraving text: ${engravingText}` : '',
       engravingNotes ? `Engraving placement: ${engravingNotes}` : '',
     ].filter(Boolean).join('\n\n')
+
+    // Pull structured specs (wood, dimensions, thickness, juice groove,
+    // engraving, budget) out of the conversation for the order record.
+    let specs: BoardSpecs | null = null
+    if (Array.isArray(chatTranscript) && chatTranscript.length && process.env.ANTHROPIC_API_KEY) {
+      specs = await extractSpecs(chatTranscript)
+    }
+
+    // Specs as labeled rows for the owner email (only fields that are present).
+    const SPEC_LABELS: [keyof BoardSpecs, string][] = [
+      ['wood', 'Wood'], ['dimensions', 'Dimensions'], ['thickness', 'Thickness'],
+      ['juiceGroove', 'Juice groove'], ['engraving', 'Engraving'], ['budget', 'Budget'],
+    ]
+    const specsHtml = specs && SPEC_LABELS.some(([k]) => specs![k])
+      ? `<p><strong>Specifications:</strong></p><ul style="margin:4px 0; padding-left:18px; color:#2d241e;">${SPEC_LABELS
+          .filter(([k]) => specs![k])
+          .map(([k, label]) => `<li><strong>${label}:</strong> ${esc(specs![k])}</li>`)
+          .join('')}</ul>`
+      : ''
 
     // Full conversation as HTML for the owner email (always visible).
     const conversationHtml =
@@ -55,6 +75,7 @@ export async function POST(req: NextRequest) {
       ai_summary: aiSummary ?? null,
       ai_image_url: aiImageUrl ?? null,
       chat_transcript: chatTranscript ?? null,
+      ai_specs: specs ?? null,
       status: 'new',
       created_at: new Date().toISOString(),
     }).select('id').single()
@@ -88,6 +109,7 @@ export async function POST(req: NextRequest) {
         ${timeline ? `<p><strong>Timeline:</strong> ${esc(timeline)}</p>` : ''}
         ${engravingText ? `<p><strong>Engraving text:</strong> ${esc(engravingText)}</p>` : ''}
         ${engravingNotes ? `<p><strong>Engraving placement:</strong> ${esc(engravingNotes)}</p>` : ''}
+        ${specsHtml}
         ${aiImageUrl ? `<p><strong>Generated preview:</strong></p><p><a href="${esc(aiImageUrl)}"><img src="${esc(aiImageUrl)}" alt="Generated board preview" style="max-width:480px;border:1px solid #e6ded1;border-radius:6px;" /></a></p>` : ''}
         ${conversationHtml}
         ${(referenceImages ?? []).length

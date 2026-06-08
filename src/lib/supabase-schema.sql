@@ -125,3 +125,4 @@ alter table drops add column if not exists sort_order int not null default 0;
 alter table custom_orders add column if not exists ai_summary text;
 alter table custom_orders add column if not exists ai_image_url text;
 alter table custom_orders add column if not exists chat_transcript jsonb;
+alter table custom_orders add column if not exists ai_specs jsonb;

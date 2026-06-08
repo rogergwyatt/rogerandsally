@@ -78,6 +78,50 @@ export async function buildPreviewSpec(messages: ChatMessage[]): Promise<Preview
   }
 }
 
+// Structured specifications pulled from the conversation for the order record.
+export type BoardSpecs = {
+  wood: string | null
+  dimensions: string | null
+  thickness: string | null
+  juiceGroove: string | null
+  engraving: string | null
+  budget: string | null
+}
+
+const EMPTY_SPECS: BoardSpecs = {
+  wood: null, dimensions: null, thickness: null, juiceGroove: null, engraving: null, budget: null,
+}
+
+// Extract the customer's board specifications from the conversation. Returns
+// nulls for anything not mentioned; never throws (returns empty specs on error).
+export async function extractSpecs(messages: ChatMessage[]): Promise<BoardSpecs> {
+  try {
+    const res = await anthropic().messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 400,
+      system: `From the conversation, extract the customer's cutting/charcuterie board specifications. Respond ONLY with minified JSON of the form {"wood": string|null, "dimensions": string|null, "thickness": string|null, "juiceGroove": string|null, "engraving": string|null, "budget": string|null}. Use null for anything not clearly stated. Formatting: "dimensions" like "16 x 11 in"; "thickness" like "1.5 in"; "juiceGroove" exactly "Yes" or "No"; "engraving" the requested text and placement (or null); "budget" the stated amount or range (or null). Do not guess.`,
+      messages: clampMessages(messages),
+    })
+    const block = res.content.find(b => b.type === 'text')
+    const raw = block && 'text' in block ? block.text.trim() : ''
+    const parsed = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1))
+    const clean = (v: unknown) => {
+      const s = v == null ? null : String(v).trim()
+      return s && s.toLowerCase() !== 'null' ? s : null
+    }
+    return {
+      wood: clean(parsed.wood),
+      dimensions: clean(parsed.dimensions),
+      thickness: clean(parsed.thickness),
+      juiceGroove: clean(parsed.juiceGroove),
+      engraving: clean(parsed.engraving),
+      budget: clean(parsed.budget),
+    }
+  } catch {
+    return { ...EMPTY_SPECS }
+  }
+}
+
 function normalizeWood(w: unknown): WoodKey {
   const s = String(w ?? '').toLowerCase()
   if (s.includes('walnut')) return 'walnut'
