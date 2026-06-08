@@ -22,7 +22,7 @@ The story of Roger & Sally is really just about a sharp turn from the digital wo
 Right now, we operate out of our garage shop here in the Richmond area, but we&apos;re working toward a bigger goal. Our plan with Roger & Sally is to help fund a move out to Northeast Tennessee. We&apos;re looking to buy a good piece of land out near the mountains to build a family compound and a forever workshop. Every single board we glue up is a literal step closer to that mountain air.
 <br/>
 <br/>
-Because of all that time spent in tech, the way we look at woodworking is probably a little different. We don&apos;t just build things to look pretty on a counter; we look at a cutting board like a structural engineering problem. Standard boards are famous for warping, twisting, and splitting down the road, so we design ours specifically to fix those bugs.
+Because of all that time spent in tech, the way we look at woodworking is probably a little different. We don&apos;t just build things to look pretty on a counter; we look at a cutting board like a structural engineering problem. Standard boards are famous for warping, twisting, and splitting along the edges, so we design ours specifically to fix those bugs.
 <br/>
 <br/>
 That starts with the wood itself. We never buy bulk pallets of lumber and just hope for the best. I hand-pick every single board of Walnut, Cherry, and Maple myself, inspecting the grain direction to make sure it&apos;s stable before it ever touches a saw blade.
