@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     let imageError = false
     try {
       const reference = await loadReference(req.nextUrl.origin, referenceForWood(spec.wood))
-      const b64 = await generateBoardImage(boardPrompt(spec.imagePrompt), reference)
+      const b64 = await generateBoardImage(boardPrompt(spec.wood, spec.imagePrompt), reference)
       try {
         // Preferred: store in Vercel Blob and return a durable URL.
         const bytes = Buffer.from(b64, 'base64')

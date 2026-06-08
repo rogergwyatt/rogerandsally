@@ -149,20 +149,35 @@ export function referenceForWood(wood: WoodKey): string {
   return WOOD_REFERENCES[wood] ?? WOOD_REFERENCES.other
 }
 
-// Wrap the board description in fixed craftsmanship constraints so every
-// generation matches our aesthetic regardless of how the customer phrased it.
-export function boardPrompt(imagePrompt: string): string {
-  return `Using the attached photo of one of our actual handcrafted Roger & Sally boards as the exact reference for wood species, color, grain, finish, and craftsmanship, generate ONE photorealistic product photo of the board described below.
+const WOOD_NAMES: Record<WoodKey, string> = {
+  walnut: 'walnut (dark chocolate-brown)',
+  cherry: 'cherry (warm reddish-brown)',
+  maple: 'maple (pale creamy blond)',
+  other: '',
+}
 
-Requirements:
+// Wrap the board description in fixed constraints so every generation matches
+// our aesthetic. Wood species is the #1 directive (the model otherwise drifts
+// to a default walnut look), then size/thickness, then craftsmanship details.
+export function boardPrompt(wood: WoodKey, imagePrompt: string): string {
+  const speciesDirective =
+    wood === 'other'
+      ? 'Use exactly the wood species named in the board description below — render that species\' true color and grain. Do NOT substitute a different wood.'
+      : `The board MUST be made of ${WOOD_NAMES[wood]}. Render authentic ${wood} color and grain. This is the single most important attribute — do NOT default to walnut or any other species. The attached reference photo is also ${wood}; match its wood tone.`
+
+  return `Use the attached photo of one of our actual handcrafted Roger & Sally boards as the reference for craftsmanship, finish, and proportions. Generate ONE photorealistic product photo of the board described below.
+
+TOP PRIORITY — WOOD SPECIES: ${speciesDirective}
+
+SECOND PRIORITY — SIZE & THICKNESS: Honor the stated dimensions, and especially the thickness — render a substantial, chunky board shot from a low 3/4 angle so the full thick edge/side profile is clearly visible (a thick slab, not a thin panel).
+
+Other requirements:
 - A single-species EDGE-GRAIN board (never end-grain; no mosaic, checkerboard, chevron, herringbone, or parquet patterns).
 - A simple clean rectangle with gently rounded corners.
 - Our signature contrasting hardwood dowel pegs visible along the edge (the "Heritage Lock").
-- THICKNESS IS CRITICAL: render a substantial, chunky board and honor the stated thickness. Shoot from a low 3/4 angle so the full thick edge/side profile is clearly visible (like a thick wooden slab, not a thin panel).
-- If a juice groove is specified, it MUST be clearly visible as a recessed channel routed in a rectangle around the top perimeter, a short distance in from the edges.
+- If a juice groove is specified, it MUST be clearly visible as a recessed channel routed in a rectangle around the top perimeter.
 - Include small brass feet only if described.
 - Rest it on a neutral, uncluttered surface in soft natural daylight; no text overlays, no watermarks, no people or hands.
-Match the realism, proportions, and finish of the reference photo.
 
 Board to depict: ${imagePrompt}`
 }
