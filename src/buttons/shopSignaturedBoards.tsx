@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ShopSignatureBoardsButton() {
 
-    const shopURL = "/shop/heritage-lock-cutting-board";
+    const shopURL = "/shop/signature-cutting-board";
     return (
         <div className="mb-2 lg:mb-3 grid content-center text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-1 lg:text-left">
             <Link
