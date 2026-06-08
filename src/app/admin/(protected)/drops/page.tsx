@@ -18,6 +18,112 @@ function toLocalInput(iso?: string | null) {
   return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16)
 }
 
+// Map a stored drop item into an editable draft.
+function itemToDraft(item: any) {
+  return {
+    name: item.name ?? '',
+    price: item.price ?? '',
+    description: item.description ?? '',
+    quantity: item.quantity ?? 1,
+    allow_engraving: item.allow_engraving ?? true,
+    length_in: item.length_in ?? '',
+    width_in: item.width_in ?? '',
+    thickness_in: item.thickness_in ?? '',
+    juice_groove_available: item.juice_groove_available ?? true,
+    juice_groove_price: item.juice_groove_price ?? '',
+    image_urls: item.image_urls?.length ? item.image_urls : item.image_url ? [item.image_url] : [],
+    video_url: item.video_url ?? undefined,
+  }
+}
+
+// Shared field set used for both adding a new board and editing an existing one.
+function ItemFields({
+  draft,
+  set,
+  setMediaBusy,
+}: {
+  draft: any
+  set: (patch: any) => void
+  setMediaBusy: (b: boolean) => void
+}) {
+  const photos: string[] = draft.image_urls ?? []
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <input placeholder="Name" value={draft.name ?? ''} onChange={e => set({ name: e.target.value })}
+          className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+        <input type="number" min="0" step="0.01" placeholder="Price" value={draft.price ?? ''} onChange={e => set({ price: e.target.value })}
+          className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+      </div>
+      <input placeholder="Description (optional)" value={draft.description ?? ''} onChange={e => set({ description: e.target.value })}
+        className="w-full border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+      <div className="grid grid-cols-2 gap-2 items-center">
+        <input type="number" min="1" placeholder="Quantity (1 = one-of-a-kind)" value={draft.quantity ?? ''} onChange={e => set({ quantity: e.target.value })}
+          className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+        <label className="flex items-center gap-2 text-sm text-slate">
+          <input type="checkbox" checked={draft.allow_engraving ?? true} onChange={e => set({ allow_engraving: e.target.checked })} className="accent-cherry" />
+          Allow engraving
+        </label>
+      </div>
+
+      {/* Dimensions (inches) */}
+      <div>
+        <p className="text-xs font-semibold text-walnut mb-1">Dimensions (inches)</p>
+        <div className="grid grid-cols-3 gap-2">
+          <input type="number" min="0" step="0.25" placeholder="Length" value={draft.length_in ?? ''} onChange={e => set({ length_in: e.target.value })}
+            className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+          <input type="number" min="0" step="0.25" placeholder="Width" value={draft.width_in ?? ''} onChange={e => set({ width_in: e.target.value })}
+            className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+          <input type="number" min="0" step="0.125" placeholder="Thickness" value={draft.thickness_in ?? ''} onChange={e => set({ thickness_in: e.target.value })}
+            className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
+        </div>
+      </div>
+
+      {/* Juice groove */}
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-sm text-slate">
+          <input type="checkbox" checked={draft.juice_groove_available ?? true} onChange={e => set({ juice_groove_available: e.target.checked })} className="accent-cherry" />
+          Offer juice groove
+        </label>
+        {(draft.juice_groove_available ?? true) && (
+          <div className="flex items-center gap-1 text-sm text-slate">
+            <span>Upcharge $</span>
+            <input type="number" min="0" step="0.01" placeholder="0.00" value={draft.juice_groove_price ?? ''} onChange={e => set({ juice_groove_price: e.target.value })}
+              className="w-24 border border-maple rounded px-2 py-1 text-sm bg-white focus:outline-none focus:border-cherry" />
+            <span className="text-xs text-slate">(0 = free)</span>
+          </div>
+        )}
+      </div>
+
+      {/* Photos (multiple) */}
+      <div>
+        <p className="text-xs font-semibold text-walnut mb-1">Board photos</p>
+        {photos.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {photos.map((url, i) => (
+              <div key={i} className="relative h-16 w-16 rounded overflow-hidden border border-maple">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="" className="h-full w-full object-cover" />
+                <button onClick={() => set({ image_urls: photos.filter((_, idx) => idx !== i) })}
+                  className="absolute top-0 right-0 bg-walnut/80 text-white text-xs w-5 h-5 leading-5 text-center">×</button>
+                {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-cherry text-white text-[9px] text-center">cover</span>}
+              </div>
+            ))}
+          </div>
+        )}
+        <GraphicUpload label="Add a photo" value={undefined}
+          onUploadingChange={setMediaBusy}
+          onChange={url => { if (url) set({ image_urls: [...photos, url] }) }} />
+      </div>
+
+      {/* Video */}
+      <VideoUpload label="Board video (optional)" value={draft.video_url}
+        onUploadingChange={setMediaBusy}
+        onChange={url => set({ video_url: url })} />
+    </div>
+  )
+}
+
 export default function DropsAdminPage() {
   const router = useRouter()
   const [drops, setDrops] = useState<any[]>([])
@@ -26,23 +132,8 @@ export default function DropsAdminPage() {
   const [newDesc, setNewDesc] = useState('')
   const [itemDraft, setItemDraft] = useState<Record<string, any>>({})
   const [mediaBusy, setMediaBusy] = useState(false)
-
-  function patchDraft(dropId: string, patch: any) {
-    setItemDraft(s => ({ ...s, [dropId]: { ...s[dropId], ...patch } }))
-  }
-  function addPhoto(dropId: string, url?: string) {
-    if (!url) return
-    setItemDraft(s => {
-      const cur = s[dropId]?.image_urls ?? []
-      return { ...s, [dropId]: { ...s[dropId], image_urls: [...cur, url] } }
-    })
-  }
-  function removePhoto(dropId: string, idx: number) {
-    setItemDraft(s => {
-      const cur: string[] = s[dropId]?.image_urls ?? []
-      return { ...s, [dropId]: { ...s[dropId], image_urls: cur.filter((_, i) => i !== idx) } }
-    })
-  }
+  const [editing, setEditing] = useState<string | null>(null)
+  const [editDraft, setEditDraft] = useState<Record<string, any>>({})
 
   function load() {
     fetch('/api/admin/drops')
@@ -79,6 +170,30 @@ export default function DropsAdminPage() {
       setDrops(p => p.map(dr => dr.id === dropId ? { ...dr, items: [...(dr.items ?? []), r.item] } : dr))
       setItemDraft(s => ({ ...s, [dropId]: {} }))
     } else alert(r.error)
+  }
+
+  function startEdit(item: any) {
+    setEditing(item.id)
+    setEditDraft(s => ({ ...s, [item.id]: itemToDraft(item) }))
+  }
+
+  async function saveItem(dropId: string, itemId: string) {
+    const d = editDraft[itemId] ?? {}
+    if (!d.name || d.price === '' || d.price == null) { alert('Item needs a name and price.'); return }
+    const res = await fetch('/api/admin/drops', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind: 'item', id: itemId, ...d, quantity: d.quantity || 1 }),
+    })
+    const r = await res.json()
+    if (!res.ok) { alert(r.error); return }
+    // Reflect the saved values locally (image_url cover = first photo).
+    const cover = (d.image_urls ?? [])[0] ?? null
+    setDrops(p => p.map(dr => dr.id === dropId ? {
+      ...dr,
+      items: dr.items.map((it: any) => it.id === itemId ? { ...it, ...d, image_url: cover } : it),
+    } : dr))
+    setEditing(null)
   }
 
   async function deleteItem(dropId: string, itemId: string) {
@@ -144,92 +259,44 @@ export default function DropsAdminPage() {
             {/* Items */}
             <div className="space-y-2 mb-4">
               {(drop.items ?? []).map((item: any) => (
-                <div key={item.id} className="flex items-center gap-3 text-sm border border-maple rounded px-3 py-2">
-                  {item.image_url && <img src={item.image_url} alt="" className="h-12 w-12 object-cover rounded flex-shrink-0" />}
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-walnut">{item.name} — ${Number(item.price).toFixed(2)}</div>
-                    <div className="text-xs text-slate">{item.sold}/{item.quantity} sold{item.allow_engraving ? ' · engraving on' : ''}</div>
+                editing === item.id ? (
+                  <div key={item.id} className="border border-cherry rounded-lg p-4 bg-parchment space-y-2">
+                    <p className="text-xs font-semibold text-walnut">Editing board</p>
+                    <ItemFields
+                      draft={editDraft[item.id] ?? {}}
+                      set={patch => setEditDraft(s => ({ ...s, [item.id]: { ...s[item.id], ...patch } }))}
+                      setMediaBusy={setMediaBusy}
+                    />
+                    <div className="flex gap-2">
+                      <button onClick={() => saveItem(drop.id, item.id)} disabled={mediaBusy}
+                        className="bg-forest text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90 disabled:opacity-50">
+                        {mediaBusy ? 'Uploading…' : 'Save Changes'}
+                      </button>
+                      <button onClick={() => setEditing(null)} className="px-4 py-1.5 rounded text-sm text-slate hover:text-cherry">Cancel</button>
+                    </div>
                   </div>
-                  <button onClick={() => deleteItem(drop.id, item.id)} className="text-xs text-slate hover:text-cherry flex-shrink-0">Remove</button>
-                </div>
+                ) : (
+                  <div key={item.id} className="flex items-center gap-3 text-sm border border-maple rounded px-3 py-2">
+                    {item.image_url && <img src={item.image_url} alt="" className="h-12 w-12 object-cover rounded flex-shrink-0" />}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-walnut">{item.name} — ${Number(item.price).toFixed(2)}</div>
+                      <div className="text-xs text-slate">{item.sold}/{item.quantity} sold{item.allow_engraving ? ' · engraving on' : ''}</div>
+                    </div>
+                    <button onClick={() => startEdit(item)} className="text-xs text-forest hover:underline flex-shrink-0">Edit</button>
+                    <button onClick={() => deleteItem(drop.id, item.id)} className="text-xs text-slate hover:text-cherry flex-shrink-0">Remove</button>
+                  </div>
+                )
               ))}
             </div>
 
             {/* Add item */}
             <div className="bg-parchment border border-maple rounded-lg p-4 space-y-2">
               <p className="text-xs font-semibold text-walnut">Add a board to this drop</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input placeholder="Name" value={itemDraft[drop.id]?.name ?? ''} onChange={e => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], name: e.target.value } }))}
-                  className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-                <input type="number" min="0" step="0.01" placeholder="Price" value={itemDraft[drop.id]?.price ?? ''} onChange={e => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], price: e.target.value } }))}
-                  className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-              </div>
-              <input placeholder="Description (optional)" value={itemDraft[drop.id]?.description ?? ''} onChange={e => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], description: e.target.value } }))}
-                className="w-full border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-              <div className="grid grid-cols-2 gap-2 items-center">
-                <input type="number" min="1" placeholder="Quantity (1 = one-of-a-kind)" value={itemDraft[drop.id]?.quantity ?? ''} onChange={e => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], quantity: e.target.value } }))}
-                  className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-                <label className="flex items-center gap-2 text-sm text-slate">
-                  <input type="checkbox" checked={itemDraft[drop.id]?.allow_engraving ?? true} onChange={e => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], allow_engraving: e.target.checked } }))} className="accent-cherry" />
-                  Allow engraving
-                </label>
-              </div>
-
-              {/* Dimensions (inches) */}
-              <div>
-                <p className="text-xs font-semibold text-walnut mb-1">Dimensions (inches)</p>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="number" min="0" step="0.25" placeholder="Length" value={itemDraft[drop.id]?.length_in ?? ''} onChange={e => patchDraft(drop.id, { length_in: e.target.value })}
-                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-                  <input type="number" min="0" step="0.25" placeholder="Width" value={itemDraft[drop.id]?.width_in ?? ''} onChange={e => patchDraft(drop.id, { width_in: e.target.value })}
-                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-                  <input type="number" min="0" step="0.125" placeholder="Thickness" value={itemDraft[drop.id]?.thickness_in ?? ''} onChange={e => patchDraft(drop.id, { thickness_in: e.target.value })}
-                    className="border border-maple rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-cherry" />
-                </div>
-              </div>
-
-              {/* Juice groove */}
-              <div className="flex flex-wrap items-center gap-3">
-                <label className="flex items-center gap-2 text-sm text-slate">
-                  <input type="checkbox" checked={itemDraft[drop.id]?.juice_groove_available ?? true} onChange={e => patchDraft(drop.id, { juice_groove_available: e.target.checked })} className="accent-cherry" />
-                  Offer juice groove
-                </label>
-                {(itemDraft[drop.id]?.juice_groove_available ?? true) && (
-                  <div className="flex items-center gap-1 text-sm text-slate">
-                    <span>Upcharge $</span>
-                    <input type="number" min="0" step="0.01" placeholder="0.00" value={itemDraft[drop.id]?.juice_groove_price ?? ''} onChange={e => patchDraft(drop.id, { juice_groove_price: e.target.value })}
-                      className="w-24 border border-maple rounded px-2 py-1 text-sm bg-white focus:outline-none focus:border-cherry" />
-                    <span className="text-xs text-slate">(0 = free)</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Photos (multiple) */}
-              <div>
-                <p className="text-xs font-semibold text-walnut mb-1">Board photos</p>
-                {(itemDraft[drop.id]?.image_urls ?? []).length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {(itemDraft[drop.id]?.image_urls ?? []).map((url: string, i: number) => (
-                      <div key={i} className="relative h-16 w-16 rounded overflow-hidden border border-maple">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt="" className="h-full w-full object-cover" />
-                        <button onClick={() => removePhoto(drop.id, i)}
-                          className="absolute top-0 right-0 bg-walnut/80 text-white text-xs w-5 h-5 leading-5 text-center">×</button>
-                        {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-cherry text-white text-[9px] text-center">cover</span>}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <GraphicUpload label="Add a photo" value={undefined}
-                  onUploadingChange={setMediaBusy}
-                  onChange={url => addPhoto(drop.id, url)} />
-              </div>
-
-              {/* Video */}
-              <VideoUpload label="Board video (optional)" value={itemDraft[drop.id]?.video_url}
-                onUploadingChange={setMediaBusy}
-                onChange={url => patchDraft(drop.id, { video_url: url })} />
-
+              <ItemFields
+                draft={itemDraft[drop.id] ?? {}}
+                set={patch => setItemDraft(s => ({ ...s, [drop.id]: { ...s[drop.id], ...patch } }))}
+                setMediaBusy={setMediaBusy}
+              />
               <button onClick={() => addItem(drop.id)} disabled={mediaBusy}
                 className="bg-forest text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-opacity-90 disabled:opacity-50">
                 {mediaBusy ? 'Uploading…' : 'Add Board'}
