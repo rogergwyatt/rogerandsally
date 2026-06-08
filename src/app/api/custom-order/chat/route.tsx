@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { chatReply, MAX_MESSAGES, type ChatMessage } from '@/lib/customOrderAI'
+import { chatReply, MAX_PAYLOAD_MESSAGES, type ChatMessage } from '@/lib/customOrderAI'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     if (!Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: 'No messages' }, { status: 400 })
     }
-    if (messages.length > MAX_MESSAGES) {
+    if (messages.length > MAX_PAYLOAD_MESSAGES) {
       return NextResponse.json({ error: 'Conversation too long' }, { status: 400 })
     }
     if (!process.env.ANTHROPIC_API_KEY) {

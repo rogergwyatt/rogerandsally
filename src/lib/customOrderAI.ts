@@ -5,7 +5,11 @@ export type ChatMessage = { role: 'user' | 'assistant'; content: string }
 const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
 
 // Guards against abusive payloads on public endpoints.
+// MAX_MESSAGES: how many recent turns we send to the model (context/cost cap).
+// MAX_PAYLOAD_MESSAGES: hard reject threshold for an incoming request (abuse cap),
+// set well above a normal conversation so long legitimate chats still work.
 export const MAX_MESSAGES = 30
+export const MAX_PAYLOAD_MESSAGES = 100
 export const MAX_CONTENT_CHARS = 4000
 
 function anthropic(): Anthropic {
@@ -68,6 +72,9 @@ export async function buildPreviewSpec(messages: ChatMessage[]): Promise<Preview
 // Render an image via the Gemini Imagen REST API; returns a base64 PNG (no data: prefix).
 // Throws on failure so the caller can degrade gracefully.
 export async function generateImageBase64(imagePrompt: string): Promise<string> {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not set — image generation is unconfigured')
+  }
   const url =
     'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict'
   const res = await fetch(url, {

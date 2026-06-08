@@ -8,6 +8,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { name, email, phone, description, woodPreference, dimensions, budget, timeline, referenceImages, engravingText, engravingNotes, aiSummary, aiImageUrl, chatTranscript } = body
 
+    // Escape user-controlled values before interpolating into email HTML.
+    const esc = (s: unknown) =>
+      String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string))
+
     // No dedicated columns — fold engraving text + placement notes into the
     // stored description so they're captured without a schema change.
     const fullDescription = [
@@ -49,25 +53,24 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: `Roger & Sally <${process.env.EMAIL_FROM ?? 'noreply@rogerandsally.com'}>`,
       to: process.env.SITE_MAIL_RECIEVER,
-      subject: `New Custom Order Request — ${name}`,
+      subject: `New Custom Order Request — ${esc(name)}`,
       html: `
         <h2>New Custom Order Request</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-        <p><strong>Phone:</strong> ${phone || 'not provided'}</p>
-        <p><strong>Wood Preference:</strong> ${woodPreference || 'not specified'}</p>
-        <p><strong>Dimensions:</strong> ${dimensions || 'not specified'}</p>
-        <p><strong>Budget:</strong> ${budget || 'not specified'}</p>
-        <p><strong>Timeline:</strong> ${timeline || 'not specified'}</p>
-        ${engravingText ? `<p><strong>Engraving text:</strong> ${engravingText}</p>` : ''}
-        ${engravingNotes ? `<p><strong>Engraving placement:</strong> ${engravingNotes}</p>` : ''}
-        ${aiSummary ? `<p><strong>AI summary:</strong></p><blockquote style="border-left: 3px solid #3e4d39; padding-left: 16px; color: #2d241e;">${aiSummary}</blockquote>` : ''}
-        ${aiImageUrl ? `<p><strong>Generated preview:</strong></p><p><a href="${aiImageUrl}"><img src="${aiImageUrl}" alt="Generated board preview" style="max-width:480px;border:1px solid #e6ded1;border-radius:6px;" /></a></p>` : ''}
-        ${Array.isArray(chatTranscript) && chatTranscript.length ? `<details><summary><strong>Chat transcript</strong></summary>${chatTranscript.map((m: any) => `<p style="margin:4px 0;"><strong>${m.role === 'user' ? 'Customer' : 'Assistant'}:</strong> ${String(m.content).replace(/</g, '&lt;')}</p>`).join('')}</details>` : ''}
-        <p><strong>Description:</strong></p>
-        <blockquote style="border-left: 3px solid #a64b29; padding-left: 16px; color: #5a5a5a;">${description}</blockquote>
+        <p><strong>Name:</strong> ${esc(name)}</p>
+        <p><strong>Email:</strong> <a href="mailto:${esc(email)}">${esc(email)}</a></p>
+        <p><strong>Phone:</strong> ${esc(phone) || 'not provided'}</p>
+        <p><strong>Wood Preference:</strong> ${esc(woodPreference) || 'not specified'}</p>
+        <p><strong>Dimensions:</strong> ${esc(dimensions) || 'not specified'}</p>
+        <p><strong>Budget:</strong> ${esc(budget) || 'not specified'}</p>
+        <p><strong>Timeline:</strong> ${esc(timeline) || 'not specified'}</p>
+        ${engravingText ? `<p><strong>Engraving text:</strong> ${esc(engravingText)}</p>` : ''}
+        ${engravingNotes ? `<p><strong>Engraving placement:</strong> ${esc(engravingNotes)}</p>` : ''}
+        ${aiSummary ? `<p><strong>AI summary:</strong></p><blockquote style="border-left: 3px solid #3e4d39; padding-left: 16px; color: #2d241e;">${esc(aiSummary)}</blockquote>` : ''}
+        ${aiImageUrl ? `<p><strong>Generated preview:</strong></p><p><a href="${esc(aiImageUrl)}"><img src="${esc(aiImageUrl)}" alt="Generated board preview" style="max-width:480px;border:1px solid #e6ded1;border-radius:6px;" /></a></p>` : ''}
+        ${Array.isArray(chatTranscript) && chatTranscript.length ? `<details><summary><strong>Chat transcript</strong></summary>${chatTranscript.map((m: any) => `<p style="margin:4px 0;"><strong>${m.role === 'user' ? 'Customer' : 'Assistant'}:</strong> ${esc(m.content)}</p>`).join('')}</details>` : ''}
+        ${fullDescription ? `<p><strong>Description:</strong></p><blockquote style="border-left: 3px solid #a64b29; padding-left: 16px; color: #5a5a5a;">${esc(fullDescription)}</blockquote>` : ''}
         ${(referenceImages ?? []).length
-          ? `<p><strong>Reference image(s):</strong> ${(referenceImages as string[]).map((u, i) => `<a href="${u}">image ${i + 1}</a>`).join(' · ')}</p>`
+          ? `<p><strong>Reference image(s):</strong> ${(referenceImages as string[]).map((u, i) => `<a href="${esc(u)}">image ${i + 1}</a>`).join(' · ')}</p>`
           : ''}
         <p><a href="https://www.rogerandsally.com/admin/orders">View Admin Dashboard</a></p>
       `,
@@ -81,10 +84,10 @@ export async function POST(req: NextRequest) {
       html: `
         <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #2d241e; background: #f9f7f2; padding: 32px;">
           <h1 style="color: #a64b29;">We got it!</h1>
-          <p>Hi ${name.split(' ')[0]}, thank you for reaching out. We've received your custom order request and will be in touch within 2 business days with a quote.</p>
+          <p>Hi ${esc(name.split(' ')[0])}, thank you for reaching out. We've received your custom order request and will be in touch within 2 business days with a quote.</p>
           <div style="background: white; border: 1px solid #e6ded1; border-radius: 6px; padding: 20px; margin: 24px 0;">
             <p style="margin: 0 0 8px; font-weight: bold; color: #2d241e;">Your request summary:</p>
-            <p style="color: #5a5a5a; margin: 0; line-height: 1.6;">${description}</p>
+            <p style="color: #5a5a5a; margin: 0; line-height: 1.6;">${esc(fullDescription)}</p>
           </div>
           <p style="color: #5a5a5a;">In the meantime, feel free to browse our <a href="https://www.rogerandsally.com/shop" style="color: #a64b29;">standard offerings</a> or reply to this email with any additional details or photos.</p>
           <p style="font-size: 12px; color: #999; margin-top: 32px;">Roger & Sally · Handcrafted Heritage Lock Wood Cutting Boards · Virginia</p>
