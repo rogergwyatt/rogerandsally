@@ -110,7 +110,15 @@ export function referenceForWood(wood: WoodKey): string {
 export function boardPrompt(imagePrompt: string): string {
   return `Using the attached photo of one of our actual handcrafted Roger & Sally boards as the exact reference for wood species, color, grain, finish, and craftsmanship, generate ONE photorealistic product photo of the board described below.
 
-Requirements: a single-species EDGE-GRAIN board (never end-grain; no mosaic, checkerboard, chevron, herringbone, or parquet patterns); a simple clean rectangle with gently rounded corners; our signature contrasting hardwood dowel pegs visible along the edge (the "Heritage Lock"); include a juice groove and/or small brass feet only if described; rest it on a neutral, uncluttered light surface in soft natural daylight; no text overlays, no watermarks, no people or hands. Match the realism, proportions, and finish of the reference photo.
+Requirements:
+- A single-species EDGE-GRAIN board (never end-grain; no mosaic, checkerboard, chevron, herringbone, or parquet patterns).
+- A simple clean rectangle with gently rounded corners.
+- Our signature contrasting hardwood dowel pegs visible along the edge (the "Heritage Lock").
+- THICKNESS IS CRITICAL: render a substantial, chunky board and honor the stated thickness. Shoot from a low 3/4 angle so the full thick edge/side profile is clearly visible (like a thick wooden slab, not a thin panel).
+- If a juice groove is specified, it MUST be clearly visible as a recessed channel routed in a rectangle around the top perimeter, a short distance in from the edges.
+- Include small brass feet only if described.
+- Rest it on a neutral, uncluttered surface in soft natural daylight; no text overlays, no watermarks, no people or hands.
+Match the realism, proportions, and finish of the reference photo.
 
 Board to depict: ${imagePrompt}`
 }
