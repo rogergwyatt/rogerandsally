@@ -47,7 +47,7 @@ export default function Products() {
                     <div className="mt-2 lg:mt-5 align-top">
                         <div className="text-2xl">Signature Boards</div>
                         <div className="text-lg">
-                            Our top of the line boards come in all thicknesses. What sets the Signature Boards apart from the Standard is that they are available up to 2.5" thick. When we come across special pieces (such as spalted silver or figured maple), it becomes a signature board. 
+                            Our top of the line boards come in all thicknesses. What sets the Signature boards apart from the Standard is that they are available up to 2.5" thick. When we come across special pieces (such as spalted silver or figured maple), it becomes a signature board. 
                         </div>
                         <div><ShopSignatureBoardsButton/></div>
                     </div>
