@@ -43,37 +43,58 @@ export async function chatReply(messages: ChatMessage[]): Promise<string> {
 export type WoodKey = 'walnut' | 'cherry' | 'maple' | 'other'
 export type PreviewSpec = { summary: string; imagePrompt: string; wood: WoodKey }
 
-// Ask Claude to summarize the conversation and craft an image prompt.
-// Robust to non-JSON: falls back to using the raw text as the summary.
-export async function buildPreviewSpec(messages: ChatMessage[]): Promise<PreviewSpec> {
+// Render a conversation as plain text for use as embedded data (not as an
+// active chat the model would try to continue).
+function transcriptOf(messages: ChatMessage[]): string {
+  return clampMessages(messages)
+    .map(m => `${m.role === 'user' ? 'Customer' : 'Assistant'}: ${m.content}`)
+    .join('\n')
+}
+
+// Run an extraction prompt that returns JSON. The conversation is embedded as
+// reference data in a single user turn, and the assistant reply is prefilled
+// with "{" so the model is forced to emit JSON instead of continuing the chat.
+// Returns the parsed object, or null on failure.
+async function jsonExtract(system: string, messages: ChatMessage[], maxTokens: number): Promise<any | null> {
   const res = await anthropic().messages.create({
     model: CLAUDE_MODEL,
-    max_tokens: 600,
-    system: `Summarize the customer's desired cutting/charcuterie board from the conversation. Respond ONLY with minified JSON of the form {"summary": string, "imagePrompt": string, "wood": string}.
-- "summary": a tidy 2-4 sentence description of the board (wood, size, thickness, juice groove, engraving, intended use).
-- "wood": the primary wood species, exactly one of "walnut", "cherry", "maple", or "other".
-- "imagePrompt": a concise factual description of ONLY the board to depict — wood species, overall shape and approximate dimensions, thickness, whether it has a juice groove, and any engraving text and its placement. Do NOT describe backgrounds, lighting, or camera; do NOT mention mosaic, checkerboard, chevron, or end-grain patterns (our boards are simple single-species edge-grain).`,
-    messages: clampMessages(messages),
+    max_tokens: maxTokens,
+    system,
+    messages: [
+      { role: 'user', content: `Here is the conversation to analyze:\n\n${transcriptOf(messages)}` },
+      { role: 'assistant', content: '{' },
+    ],
   })
   const block = res.content.find(b => b.type === 'text')
-  const raw = block && 'text' in block ? block.text.trim() : ''
+  const text = block && 'text' in block ? block.text : ''
+  const raw = '{' + text
   try {
-    const jsonStart = raw.indexOf('{')
-    const jsonEnd = raw.lastIndexOf('}')
-    const parsed = JSON.parse(raw.slice(jsonStart, jsonEnd + 1))
-    if (parsed.summary && parsed.imagePrompt) {
-      return {
-        summary: String(parsed.summary),
-        imagePrompt: String(parsed.imagePrompt),
-        wood: normalizeWood(parsed.wood),
-      }
-    }
+    return JSON.parse(raw.slice(0, raw.lastIndexOf('}') + 1))
   } catch {
-    // fall through
+    return null
+  }
+}
+
+// Summarize the conversation and craft an image prompt + detect the wood.
+export async function buildPreviewSpec(messages: ChatMessage[]): Promise<PreviewSpec> {
+  const parsed = await jsonExtract(
+    `You are analyzing a custom cutting/charcuterie board conversation. Output ONLY minified JSON: {"summary": string, "imagePrompt": string, "wood": string}.
+- "summary": a tidy 2-4 sentence description of the board (wood, size, thickness, juice groove, engraving, intended use).
+- "wood": the primary wood species the customer chose, exactly one of "walnut", "cherry", "maple", or "other".
+- "imagePrompt": a concise factual description of ONLY the board to depict — wood species, overall shape and approximate dimensions, thickness, whether it has a juice groove, and any engraving text and its placement. Do NOT describe backgrounds, lighting, or camera; do NOT mention mosaic, checkerboard, chevron, or end-grain patterns (our boards are simple single-species edge-grain).`,
+    messages,
+    600,
+  )
+  if (parsed && parsed.summary && parsed.imagePrompt) {
+    return {
+      summary: String(parsed.summary),
+      imagePrompt: String(parsed.imagePrompt),
+      wood: normalizeWood(parsed.wood),
+    }
   }
   return {
-    summary: raw || 'Custom board (see conversation).',
-    imagePrompt: raw.slice(0, 500) || 'a handcrafted hardwood cutting board',
+    summary: 'Custom board — see the conversation for details.',
+    imagePrompt: 'a handcrafted single-species edge-grain hardwood cutting board',
     wood: 'other',
   }
 }
@@ -96,15 +117,12 @@ const EMPTY_SPECS: BoardSpecs = {
 // nulls for anything not mentioned; never throws (returns empty specs on error).
 export async function extractSpecs(messages: ChatMessage[]): Promise<BoardSpecs> {
   try {
-    const res = await anthropic().messages.create({
-      model: CLAUDE_MODEL,
-      max_tokens: 400,
-      system: `From the conversation, extract the customer's cutting/charcuterie board specifications. Respond ONLY with minified JSON of the form {"wood": string|null, "dimensions": string|null, "thickness": string|null, "juiceGroove": string|null, "engraving": string|null, "budget": string|null}. Use null for anything not clearly stated. Formatting: "dimensions" like "16 x 11 in"; "thickness" like "1.5 in"; "juiceGroove" exactly "Yes" or "No"; "engraving" the requested text and placement (or null); "budget" the stated amount or range (or null). Do not guess.`,
-      messages: clampMessages(messages),
-    })
-    const block = res.content.find(b => b.type === 'text')
-    const raw = block && 'text' in block ? block.text.trim() : ''
-    const parsed = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1))
+    const parsed = await jsonExtract(
+      `Extract the customer's cutting/charcuterie board specifications from the conversation. Output ONLY minified JSON: {"wood": string|null, "dimensions": string|null, "thickness": string|null, "juiceGroove": string|null, "engraving": string|null, "budget": string|null}. Use null for anything not clearly stated. Formatting: "dimensions" like "16 x 11 in"; "thickness" like "1.5 in"; "juiceGroove" exactly "Yes" or "No"; "engraving" the requested text and placement (or null); "budget" the stated amount or range (or null). Do not guess.`,
+      messages,
+      400,
+    )
+    if (!parsed) return { ...EMPTY_SPECS }
     const clean = (v: unknown) => {
       const s = v == null ? null : String(v).trim()
       return s && s.toLowerCase() !== 'null' ? s : null

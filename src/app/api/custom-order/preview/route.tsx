@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       imageError = true
     }
 
-    return NextResponse.json({ summary: spec.summary, imageUrl, imageError })
+    return NextResponse.json({ summary: spec.summary, imageUrl, imageError, wood: spec.wood })
   } catch (err: any) {
     console.error('custom-order preview error:', err.message)
     return NextResponse.json({ error: 'Preview failed. Please try again.' }, { status: 500 })
