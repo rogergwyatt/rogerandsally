@@ -6,12 +6,12 @@ import nodemailer from 'nodemailer'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, phone, description, woodPreference, dimensions, budget, timeline, referenceImages, engravingText, engravingNotes } = body
+    const { name, email, phone, description, woodPreference, dimensions, budget, timeline, referenceImages, engravingText, engravingNotes, aiSummary, aiImageUrl, chatTranscript } = body
 
     // No dedicated columns — fold engraving text + placement notes into the
     // stored description so they're captured without a schema change.
     const fullDescription = [
-      description,
+      description || aiSummary || '',
       engravingText ? `Engraving text: ${engravingText}` : '',
       engravingNotes ? `Engraving placement: ${engravingNotes}` : '',
     ].filter(Boolean).join('\n\n')
@@ -25,6 +25,9 @@ export async function POST(req: NextRequest) {
       budget,
       timeline,
       reference_images: referenceImages ?? [],
+      ai_summary: aiSummary ?? null,
+      ai_image_url: aiImageUrl ?? null,
+      chat_transcript: chatTranscript ?? null,
       status: 'new',
       created_at: new Date().toISOString(),
     }).select('id').single()
@@ -58,6 +61,9 @@ export async function POST(req: NextRequest) {
         <p><strong>Timeline:</strong> ${timeline || 'not specified'}</p>
         ${engravingText ? `<p><strong>Engraving text:</strong> ${engravingText}</p>` : ''}
         ${engravingNotes ? `<p><strong>Engraving placement:</strong> ${engravingNotes}</p>` : ''}
+        ${aiSummary ? `<p><strong>AI summary:</strong></p><blockquote style="border-left: 3px solid #3e4d39; padding-left: 16px; color: #2d241e;">${aiSummary}</blockquote>` : ''}
+        ${aiImageUrl ? `<p><strong>Generated preview:</strong></p><p><a href="${aiImageUrl}"><img src="${aiImageUrl}" alt="Generated board preview" style="max-width:480px;border:1px solid #e6ded1;border-radius:6px;" /></a></p>` : ''}
+        ${Array.isArray(chatTranscript) && chatTranscript.length ? `<details><summary><strong>Chat transcript</strong></summary>${chatTranscript.map((m: any) => `<p style="margin:4px 0;"><strong>${m.role === 'user' ? 'Customer' : 'Assistant'}:</strong> ${String(m.content).replace(/</g, '&lt;')}</p>`).join('')}</details>` : ''}
         <p><strong>Description:</strong></p>
         <blockquote style="border-left: 3px solid #a64b29; padding-left: 16px; color: #5a5a5a;">${description}</blockquote>
         ${(referenceImages ?? []).length
