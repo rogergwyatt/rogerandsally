@@ -16,6 +16,7 @@ export default async function DropsSection() {
       .select('*')
       .eq('status', 'live')
       .or(`release_at.is.null,release_at.lte.${nowISO}`)
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
     drops = (data as Drop[]) ?? []
     if (drops.length) {
