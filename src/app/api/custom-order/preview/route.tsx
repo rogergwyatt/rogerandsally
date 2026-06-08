@@ -2,10 +2,29 @@ import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
 import {
   buildPreviewSpec,
-  generateImageBase64,
+  generateBoardImage,
+  boardPrompt,
+  referenceForWood,
   MAX_PAYLOAD_MESSAGES,
   type ChatMessage,
 } from '@/lib/customOrderAI'
+
+// Fetch a public reference photo from this deployment and return it as
+// inline base64 for the image model. Returns undefined if it can't be loaded.
+async function loadReference(
+  origin: string,
+  path: string,
+): Promise<{ data: string; mimeType: string } | undefined> {
+  try {
+    const res = await fetch(`${origin}${encodeURI(path)}`)
+    if (!res.ok) return undefined
+    const buf = Buffer.from(await res.arrayBuffer())
+    const mimeType = res.headers.get('content-type') || 'image/jpeg'
+    return { data: buf.toString('base64'), mimeType }
+  } catch {
+    return undefined
+  }
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -28,7 +47,8 @@ export async function POST(req: NextRequest) {
     let imageUrl: string | null = null
     let imageError = false
     try {
-      const b64 = await generateImageBase64(spec.imagePrompt)
+      const reference = await loadReference(req.nextUrl.origin, referenceForWood(spec.wood))
+      const b64 = await generateBoardImage(boardPrompt(spec.imagePrompt), reference)
       try {
         // Preferred: store in Vercel Blob and return a durable URL.
         const bytes = Buffer.from(b64, 'base64')

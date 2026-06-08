@@ -40,7 +40,8 @@ export async function chatReply(messages: ChatMessage[]): Promise<string> {
   return text && 'text' in text ? text.text : ''
 }
 
-export type PreviewSpec = { summary: string; imagePrompt: string }
+export type WoodKey = 'walnut' | 'cherry' | 'maple' | 'other'
+export type PreviewSpec = { summary: string; imagePrompt: string; wood: WoodKey }
 
 // Ask Claude to summarize the conversation and craft an image prompt.
 // Robust to non-JSON: falls back to using the raw text as the summary.
@@ -48,7 +49,10 @@ export async function buildPreviewSpec(messages: ChatMessage[]): Promise<Preview
   const res = await anthropic().messages.create({
     model: CLAUDE_MODEL,
     max_tokens: 600,
-    system: `Summarize the customer's desired cutting/charcuterie board from the conversation. Respond ONLY with minified JSON of the form {"summary": string, "imagePrompt": string}. "summary" is a tidy 2-4 sentence description of the board (wood, size, thickness, juice groove, engraving, intended use). "imagePrompt" describes a single photorealistic product photo of THAT board resting on a neutral light kitchen counter, soft daylight, no text overlay, no people — include wood species, shape, dimensions, and any engraving.`,
+    system: `Summarize the customer's desired cutting/charcuterie board from the conversation. Respond ONLY with minified JSON of the form {"summary": string, "imagePrompt": string, "wood": string}.
+- "summary": a tidy 2-4 sentence description of the board (wood, size, thickness, juice groove, engraving, intended use).
+- "wood": the primary wood species, exactly one of "walnut", "cherry", "maple", or "other".
+- "imagePrompt": a concise factual description of ONLY the board to depict — wood species, overall shape and approximate dimensions, thickness, whether it has a juice groove, and any engraving text and its placement. Do NOT describe backgrounds, lighting, or camera; do NOT mention mosaic, checkerboard, chevron, or end-grain patterns (our boards are simple single-species edge-grain).`,
     messages: clampMessages(messages),
   })
   const block = res.content.find(b => b.type === 'text')
@@ -58,41 +62,94 @@ export async function buildPreviewSpec(messages: ChatMessage[]): Promise<Preview
     const jsonEnd = raw.lastIndexOf('}')
     const parsed = JSON.parse(raw.slice(jsonStart, jsonEnd + 1))
     if (parsed.summary && parsed.imagePrompt) {
-      return { summary: String(parsed.summary), imagePrompt: String(parsed.imagePrompt) }
+      return {
+        summary: String(parsed.summary),
+        imagePrompt: String(parsed.imagePrompt),
+        wood: normalizeWood(parsed.wood),
+      }
     }
   } catch {
     // fall through
   }
   return {
     summary: raw || 'Custom board (see conversation).',
-    imagePrompt: `A photorealistic handcrafted hardwood cutting board on a neutral light kitchen counter, soft daylight, no text. ${raw.slice(0, 500)}`,
+    imagePrompt: raw.slice(0, 500) || 'a handcrafted hardwood cutting board',
+    wood: 'other',
   }
 }
 
-// Render an image via the Gemini Imagen REST API; returns a base64 PNG (no data: prefix).
-// Throws on failure so the caller can degrade gracefully.
-export async function generateImageBase64(imagePrompt: string): Promise<string> {
+function normalizeWood(w: unknown): WoodKey {
+  const s = String(w ?? '').toLowerCase()
+  if (s.includes('walnut')) return 'walnut'
+  if (s.includes('cherry')) return 'cherry'
+  if (s.includes('maple')) return 'maple'
+  return 'other'
+}
+
+// Gemini image model that accepts a reference photo as input (multimodal).
+const GEMINI_IMAGE_MODEL = 'gemini-3-pro-image'
+
+// A real Roger & Sally board photo per wood species, used as the style /
+// craftsmanship reference so generated previews resemble our actual work
+// (correct wood, single-species edge grain, Heritage Lock dowels, brass feet).
+// Paths are public assets served by the deployment.
+const WOOD_REFERENCES: Record<WoodKey, string> = {
+  walnut: '/images/products/Walnut Charcuterie Board/IMG_3827.jpeg',
+  cherry: '/images/CherryWithGrooveNoText.jpg',
+  maple: '/images/products/MapleSignatureBoard/IMG_3807.jpeg',
+  // No distinct "other" reference — fall back to walnut for authentic style.
+  other: '/images/products/Walnut Charcuterie Board/IMG_3827.jpeg',
+}
+
+export function referenceForWood(wood: WoodKey): string {
+  return WOOD_REFERENCES[wood] ?? WOOD_REFERENCES.other
+}
+
+// Wrap the board description in fixed craftsmanship constraints so every
+// generation matches our aesthetic regardless of how the customer phrased it.
+export function boardPrompt(imagePrompt: string): string {
+  return `Using the attached photo of one of our actual handcrafted Roger & Sally boards as the exact reference for wood species, color, grain, finish, and craftsmanship, generate ONE photorealistic product photo of the board described below.
+
+Requirements: a single-species EDGE-GRAIN board (never end-grain; no mosaic, checkerboard, chevron, herringbone, or parquet patterns); a simple clean rectangle with gently rounded corners; our signature contrasting hardwood dowel pegs visible along the edge (the "Heritage Lock"); include a juice groove and/or small brass feet only if described; rest it on a neutral, uncluttered light surface in soft natural daylight; no text overlays, no watermarks, no people or hands. Match the realism, proportions, and finish of the reference photo.
+
+Board to depict: ${imagePrompt}`
+}
+
+// Generate a board image with Gemini, optionally conditioned on a reference
+// photo (inline base64). Returns a base64 image (no data: prefix). Throws on
+// failure so the caller can degrade gracefully.
+export async function generateBoardImage(
+  prompt: string,
+  reference?: { data: string; mimeType: string },
+): Promise<string> {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not set — image generation is unconfigured')
   }
-  const url =
-    'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict'
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': process.env.GEMINI_API_KEY ?? '',
+  const parts: Record<string, unknown>[] = [{ text: prompt }]
+  if (reference) {
+    parts.push({ inline_data: { mime_type: reference.mimeType, data: reference.data } })
+  }
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_IMAGE_MODEL}:generateContent`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': process.env.GEMINI_API_KEY ?? '',
+      },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { responseModalities: ['IMAGE'] },
+      }),
     },
-    body: JSON.stringify({
-      instances: [{ prompt: imagePrompt }],
-      parameters: { sampleCount: 1, aspectRatio: '4:3' },
-    }),
-  })
+  )
   if (!res.ok) {
-    throw new Error(`Imagen error ${res.status}: ${await res.text()}`)
+    throw new Error(`Gemini image error ${res.status}: ${await res.text()}`)
   }
   const data = await res.json()
-  const b64 = data?.predictions?.[0]?.bytesBase64Encoded
-  if (!b64) throw new Error('Imagen returned no image')
+  const outParts: any[] = data?.candidates?.[0]?.content?.parts ?? []
+  const imgPart = outParts.find(p => p?.inlineData?.data || p?.inline_data?.data)
+  const b64 = imgPart?.inlineData?.data ?? imgPart?.inline_data?.data
+  if (!b64) throw new Error('Gemini returned no image')
   return b64
 }
