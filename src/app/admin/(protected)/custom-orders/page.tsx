@@ -119,6 +119,21 @@ export default function CustomOrdersPage() {
                     <div><span className="text-slate">Budget:</span> <span className="text-walnut">{co.budget || '—'}</span></div>
                   </div>
 
+                  {co.ai_summary && (
+                    <div>
+                      <p className="text-xs font-semibold text-walnut mb-1">AI summary</p>
+                      <p className="text-sm text-slate whitespace-pre-line">{co.ai_summary}</p>
+                    </div>
+                  )}
+                  {co.ai_image_url && (
+                    <div>
+                      <p className="text-xs font-semibold text-walnut mb-1">Generated preview</p>
+                      <a href={co.ai_image_url} target="_blank" rel="noopener noreferrer">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={co.ai_image_url} alt="Generated preview" className="max-w-xs rounded border border-maple hover:border-cherry" />
+                      </a>
+                    </div>
+                  )}
                   <div>
                     <p className="text-xs font-semibold text-walnut mb-1">Description</p>
                     <p className="text-sm text-slate whitespace-pre-line">{co.description}</p>
