@@ -16,7 +16,7 @@ export default function ShopStandardBoardsButton() {
                 <div className="flex justify-center ">
                     <div className="mb-3 text-xl font-bold">
                         <div className="rounded-xl text-white hover:text-white  lg:w-80 lg:h-20  lg:p-r-10 p-r-2 flex items-center justify-center hover:bg-walnut hover:text-white-200 bg-forest bg-flex-none border-solid border-black border-2 text-center align-middle text-black font-bold"> 
-                            Shop Standard Boards &gt;
+                            Shop Heritage Boards &gt;
                         </div>
                     </div>
                     
