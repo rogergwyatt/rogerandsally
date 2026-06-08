@@ -26,6 +26,7 @@ export default function FooterSection(){
                     <a href="/#whyChoose" className="hover:text-blue-300">the heritage lock</a>
                     <a href="/#gallery" className="hover:text-blue-300">gallery</a>
                     <a href="/#aboutus" className="hover:text-blue-300">about us</a>
+                    <Link href="/philosophy" className="hover:text-blue-300">our philosophy</Link>
                     <a href="/#contactform" className="hover:text-blue-300">contact us</a>
                     <Link href="/shop" className="hover:text-blue-300">shop</Link>
                     <Link href="/custom-order" className="hover:text-blue-300">custom order</Link>
