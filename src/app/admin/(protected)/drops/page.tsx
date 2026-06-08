@@ -196,6 +196,32 @@ export default function DropsAdminPage() {
     setEditing(null)
   }
 
+  // Reorder a drop within the list; normalize all sort_orders to index.
+  async function moveDrop(index: number, dir: -1 | 1) {
+    const j = index + dir
+    if (j < 0 || j >= drops.length) return
+    const reordered = [...drops]
+    ;[reordered[index], reordered[j]] = [reordered[j], reordered[index]]
+    setDrops(reordered)
+    await Promise.all(reordered.map((d, i) =>
+      fetch('/api/admin/drops', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'drop', id: d.id, sort_order: i }) })
+    ))
+  }
+
+  // Reorder a board within its drop; normalize all sort_orders to index.
+  async function moveItem(dropId: string, index: number, dir: -1 | 1) {
+    const drop = drops.find(d => d.id === dropId)
+    if (!drop) return
+    const items = [...(drop.items ?? [])]
+    const j = index + dir
+    if (j < 0 || j >= items.length) return
+    ;[items[index], items[j]] = [items[j], items[index]]
+    setDrops(p => p.map(d => d.id === dropId ? { ...d, items } : d))
+    await Promise.all(items.map((it: any, i: number) =>
+      fetch('/api/admin/drops', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'item', id: it.id, sort_order: i }) })
+    ))
+  }
+
   async function deleteItem(dropId: string, itemId: string) {
     await fetch('/api/admin/drops', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'item', id: itemId }) })
     setDrops(p => p.map(dr => dr.id === dropId ? { ...dr, items: dr.items.filter((i: any) => i.id !== itemId) } : dr))
@@ -223,15 +249,23 @@ export default function DropsAdminPage() {
       {drops.length === 0 && <p className="text-slate text-center py-8">No drops yet.</p>}
 
       <div className="space-y-6">
-        {drops.map(drop => (
+        {drops.map((drop, dropIdx) => (
           <div key={drop.id} className="bg-white border border-maple rounded-lg p-5">
             <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className={`text-xl text-walnut ${serif.className}`}>{drop.title}</h2>
-                  <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[drop.status]}`}>{drop.status}</span>
+              <div className="flex items-start gap-2">
+                <div className="flex flex-col">
+                  <button onClick={() => moveDrop(dropIdx, -1)} disabled={dropIdx === 0}
+                    className="text-slate hover:text-cherry disabled:opacity-25 leading-none text-sm" title="Move up">▲</button>
+                  <button onClick={() => moveDrop(dropIdx, 1)} disabled={dropIdx === drops.length - 1}
+                    className="text-slate hover:text-cherry disabled:opacity-25 leading-none text-sm" title="Move down">▼</button>
                 </div>
-                {drop.description && <p className="text-sm text-slate">{drop.description}</p>}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className={`text-xl text-walnut ${serif.className}`}>{drop.title}</h2>
+                    <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[drop.status]}`}>{drop.status}</span>
+                  </div>
+                  {drop.description && <p className="text-sm text-slate">{drop.description}</p>}
+                </div>
               </div>
               <button onClick={() => deleteDrop(drop.id)} className="text-xs text-slate hover:text-cherry">Delete drop</button>
             </div>
@@ -258,7 +292,7 @@ export default function DropsAdminPage() {
 
             {/* Items */}
             <div className="space-y-2 mb-4">
-              {(drop.items ?? []).map((item: any) => (
+              {(drop.items ?? []).map((item: any, itemIdx: number) => (
                 editing === item.id ? (
                   <div key={item.id} className="border border-cherry rounded-lg p-4 bg-parchment space-y-2">
                     <p className="text-xs font-semibold text-walnut">Editing board</p>
@@ -277,6 +311,12 @@ export default function DropsAdminPage() {
                   </div>
                 ) : (
                   <div key={item.id} className="flex items-center gap-3 text-sm border border-maple rounded px-3 py-2">
+                    <div className="flex flex-col flex-shrink-0">
+                      <button onClick={() => moveItem(drop.id, itemIdx, -1)} disabled={itemIdx === 0}
+                        className="text-slate hover:text-cherry disabled:opacity-25 leading-none text-xs" title="Move up">▲</button>
+                      <button onClick={() => moveItem(drop.id, itemIdx, 1)} disabled={itemIdx === (drop.items?.length ?? 0) - 1}
+                        className="text-slate hover:text-cherry disabled:opacity-25 leading-none text-xs" title="Move down">▼</button>
+                    </div>
                     {item.image_url && <img src={item.image_url} alt="" className="h-12 w-12 object-cover rounded flex-shrink-0" />}
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-walnut">{item.name} — ${Number(item.price).toFixed(2)}</div>

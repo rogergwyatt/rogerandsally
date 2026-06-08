@@ -5,7 +5,7 @@ import { isAdminAuthenticated } from '@/lib/adminAuth'
 export async function GET() {
   if (!isAdminAuthenticated()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const db = supabaseAdmin()
-  const { data: drops } = await db.from('drops').select('*').order('created_at', { ascending: false })
+  const { data: drops } = await db.from('drops').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false })
   const { data: items } = await db.from('drop_items').select('*').order('sort_order')
   const withItems = (drops ?? []).map(d => ({ ...d, items: (items ?? []).filter(i => i.drop_id === d.id) }))
   return NextResponse.json({ drops: withItems })
@@ -62,6 +62,7 @@ export async function PATCH(req: NextRequest) {
     if (body.description !== undefined) update.description = body.description
     if (body.status !== undefined) update.status = body.status
     if (body.release_at !== undefined) update.release_at = body.release_at || null
+    if (body.sort_order !== undefined) update.sort_order = Number(body.sort_order)
     const { error } = await db.from('drops').update(update).eq('id', body.id)
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
     return NextResponse.json({ ok: true })
@@ -83,6 +84,7 @@ export async function PATCH(req: NextRequest) {
     if (body.width_in !== undefined) update.width_in = body.width_in ? Number(body.width_in) : null
     if (body.thickness_in !== undefined) update.thickness_in = body.thickness_in ? Number(body.thickness_in) : null
     if (body.juice_groove_price !== undefined) update.juice_groove_price = body.juice_groove_price ? Number(body.juice_groove_price) : 0
+    if (body.sort_order !== undefined) update.sort_order = Number(body.sort_order)
     if (body.sold !== undefined) update.sold = Number(body.sold)
     const { error } = await db.from('drop_items').update(update).eq('id', body.id)
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })

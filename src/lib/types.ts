@@ -142,6 +142,7 @@ export interface Drop {
   description?: string
   status: 'draft' | 'live' | 'ended'
   release_at?: string | null
+  sort_order?: number
   created_at: string
   items?: DropItem[]
 }

@@ -83,6 +83,7 @@ create table if not exists drops (
   description text,
   status text not null default 'draft',   -- draft | live | ended
   release_at timestamptz,                  -- null or past = visible now; future = scheduled
+  sort_order int not null default 0,       -- display order (lower = first)
   created_at timestamptz not null default now()
 );
 
@@ -118,3 +119,4 @@ alter table drop_items add column if not exists width_in numeric(6,2);
 alter table drop_items add column if not exists thickness_in numeric(6,2);
 alter table drop_items add column if not exists juice_groove_available boolean not null default true;
 alter table drop_items add column if not exists juice_groove_price numeric(10,2) not null default 0;
+alter table drops add column if not exists sort_order int not null default 0;

@@ -14,6 +14,7 @@ export async function GET() {
     .select('*')
     .eq('status', 'live')
     .or(`release_at.is.null,release_at.lte.${nowISO}`)
+    .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
 
   if (!drops || drops.length === 0) return NextResponse.json({ drops: [] })
