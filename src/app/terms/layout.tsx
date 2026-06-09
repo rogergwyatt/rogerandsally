@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Sofadi_One, Nanum_Gothic} from "next/font/google";
 import "../globals.css";
 import Script from 'next/script';
-import { Analytics } from "@vercel/analytics/react"
 
 import { nanum } from '../../controls/fonts'
 import GoogleAnalytics from "@/controls/googleAnalytics";
@@ -25,7 +24,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-       <Analytics/>
        <head>
         <link rel="canonical" href="https://www.rogerandsally.com/terms" key="canonical"/>
         <HotJar/>

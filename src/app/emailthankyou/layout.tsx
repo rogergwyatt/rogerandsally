@@ -5,7 +5,6 @@ import "../globals.css";
 import { nanum } from '@/controls/fonts'
 import GoogleAnalytics from "@/controls/googleAnalytics";
 import Script from 'next/script';
-import { Analytics } from "@vercel/analytics/react"
 
 import GoogleAnalyticsEmailContact from "@/controls/googleAnalyticsEmailContact";
 
