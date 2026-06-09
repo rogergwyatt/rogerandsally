@@ -120,3 +120,9 @@ alter table drop_items add column if not exists thickness_in numeric(6,2);
 alter table drop_items add column if not exists juice_groove_available boolean not null default true;
 alter table drop_items add column if not exists juice_groove_price numeric(10,2) not null default 0;
 alter table drops add column if not exists sort_order int not null default 0;
+
+-- Custom-order AI chat: summary, generated preview image, and transcript.
+alter table custom_orders add column if not exists ai_summary text;
+alter table custom_orders add column if not exists ai_image_url text;
+alter table custom_orders add column if not exists chat_transcript jsonb;
+alter table custom_orders add column if not exists ai_specs jsonb;
