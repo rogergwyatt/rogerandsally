@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Sofadi_One, Nanum_Gothic} from "next/font/google";
 import "../globals.css";
 import Script from 'next/script';
-import { Analytics } from "@vercel/analytics/react"
 
 import { nanum } from '../../controls/fonts'
 import GoogleAnalytics from "@/controls/googleAnalytics";
