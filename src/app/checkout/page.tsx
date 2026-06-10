@@ -8,8 +8,6 @@ import TopSection from '@/controls/topSection'
 import FooterSection from '@/controls/footerSection'
 import { serif } from '@/controls/fonts'
 import { useRouter } from 'next/navigation'
-import products from '@/data/products.json'
-import { Product } from '@/lib/types'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '')
 const emptyAddress: ShippingAddress = { name: '', line1: '', line2: '', city: '', state: '', zip: '' }
@@ -105,8 +103,7 @@ export default function CheckoutPage() {
     if (!address.zip || address.zip.length < 5) return
     setLoadingRates(true)
     const totalWeight = cart.items.reduce((sum, item) => {
-      const p = (products as Product[]).find(p => p.id === item.product.id)
-      return sum + (p?.weightLbs ?? 2) * item.quantity
+      return sum + (item.product.weightLbs ?? 2) * item.quantity
     }, 0)
     const res = await fetch('/api/shipping', {
       method: 'POST',

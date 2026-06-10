@@ -3,8 +3,6 @@ import { Shippo } from 'shippo'
 import { supabaseAdmin } from '@/lib/supabase'
 import { isAdminAuthenticated } from '@/lib/adminAuth'
 import { logCustomerEvent } from '@/lib/customers'
-import products from '@/data/products.json'
-import { Product } from '@/lib/types'
 import nodemailer from 'nodemailer'
 
 const shippo = new Shippo({ apiKeyHeader: process.env.SHIPPO_API_KEY ?? 'shippo_test_REPLACE_ME' })
@@ -15,7 +13,7 @@ function buildParcel(items: any[]) {
   let totalWeightLb = 0
   let maxL = 6, maxW = 6, maxH = 2
   for (const item of items) {
-    const p = (products as Product[]).find(pr => pr.id === item.product?.id)
+    const p = item.product
     const qty = item.quantity ?? 1
     totalWeightLb += (p?.weightLbs ?? 2) * qty
     const d = p?.dimensionsInches
