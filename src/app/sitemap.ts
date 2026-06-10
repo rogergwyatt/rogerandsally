@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import products from '@/data/products.json'
+import { getProducts } from '@/lib/products'
 import { supabaseAdmin } from '@/lib/supabase'
 
 const BASE = 'https://www.rogerandsally.com'
@@ -48,7 +48,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
   ]
 
-  const productPages: MetadataRoute.Sitemap = (products as { slug: string }[]).map(p => ({
+  const allProducts = await getProducts()
+  const productPages: MetadataRoute.Sitemap = allProducts.map(p => ({
     url: `${BASE}/shop/${p.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',

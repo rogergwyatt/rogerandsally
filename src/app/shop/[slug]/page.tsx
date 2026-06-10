@@ -1,5 +1,4 @@
-import products from '@/data/products.json'
-import { Product } from '@/lib/types'
+import { getProductBySlug } from '@/lib/products'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import TopSection from '@/controls/topSection'
@@ -7,13 +6,10 @@ import FooterSection from '@/controls/footerSection'
 import ProductDetail from './ProductDetail'
 
 const BASE = 'https://www.rogerandsally.com'
-
-export async function generateStaticParams() {
-  return (products as Product[]).map(p => ({ slug: p.slug }))
-}
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = (products as Product[]).find(p => p.slug === params.slug)
+  const product = await getProductBySlug(params.slug)
   if (!product) return {}
   const url = `${BASE}/shop/${product.slug}`
   const image = product.images?.[0] ? `${BASE}${product.images[0]}` : `${BASE}/images/IMG_3668.jpeg`
@@ -36,8 +32,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = (products as Product[]).find(p => p.slug === params.slug)
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const product = await getProductBySlug(params.slug)
   if (!product) notFound()
 
   const url = `${BASE}/shop/${product.slug}`
