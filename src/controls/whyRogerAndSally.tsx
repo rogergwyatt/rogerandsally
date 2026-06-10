@@ -36,11 +36,11 @@ export default function WhyRogerAndSally() {
                     Second, it helps control wood movement
                 </div>
                 <div className="mt-5 text-left">
-                    <p>Our Signature Lock is brand new. We create a sliding dovetail on each strip that makes up the board. This means that not only are the strips glue bonded and bonded with The Heritage Lock,
+                    <p>Our Heirloom Lock is brand new. We create a sliding dovetail on each strip that makes up the board. This means that not only are the strips glue bonded and bonded with The Heritage Lock,
                     they are bonded completely mechanically. This joinery makes it impossible for the board to separate. The wood would have to break before the strips could separate.
                     </p>
                     <p className="mt-2 text-left mb-10">
-                        The Signature Lock is only available on Signature series boards.
+                        The Heirloom Lock is only available on Signature series boards.
                     </p>
                 </div>
                                <div className="lg:min-h-[800px]">
