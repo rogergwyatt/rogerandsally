@@ -126,3 +126,27 @@ alter table custom_orders add column if not exists ai_summary text;
 alter table custom_orders add column if not exists ai_image_url text;
 alter table custom_orders add column if not exists chat_transcript jsonb;
 alter table custom_orders add column if not exists ai_specs jsonb;
+
+-- Catalog products (replaces src/data/products.json). Options and images as JSONB.
+create table if not exists products (
+  id           uuid primary key default gen_random_uuid(),
+  slug         text unique not null,
+  name         text not null,
+  tagline      text,
+  description  text,
+  images       jsonb not null default '[]',   -- array of image URLs (first = primary)
+  video_url    text,
+  category     text,
+  options      jsonb not null default '[]',   -- ProductOption[] (same shape as products.json)
+  base_price   numeric(10,2) not null,
+  sale_price   numeric(10,2),
+  weight_lbs   numeric(6,2) not null default 3,
+  length_in    numeric(6,2),
+  width_in     numeric(6,2),
+  height_in    numeric(6,2),
+  featured     boolean not null default false,
+  in_stock     boolean not null default true,
+  sort_order   int not null default 0,
+  created_at   timestamptz not null default now()
+);
+create index if not exists idx_products_sort on products (sort_order);
