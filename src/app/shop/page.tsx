@@ -1,5 +1,4 @@
-import products from '@/data/products.json'
-import { Product } from '@/lib/types'
+import { getProducts } from '@/lib/products'
 import Link from 'next/link'
 import Image from 'next/image'
 import TopSection from '@/controls/topSection'
@@ -14,7 +13,8 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic'
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const products = await getProducts()
   return (
     <main className="bg-parchment min-h-screen flex flex-col">
       <TopSection />
@@ -38,7 +38,7 @@ export default function ShopPage() {
 
         <h2 className={`text-2xl lg:text-3xl text-walnut text-center mb-6 ${serif.className}`}>Made-To-Order Boards</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {(products as Product[]).map(product => (
+          {products.map(product => (
             <Link
               key={product.id}
               href={`/shop/${product.slug}`}
